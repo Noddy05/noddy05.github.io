@@ -7,10 +7,31 @@
     <link rel="stylesheet" href="prism.css">
 </head>
 <body>
-    <canvas id="maze-canvas"></canvas>
+    <canvas id="maze-canvas" width="300" height="300"></canvas>
+    <br>
+
+    <input id="maze-columns" type="range" min="1" max="20" value="6">
+    <span>Maze columns: </span>
+    <span id="maze-columns-display"></span>
+    <br>
+    <input id="maze-rows"    type="range" min="1" max="20" value="6">
+    <span>Maze rows: </span>
+    <span id="maze-rows-display"></span>
+
+    <br>
+    <input id="time-step"    type="range" min="0" max="1000" value="150">
+    <span>Time step (per iteration): </span>
+    <span id="time-step-display"></span>
+
+    <button onclick="bacterialGrowth()">Generate Maze</button>
+
     <br>
     <p class="insert-code" id="mazegen"></p>
+    <br>
+    <p class="insert-code" id="bacterialgrowth"></p>
 </body>
 </html>
-<script src="mazegen.js"></script>
+<script src="prism.js"></script>
 <script src="displayscripts.js"></script>
+<script src="bacterialgrowth.js"></script>
+<script src="mazegen.js"></script>
