@@ -1,5 +1,3 @@
-
-
 var visited = [];
 const bacterialGrowth = function(){
     clearInterval(bacterialInterval);
@@ -7,13 +5,11 @@ const bacterialGrowth = function(){
     generateGrid();
 
     //First choose a random cell to infect:
-    for(let i = 0; i < 15; i++){
-        let x = Math.floor(Math.random() * columns);
-        let y = Math.floor(Math.random() * rows);
-        grid[x][y].color = 'blue';
+    let x = Math.floor(Math.random() * columns);
+    let y = Math.floor(Math.random() * rows);
+    grid[x][y].color = 'red';
 
-        visited.push({ x: x, y: y });
-    }
+    visited.push({ x: x, y: y });
     drawMaze();
 
     bacterialGrowthSolve();
@@ -98,8 +94,7 @@ function removeIfEmpty(x, y){
         let indexInVisited = findPositionInVisited(x, y);
         if(indexInVisited > -1) {
             visited.splice(indexInVisited, 1);
-            if(grid[x][y].color == 'red')
-                grid[x][y].color = 'orange';
+            grid[x][y].color = 'orange';
         }
         return true;
     } 

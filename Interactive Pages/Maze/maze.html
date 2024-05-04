@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../prism.css">
+    <link rel="stylesheet" href="../codedisplay.css">
+</head>
+<body>
+    <div class="page">
+        <figure>
+            <canvas id="maze-canvas" width="300" height="300"></canvas>
+            <br>
+
+            <input id="maze-columns" type="range" min="1" max="20" value="6">
+            <br>
+            <div>
+                <span>Maze columns: </span>
+                <span id="maze-columns-display"></span>
+            </div>
+            
+            <input id="maze-rows"    type="range" min="1" max="20" value="6">
+            <br>
+            <div>
+                <span>Maze rows: </span>
+                <span id="maze-rows-display"></span>
+            </div>
+
+            <input id="time-step"    type="range" min="0" max="1000" value="150">
+            <br>
+            <div>
+                <span>Time step (per iteration): </span>
+                <span id="time-step-display"></span>
+            </div>
+            <button onclick="bacterialGrowth()">Generate Maze</button>
+        </figure>
+
+        <br>
+        <div class="insert-code" id="mazegen"></div>
+        <br>
+        <div class="insert-code" id="bacterialgrowth"></div>
+        <br>
+        <div class="code-snippet 3 19" id="mazegen"></div>
+        <p>
+            This first part is all about setup. We need to make sure we have a reference to all our sliders and the slider displays.
+            <br>
+            Next up, we need to make sure that whenever we update our sliders the code will update its variables accordingly. 
+            We also make sure the slider displays are updated.
+        </p>
+        <div class="code-snippet 21 65" id="mazegen"></div>
+        <p>
+            Now that the setup is done, we can actually create the maze. This is simple enough, we just generate a 2D array of
+            objects that will be our cells. Each cell will have 4 variables that specify wether or not a wall is above the cell, below it,
+            to the right or to the left. Lastly it will also contain a color, which is used when drawing the maze.
+        </p>
+        <div class="code-snippet 67 83" id="mazegen"></div>
+        <p>
+            To draw our maze we use the following code
+        </p>
+        <div class="code-snippet 85 136" id="mazegen"></div>
+    </div>
+</body>
+</html>
+<script src="../prism.js"></script>
+<script src="displayscripts.js"></script>
+<script src="bacterialgrowth.js"></script>
+<script src="mazegen.js"></script>
