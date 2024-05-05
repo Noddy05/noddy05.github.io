@@ -46,6 +46,46 @@ a.inactivePage {
     height: 100px;
 }
 
+#interactive-projects {
+    display: inline-table;
+    width: 100%;
+    text-align: center;
+}
+.project-container{
+    display: flex;
+    justify-content: center;
+}
+.project {
+    transition: all 0.1s ease-in-out;
+    width: 300px;
+    margin: 30px;
+    position: relative;
+    display: block;
+    opacity: 50%;
+    height: 500px;
+}
+.project.main:hover {
+    transition: all 0.1s ease-in-out;
+    opacity: 100%;
+}
+.project:not(.main) {
+    opacity: 30%;
+    width: 250px;
+    top: 25px;
+    position: relative;
+}
+.project:not(.main):hover {
+    transition: all 0.1s ease-in-out;
+    opacity: 50%;
+}
+.project img {
+    width: 100%;
+}
+
+#explain-timeline{
+    text-align: center;
+}
+
 
 
 /* Timeline */

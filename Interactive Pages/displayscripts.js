@@ -22,13 +22,13 @@ function insertCodeSnippets(){
         console.log(`from ${fromLine} to ${toLine}`);
         let imported = importedCode.get(codeSnippets[i].id);
         let startIndex = -1;
-        let endIndex = -1;
+        let endIndex = imported.length - 1;
         let lineCounter = 1;
         for(let c = 0; c < imported.length; c++){
             if(lineCounter >= fromLine && startIndex == -1)
                 startIndex = c;
             if(lineCounter > toLine){
-                endIndex = c - 1;
+                endIndex = c;
                 break;
             }
             if(imported[c] == '\n'){
@@ -71,12 +71,6 @@ function display(inputPath, outputId, callback){
         console.log(data);
         callback();
     });
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", inputPath);
-    xhr.send();
-    xhr.onload = () => {
-    };
 }
 
 function readFromFile(path, callback){

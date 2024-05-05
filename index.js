@@ -50,3 +50,70 @@ function writeLetter(HTMLElement, totalText, currentLetterIndex, indexInArray){
     }
     setTimeout(function() { writeLetter(HTMLElement, totalText, currentLetterIndex, indexInArray) }, 15);
 }
+
+
+//Interactive projects - Maybe write a JSON file instead?
+const interactiveProjects = [
+    { 
+        url: "./Interactive%20Pages/CellularAutometa/main.html", 
+        title: "Cellular Autometa",
+        description: "Ingen beskrivelse",
+        thumbnail: "Files/maze2.png",
+    },
+    { 
+        url: "./Interactive%20Pages/Maze/maze.html", 
+        title: "Maze Generation",
+        description: "Forskellige algoritmer (med justerbare parametre) til at danne labyrinter.",
+        thumbnail: "Files/maze_bacteria.png",
+    },
+    { 
+        url: "./Interactive%20Pages/Sorting/main.html", 
+        title: "Sorting Algorithms",
+        description: "Sammenligning af forskellige algoritmer til at sortere lister.",
+        thumbnail: "Files/bubblesort.png",
+    },
+];
+
+const leftProject  = document.getElementsByClassName("project left");
+const mainProject  = document.getElementsByClassName("project main");
+const rightProject = document.getElementsByClassName("project right");
+
+let leftIndex = 0;
+let mainIndex = 1;
+let rightIndex = 2;
+displayProjects();
+function displayProjects(){
+
+    leftProject[0].innerHTML = `
+        <img src="${interactiveProjects[leftIndex].thumbnail}"><br>
+        <h4>${interactiveProjects[leftIndex].title}</h4>
+        <p>${interactiveProjects[leftIndex].description}</p>
+    `;
+    leftProject[0].href = interactiveProjects[leftIndex].url;
+
+    mainProject[0].innerHTML = `
+        <img src="${interactiveProjects[mainIndex].thumbnail}"><br>
+        <h4>${interactiveProjects[mainIndex].title}</h4>
+        <p>${interactiveProjects[mainIndex].description}</p>
+    `;
+    mainProject[0].href = interactiveProjects[mainIndex].url;
+
+    rightProject[0].innerHTML = `
+        <img src="${interactiveProjects[rightIndex].thumbnail}"><br>
+        <h4>${interactiveProjects[rightIndex].title}</h4>
+        <p>${interactiveProjects[rightIndex].description}</p>
+    `;
+    rightProject[0].href = interactiveProjects[rightIndex].url;
+}
+
+function moveProjects(increment){
+    leftIndex  += increment;
+    mainIndex  += increment;
+    rightIndex += increment;
+
+    //Loop back around:
+    leftIndex  = (leftIndex  + interactiveProjects.length) % interactiveProjects.length;
+    mainIndex  = (mainIndex  + interactiveProjects.length) % interactiveProjects.length;
+    rightIndex = (rightIndex + interactiveProjects.length) % interactiveProjects.length;
+    displayProjects();
+}

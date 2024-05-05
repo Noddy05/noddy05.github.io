@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Sorting Algorithms</title>
+    <link rel="stylesheet" href="../prism.css">
+    <link rel="stylesheet" href="../codedisplay.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div class="page">
+        <p>
+            Its impossible to show off a collection of algorithms without including sortingalgorithms. This page will 
+            compare, explain and visualize different sorting algorithms.
+            <br>
+            Before we can implement any algorithm its important to write some methods for drawing an array. 
+        </p>
+        <figure>
+            <canvas id="unsorted-canvas" width="300" height="300"></canvas>
+        </figure>
+        <h2>Bubble Sort</h2>
+        <p>
+            Bubble Sort works by comparing each entry in an array <code>array[i]</code> with its immediate successor <code>array[i + 1]</code>.
+            Since the goal of this sorting algorithm is to have the smallest entries to the left, and the largest to the right we swap the
+            two entries if <code>array[i] > array[i + 1]</code>. We now increase <code>i</code> by 1 and repeat this checking and swapping.
+            Whenever <code>i</code> reaches the end of the array we know that the largest entry in the array must be in its place. 
+            <br>
+            - This is why its called Bubble Sort, since the largest entry always floats to the top.
+            <br>
+            But we're not done yet, we need to repeat this process again, until every element of the array is sorted. The pseudocode looks like this:
+        </p>
+        <ol>
+            <li>
+                Let <code>i = 0</code> and let <code>j = 0</code>
+            </li>
+            <li>
+                Compare <code>if(array[j] > array[j + 1])</code> - if this is true swap the two entries; 
+                <code>swap(array, j, j + 1)</code>
+            </li>
+            <li>
+                Increment <code>j</code> by 1
+            </li>
+            <li>
+                If <code>j >= array.length - 1 - i</code> we reached the end of the array. 
+                This means we can increment <code>i</code> by 1 and reset <code>j = 0</code>
+            </li>
+            <li>
+                Repeat from step 2 until <code>i >= array.length</code>
+            </li>
+        </ol>
+        <figure>
+            <canvas id="unsorted-canvas" width="300" height="300"></canvas>
+        </figure>
+    </div>
+</body>
+</html>
+<script src="../prism.js"></script>
+<script src="../displayscripts.js"></script>
+<script src="main.js"></script>
+<script src="bubblesort.js"></script>
