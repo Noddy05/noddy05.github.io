@@ -11,7 +11,7 @@ function insertCode(i){
         insertCodeSnippets();
         return;
     }
-    display(`https://noddy05.github.io/Interactive%20Pages/Maze/${codeElements[i].id}.js`, codeElements[i].id, function() {
+    display(`https://noddy05.github.io/Interactive%20Pages/${codeElements[i].id}.js`, codeElements[i].id, function() {
         insertCode(i + 1);
     });
 }

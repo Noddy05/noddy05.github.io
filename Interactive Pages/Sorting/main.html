@@ -20,6 +20,13 @@
             <canvas id="unsorted-canvas" width="300" height="300"></canvas>
         </figure>
         <h2>Bubble Sort</h2>
+        <figure>
+            <canvas id="bubblesort" width="300" height="300"></canvas>
+            <br>
+            <button onclick="bubbleSort(bubbleSortArray, bubbleSortCanvas, 40);">Sort Array</button>
+            <button onclick="bubbleSortArray = unsortArray(bubbleSortEntries, bubbleSortCanvas, bubbleSortLoop);">Unsort Array</button>
+
+        </figure>
         <p>
             Bubble Sort works by comparing each entry in an array <code>array[i]</code> with its immediate successor <code>array[i + 1]</code>.
             Since the goal of this sorting algorithm is to have the smallest entries to the left, and the largest to the right we swap the
@@ -49,13 +56,13 @@
                 Repeat from step 2 until <code>i >= array.length</code>
             </li>
         </ol>
-        <figure>
-            <canvas id="unsorted-canvas" width="300" height="300"></canvas>
-        </figure>
+        Implemented in JS:
+        <div class="insert-code" id="Sorting/bubblesort"></div>
+        <div class="code-snippet 2 18" id="Sorting/bubblesort"></div>
     </div>
 </body>
 </html>
 <script src="../prism.js"></script>
-<script src="../displayscripts.js"></script>
 <script src="main.js"></script>
 <script src="bubblesort.js"></script>
+<script src="../displayscripts.js"></script>
