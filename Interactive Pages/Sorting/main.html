@@ -7,58 +7,98 @@
     <link rel="stylesheet" href="../prism.css">
     <link rel="stylesheet" href="../codedisplay.css">
     <link rel="stylesheet" href="main.css">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(','\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
 </head>
 <body>
-    <div class="page">
-        <p>
-            Its impossible to show off a collection of algorithms without including sortingalgorithms. This page will 
-            compare, explain and visualize different sorting algorithms.
-            <br>
-            Before we can implement any algorithm its important to write some methods for drawing an array. 
-        </p>
-        <figure>
-            <canvas id="unsorted-canvas" width="300" height="300"></canvas>
-        </figure>
-        <h2>Bubble Sort</h2>
-        <figure>
-            <canvas id="bubblesort" width="300" height="300"></canvas>
-            <br>
-            <button onclick="bubbleSort(bubbleSortArray, bubbleSortCanvas, 40);">Sort Array</button>
-            <button onclick="bubbleSortArray = unsortArray(bubbleSortEntries, bubbleSortCanvas, bubbleSortLoop);">Unsort Array</button>
+    <div id="container">
+        <div class="page">
+            <h1>Sorting Algorithms</h1>
+            <h2>1. Drawing an unsorted array</h2>
+            <p>
+                Its impossible to show off a collection of algorithms without including sortingalgorithms. This page will 
+                compare, explain and visualize different sorting algorithms.
+                <br>
+                Before we can implement any algorithm its important to write some methods for drawing an array. 
+            </p>
+            <figure>
+                <canvas id="unsorted-canvas" width="300" height="300"></canvas>
+            </figure>
+        </div>
+        <div class="page">
+            <h2>2. Bubble Sort</h2>
+            <h3>2.1. What is Bubble Sort?</h3>
+            <figure>
+                <canvas id="bubblesort" width="300" height="300"></canvas>
+                <br>
+                <button onclick="bubbleSort(bubbleSortArray, bubbleSortCanvas, 40);">Sort Array</button>
+                <button onclick="bubbleSortArray = unsortArray(bubbleSortEntries, bubbleSortCanvas, bubbleSortLoop);">Unsort Array</button>
+                <br>
 
-        </figure>
-        <p>
-            Bubble Sort works by comparing each entry in an array <code>array[i]</code> with its immediate successor <code>array[i + 1]</code>.
-            Since the goal of this sorting algorithm is to have the smallest entries to the left, and the largest to the right we swap the
-            two entries if <code>array[i] > array[i + 1]</code>. We now increase <code>i</code> by 1 and repeat this checking and swapping.
-            Whenever <code>i</code> reaches the end of the array we know that the largest entry in the array must be in its place. 
-            <br>
-            - This is why its called Bubble Sort, since the largest entry always floats to the top.
-            <br>
-            But we're not done yet, we need to repeat this process again, until every element of the array is sorted. The pseudocode looks like this:
-        </p>
-        <ol>
-            <li>
-                Let <code>i = 0</code> and let <code>j = 0</code>
-            </li>
-            <li>
-                Compare <code>if(array[j] > array[j + 1])</code> - if this is true swap the two entries; 
-                <code>swap(array, j, j + 1)</code>
-            </li>
-            <li>
-                Increment <code>j</code> by 1
-            </li>
-            <li>
-                If <code>j >= array.length - 1 - i</code> we reached the end of the array. 
-                This means we can increment <code>i</code> by 1 and reset <code>j = 0</code>
-            </li>
-            <li>
-                Repeat from step 2 until <code>i >= array.length</code>
-            </li>
-        </ol>
-        Implemented in JS:
-        <div class="insert-code" id="Sorting/bubblesort"></div>
-        <div class="code-snippet 2 18" id="Sorting/bubblesort"></div>
+                <div>
+                    <span>Entries: </span>
+                    <span id="entries-display"></span>
+                </div>
+                <input id="entries" type="range" min="1" max="100" value="20">
+                <br>
+                
+                <div>
+                    <span>Time between iterations: </span>
+                    <span id="delay-display"></span>
+                </div>
+                <input id="delay" type="range" min="1" max="1000" value="150">
+            </figure>
+            <p>
+                Bubble Sort works by comparing each entry in an array $array[i]$ with its immediate successor $array[i + 1]$.
+                Since the goal of this sorting algorithm is to have the smallest entries to the left, and the largest to the right we swap the
+                two entries if $array[i] > array[i + 1]$. We now increase $i$ by 1 and repeat this checking and swapping.
+                Whenever $i$ reaches the end of the array we know that the largest entry in the array must be in its place. 
+                <br>
+                - This is why its called Bubble Sort, since the largest entry always floats to the top.
+                <br>
+                But we're not done yet, we need to repeat this process again, until every element of the array is sorted. The pseudocode looks like this:
+            </p>
+            <ol>
+                <li>
+                    Let $i = 0$ and let $j=0$
+                </li>
+                <li>
+                    Compare if$\left(array[j] > array[j + 1]\right)$ - if this is true swap the two entries; 
+                    swap$(array, j, j + 1)$
+                </li>
+                <li>
+                    Increment $j$ by 1
+                </li>
+                <li>
+                    If $j \geq array.length - 1 - i$ we reached the end of the unsorted array. 
+                    This means we can increment $i$ by 1 and reset $j = 0$
+                </li>
+                <li>
+                    Repeat from step 2 until $i \geq array.length$
+                </li>
+            </ol>
+            Implemented in JS:
+            <div class="insert-code" id="Sorting/bubblesort"></div>
+            <div class="code-snippet 2 16" id="Sorting/bubblesort"></div>
+            <h4>2.2. Bubble Sort stats</h4>
+            If $n$ is the number of entries in the unsorted array, this algorithm contains two loops, 
+            one running from $i=0$ to $i= n - 1$ and the next loop, from $j=0$ to $j = n - 1 -i$. So the algorithm runs for 
+            \[\sum_{k=0}^{n} \left(n-k\right)=\sum_{k=0}^{n} k=\frac{n(n+1)}{2}=\frac{n^2+n}{2}\]
+            iterations. Since the term $n^2$ grows way faster than $n$ we ignore this last term when determining time complexity.
+            So that leaves this algorithm with a time complexity $\mathcal O(n^2)$. This time complexity is quite bad, 
+            and we can do way better with other algorithms.<br>
+            The auxiliary space refers to the extra space taken up by an algorithm. For this algorithm, we only ever create a new variable
+            when swapping two elements, this means this algorithm has an auxiliary space of $\mathcal O(1)$. This is great, and one of the 
+            advantages of Bubble Sort. Another advantage is the algorithm's simplicity.
+        </div>
     </div>
 </body>
 </html>
@@ -66,3 +106,5 @@
 <script src="main.js"></script>
 <script src="bubblesort.js"></script>
 <script src="../displayscripts.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

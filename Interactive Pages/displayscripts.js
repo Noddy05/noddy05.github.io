@@ -19,7 +19,6 @@ function insertCodeSnippets(){
     for(let i = 0; i < codeSnippets.length; i++){
         let fromLine = Number(codeSnippets[i].classList[1]);
         let toLine = Number(codeSnippets[i].classList[2]);
-        console.log(`from ${fromLine} to ${toLine}`);
         let imported = importedCode.get(codeSnippets[i].id);
         let startIndex = -1;
         let endIndex = imported.length - 1;
@@ -45,7 +44,6 @@ function insertCodeSnippets(){
 async function popupWindow(id){
     var myWindow = await window.open("", `Code for ${id}.js`, `width=${window.innerWidth / 2},height=${window.innerHeight / 2}`);
     myWindow.document.write(document.getElementById(id).innerHTML);
-    console.log(document.getElementById(id).innerHTML);
     var styleSheet = document.createElement("style");
     styleSheet.innerText = prismStyleSheet;
     myWindow.document.head.appendChild(styleSheet);
@@ -68,7 +66,6 @@ function display(inputPath, outputId, callback){
         outputPath.innerHTML = formatCode(data);
         importedCode.set(outputId, data);
         outputPath.classList.add("hidden");
-        console.log(data);
         callback();
     });
 }

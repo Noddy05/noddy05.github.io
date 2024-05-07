@@ -1,17 +1,15 @@
 
 //This is the Bubble Sort Algorithm implemented in JS:
 function standardBubbleSort(array){
-    let copiedArray = array.map((x) => x);
-
     //We set up the two loops:
-    for(let i = 0; i < copiedArray.length; i++){
+    for(let i = 0; i < array.length; i++){
         //Since we know that after i iterations, the last i elements will
         //sorted we can stop checking after j >= array.length - 1 - i.
-        for(let j = 0; j < copiedArray.length - 1 - i; j++){
+        for(let j = 0; j < array.length - 1 - i; j++){
             //We compare to see if the two entries are locally sorted
-            if(copiedArray[i] > copiedArray[i + 1]){
+            if(array[i] > array[i + 1]){
                 //If not, we swap:
-                swap(copiedArray, i, i + 1);
+                swap(array, i, i + 1);
             }
         }
     }
@@ -30,7 +28,17 @@ const bubbleSort = async function bubbleSort(array, canvas, timeBetween){
     //To meassure the time it took to run (realtime):
     //We use this to compare how long it took to sort the array:
     const start = Date.now();
-    await standardBubbleSort(array);
+    let copiedArray = array.map((x) => x);
+    await standardBubbleSort(copiedArray);
+
+    if(timeBetween == 0){
+        drawArray(copiedArray, canvas, [0]);
+        setTimeout(function() {
+            finalizeArray(copiedArray, canvas, 5);
+        }, 5);
+        return;
+    }
+
     //The difference between end and start is the time it took to run the sorting algorithm.
     const end = Date.now();
     console.log(`Execution time for an array with ${array.length} entries took ${end - start}ms`)
@@ -45,11 +53,16 @@ const bubbleSort = async function bubbleSort(array, canvas, timeBetween){
                 swap(array, j, j + 1);
             }
             selectedEntries[0] = j + 1;
-            if(timeBetween > 0)
+            if(timeBetween > 0){
                 drawArray(array, canvas, selectedEntries);
+            } else {
+                bubbleSortLoop.running = false;
+            }
         }, bubbleSortLoop.running);
-        if(timeBetween <= 0)
+        if(timeBetween <= 0){
             drawArray(array, canvas, selectedEntries);
+            bubbleSortLoop.running = false;
+        }
     }, bubbleSortLoop.running);
 
     //Stop if loop was stopped during sorting:
