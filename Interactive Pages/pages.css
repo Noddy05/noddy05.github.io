@@ -1,0 +1,84 @@
+
+@font-face {
+    font-family: CMUModern;
+    src: url(../Files/computer-modern/cmunrm.ttf);
+}
+@font-face {
+    font-family: CMUModernBold;
+    src: url(../Files/computer-modern/cmunbx.ttf);
+}
+
+body{
+    font-family: CMUModern;
+    font-size: 1.1em;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family: CMUModernBold;
+}
+h2, h3, h4, h5, h6{
+    letter-spacing: -0.8px;
+}
+h3, h4{
+    font-size: 20px;
+}
+h4{
+    margin: 90px 0px 0px 0px;
+}
+
+.page{
+    position: relative;
+    margin: 100px 0px;
+    left: 50%;
+    background: #ffffff;
+    padding: 75px;
+    width: 800px;
+    box-shadow: rgba(0, 0, 0, 0.3) -6px 6px 30px;
+}
+
+#container {
+    top: 0%;
+    left: 0%;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+h1 {
+    font-size: 60px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.derivation label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+.derivation label::before{
+    content: '+';
+    width: 20px;
+    font-size: 1.15em;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+
+.derivation input[type="checkbox"]{
+    display: none;
+}
+.derivation .content{
+    margin: 10px 30px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+}
+.derivation input[type="checkbox"]:checked + label + .content{
+    max-height: inherit;
+}
+.derivation input[type="checkbox"]:checked + label::before{
+    content: '-';
+}

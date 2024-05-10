@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../prism.css">
     <link rel="stylesheet" href="../codedisplay.css">
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../pages.css">
     <script>
         MathJax = {
             tex: {
@@ -24,7 +25,7 @@
             <h1>Sorting Algorithms</h1>
             <h2>1. Drawing an unsorted array</h2>
             <p>
-                Its impossible to show off a collection of algorithms without including sortingalgorithms. This page will 
+                Its impossible to show off a collection of algorithms without including sorting algorithms. This page will 
                 compare, explain and visualize different sorting algorithms.
                 <br>
                 Before we can implement any algorithm its important to write some methods for drawing an array. 
@@ -36,26 +37,7 @@
         <div class="page">
             <h2>2. Bubble Sort</h2>
             <h3>2.1. What is Bubble Sort?</h3>
-            <figure>
-                <canvas id="bubblesort" width="300" height="300"></canvas>
-                <br>
-                <button onclick="bubbleSort(bubbleSortArray, bubbleSortCanvas, 40);">Sort Array</button>
-                <button onclick="bubbleSortArray = unsortArray(bubbleSortEntries, bubbleSortCanvas, bubbleSortLoop);">Unsort Array</button>
-                <br>
-
-                <div>
-                    <span>Entries: </span>
-                    <span id="entries-display"></span>
-                </div>
-                <input id="entries" type="range" min="1" max="100" value="20">
-                <br>
-                
-                <div>
-                    <span>Time between iterations: </span>
-                    <span id="delay-display"></span>
-                </div>
-                <input id="delay" type="range" min="1" max="1000" value="150">
-            </figure>
+            <figure class="display bubbleSort"></figure>
             <p>
                 Bubble Sort works by comparing each entry in an array $array[i]$ with its immediate successor $array[i + 1]$.
                 Since the goal of this sorting algorithm is to have the smallest entries to the left, and the largest to the right we swap the
@@ -64,7 +46,7 @@
                 <br>
                 - This is why its called Bubble Sort, since the largest entry always floats to the top.
                 <br>
-                But we're not done yet, we need to repeat this process again, until every element of the array is sorted. The pseudocode looks like this:
+                But we're not done yet, we need to repeat this process again, until every element of the array is sorted. The algorithm looks like this:
             </p>
             <ol>
                 <li>
@@ -87,17 +69,79 @@
             </ol>
             Implemented in JS:
             <div class="insert-code" id="Sorting/bubblesort"></div>
-            <div class="code-snippet 2 16" id="Sorting/bubblesort"></div>
+            <div class="code-snippet 2 10" id="Sorting/bubblesort"></div>
             <h4>2.2. Bubble Sort stats</h4>
             If $n$ is the number of entries in the unsorted array, this algorithm contains two loops, 
             one running from $i=0$ to $i= n - 1$ and the next loop, from $j=0$ to $j = n - 1 -i$. So the algorithm runs for 
             \[\sum_{k=0}^{n} \left(n-k\right)=\sum_{k=0}^{n} k=\frac{n(n+1)}{2}=\frac{n^2+n}{2}\]
             iterations. Since the term $n^2$ grows way faster than $n$ we ignore this last term when determining time complexity.
-            So that leaves this algorithm with a time complexity $\mathcal O(n^2)$. This time complexity is quite bad, 
-            and we can do way better with other algorithms.<br>
-            The auxiliary space refers to the extra space taken up by an algorithm. For this algorithm, we only ever create a new variable
+            So that leaves this algorithm with a worst case time complexity of $\mathcal O(n^2)$. Notice that even if the array is 
+            already sorted it still uses the same number of iterations to sort the array, therefore the average and best case time complexity
+            is also $\mathcal\Theta(n^2)$ and $\mathcal\Omega(n^2)$ (Where $\mathcal O(f(n))$ is the worst case- $\mathcal 
+            \Theta(f(n))$ is the average case- and $\mathcal \Omega(f(n))$ is the best case time complexity).
+            This time complexity is quite bad, and we can do way better with other algorithms.<br>
+            The space complexity refers to the extra space taken up by an algorithm. For this algorithm, we only ever create a new variable
             when swapping two elements, this means this algorithm has an auxiliary space of $\mathcal O(1)$. This is great, and one of the 
             advantages of Bubble Sort. Another advantage is the algorithm's simplicity.
+        </div>
+        <div class="page">
+            <h2>3. Insertion Sort</h2>
+            <h3>3.1. What is Insertion Sort?</h3>
+            <figure class="display insertionSort"></figure>
+            <p>
+                Insertion Sort resembles Bubble Sort, but it does have one advantage: it does not need to perform all steps if the array 
+                is already sorted or partially sorted. For this algorithm we again compare $array[j]$ with its immediate successor $array[j + 1]$ but this time we 
+                keep decreasing j by 1 until it no longer satisfies $array[j] > array[j + 1]$ or $j=0$. We now increase an iterator $i$ by 1 and let $j = i$ 
+                before we repeat the previous steps. The algorithm goes like this
+            </p>
+            <ol>
+                <li>
+                    Let $i = 0$ and let $j=i$
+                </li>
+                <li>
+                    Compare if$\left(array[j] > array[j + 1]\right)$ - if this is true swap the two entries; 
+                    swap$(array, j, j + 1)$
+                </li>
+                <li>
+                    Decrease $j$ by 1 and repeat previous step until either: $array[j] < array[j + 1]$ or $j=0$
+                </li>
+                <li>
+                    If $j \geq array.length - 1 - i$ we reached the end of the unsorted array. 
+                    This means we can increment $i$ by 1 and reset $j = i$
+                </li>
+                <li>
+                    Repeat from step 2 until $i \geq array.length - 1$
+                </li>
+            </ol>
+            Implemented in JS:
+            <div class="insert-code" id="Sorting/insertionsort"></div>
+            <div class="code-snippet 2 10" id="Sorting/insertionsort"></div>
+            <h4>3.2. Insertion Sort stats</h4>
+            Time complexity:<br>
+            $\mathcal O(n^2) \quad \mathcal \Theta (n^2) \quad \mathcal \Omega(n)$<br>
+            The best case $\mathcal \Omega(n)$ comes when the array is already sorted, in this case it would just 
+            loop over every entry and perform no swaps. <br>
+            The worst case occurs whenever the array is sorted backwards. In this case the while loop will keep running until $j=0$ for all values of $i$, 
+            since it will always be the case that any element to the left will be larger than any element to the right. Repeating the calculations from 
+            Bubble Sort we find a worst case of $\mathcal O(n^2)$. The derivation of the average case is a bit more involved, but the result is a time 
+            complexity of $\Theta(n^2)$
+            <div class="derivation">
+                <input type="checkbox" name="derivation" id="first">
+                <label for="first">Derivation of the average case</label>
+                <div class="content">
+                    Whenever we use Insertion Sort on an array, $\mathbf{A}$, everything to the left of the cursor $i$ will be sorted,
+                    while everything on the right will be randomly arranged. For any entry $\mathbf{A}_i$ that hasn't been sorted yet, 
+                    it has $\frac{1}{i}$ probability of being larger than all elements to the left of $i$ 
+                    (Meaning all elements: $\mathbf{A}_{j< i}$). In fact, it has the same probability of being the second largest, third largest
+                    and so on... This means the average element $\mathbf{A}_i$ is the median of all elements to the left; $\mathbf{A}_{j< i}$. 
+                    Since all the elements, $\mathbf{A}_{j< i}$, are sorted, the element $\mathbf{A}_i$ must move $\frac i 2$ indices to the left.
+                    This means we must, on average, perform $\frac i 2$ checks for each element in the array. So the total number of checks comes out to
+                    \[\sum_{i=0}^{n-1}\frac{i}{2}=\frac{1}{2}\sum_{i=0}^{n-1}i=\frac{n(n-1)}{4}=\frac{n^2-n}{4}\]
+                    Which means the average time complexity of the Insertion Sort algorithm is $\mathcal \Theta(n^2)$.
+                    But notice that the number of checks are much better, compared to Bubble Sort, which has a constant $\frac{n^2+n}{2}$ number of checks per 
+                    sort.
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -105,6 +149,7 @@
 <script src="../prism.js"></script>
 <script src="main.js"></script>
 <script src="bubblesort.js"></script>
+<script src="insertionsort.js"></script>
 <script src="../displayscripts.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

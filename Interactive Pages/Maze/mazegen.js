@@ -134,6 +134,3 @@ function prepareCell(x, y){
         mazeCtx.lineTo(cellWidth * x, cellHeight * y);
     }
 }
-
-
-

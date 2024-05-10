@@ -35,7 +35,7 @@ function insertCodeSnippets(){
             }
         }
 
-        codeSnippets[i].innerHTML = formatCode(imported.substring(startIndex, endIndex)) 
+        codeSnippets[i].innerHTML = formatCode(imported.substring(startIndex, endIndex + 1)) 
             + `<button class='expand-button' onclick='popupWindow("${codeSnippets[i].id}")'>View source...</button>`;
     }
     loadPrismFunc();
@@ -64,6 +64,7 @@ function display(inputPath, outputId, callback){
 
     readFromFile(inputPath, function(data){
         outputPath.innerHTML = formatCode(data);
+        //outputPath.appendChild(createCodeElement(data));
         importedCode.set(outputId, data);
         outputPath.classList.add("hidden");
         callback();
@@ -81,11 +82,12 @@ function readFromFile(path, callback){
             callback(data);
         } else {
             console.log(`Error: ${xhr.status}`);
+            callback(`Error retrieving code from '${path}': ${xhr.status}`)
         }
     };
 }
 
 function formatCode(code){
-    return "<pre><code class='language-js'>" + code + "</code></pre>";
+    return `<pre><code class='language-js'>${code}</code></pre>`;
 }
 
