@@ -1,5 +1,4 @@
 
-const codeElements = Array.prototype.slice.call(document.getElementsByClassName("insert-code"));
 const codeSnippets = Array.prototype.slice.call(document.getElementsByClassName("code-snippet"));
 var prismStyleSheet;
 readFromFile("https://noddy05.github.io/Interactive%20Pages/prism.css", function(data) {prismStyleSheet = data})
@@ -7,11 +6,11 @@ var importedCode = new Map();
 
 insertCode(0);
 function insertCode(i){
-    if(i >= codeElements.length){
+    if(i >= codeSnippets.length){
         insertCodeSnippets();
         return;
     }
-    display(`https://noddy05.github.io/Interactive%20Pages/${codeElements[i].id}.js`, codeElements[i].id, function() {
+    display(`https://noddy05.github.io/Interactive%20Pages/${codeSnippets[i].id}.js`, codeSnippets[i].id, function() {
         insertCode(i + 1);
     });
 }
@@ -21,7 +20,7 @@ function insertCodeSnippets(){
         let toLine = Number(codeSnippets[i].classList[2]);
         let imported = importedCode.get(codeSnippets[i].id);
         let startIndex = -1;
-        let endIndex = imported.length - 1;
+        let endIndex = imported.length;
         let lineCounter = 1;
         for(let c = 0; c < imported.length; c++){
             if(lineCounter >= fromLine && startIndex == -1)
@@ -35,7 +34,7 @@ function insertCodeSnippets(){
             }
         }
 
-        codeSnippets[i].innerHTML = formatCode(imported.substring(startIndex, endIndex + 1)) 
+        codeSnippets[i].innerHTML = formatCode(imported.substring(startIndex, endIndex)) 
             + `<button class='expand-button' onclick='popupWindow("${codeSnippets[i].id}")'>View source...</button>`;
     }
     loadPrismFunc();

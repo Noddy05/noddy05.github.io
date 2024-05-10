@@ -9,7 +9,6 @@ function bubbleSort(sortingObject){
     }
 }
 
-
 const bubbleSortObj = Object.create(sortingObject);
 sortingObjects.set("bubbleSort", bubbleSortObj);
 bubbleSortObj.ctx = document.getElementById("bubbleSort").getContext('2d');

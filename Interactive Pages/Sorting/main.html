@@ -20,10 +20,15 @@
     </script>
 </head>
 <body>
+    <div class="insert-code" id="Sorting/main"></div>
+    <div class="insert-code" id="Sorting/bubblesort"></div>
+    <div class="insert-code" id="Sorting/insertionsort"></div>
+
     <div id="container">
         <div class="page">
             <h1>Sorting Algorithms</h1>
-            <h2>1. Drawing an unsorted array</h2>
+            <ul id="table-of-contents"></ul>
+            <h2>Drawing an unsorted array</h2>
             <p>
                 Its impossible to show off a collection of algorithms without including sorting algorithms. This page will 
                 compare, explain and visualize different sorting algorithms.
@@ -33,10 +38,53 @@
             <figure>
                 <canvas id="unsorted-canvas" width="300" height="300"></canvas>
             </figure>
+            <p>
+                First we need to generate a random array, so that we can sort it. We first generate a sorted array, 
+                and then we randomly shuffle the entries around.
+            </p>
+            <div class="code-snippet 13 29" id="Sorting/main"></div>
+            <p>
+                Notice the swap function referenced in the code above? This simply swaps two elements in an array, the code will be shown later
+                in the 'prerequisites' section.
+            </p>
+            <p>
+                Now that we have a random array, we have something to draw. Firstly we need a reference to the canvas
+            </p>
+            <div class="code-snippet 3 5" id="Sorting/main"></div>
+            <p>
+                The following code includes drawing a single element of the array, and then the whole array. The whole array is drawn by
+                using our method for drawing a single element on each element in the array.
+            </p>
+            <div class="code-snippet 46 81" id="Sorting/main"></div>
+            <p>
+                Thats it for drawing an empty array! For some finishing touches I've also added a method for drawing an animation to show that the 
+                array has been sorted - but you dont have to.
+            </p>
+            <div class="code-snippet 83 102" id="Sorting/main"></div>
         </div>
         <div class="page">
-            <h2>2. Bubble Sort</h2>
-            <h3>2.1. What is Bubble Sort?</h3>
+            <h2>Prerequisites</h2>
+            <h3>Swapping elements</h3>
+            In order to swap two elements we have to create a third variable to temporarily store the information of one the two elements we are swapping.
+            The swap method looks like this:
+            <div class="code-snippet 7 12" id="Sorting/main"></div>
+            <h3>Time complexity and big O notation</h3>
+            Time complexity is meassuring how the number of steps grow, as the number of inputs grow. Mathematically we say that 
+            an algorithm is $\mathcal O(f(n))$ if
+            \[\exists x_0(\forall n>x_0, m\cdot f(n) \geq A(n))\quad(m\in\mathbb R)\]
+            Where $A(n)$ is the number of steps an algorithm takes when given $n$ inputs. This means that an algorithm is $\mathcal O(f(n))$ if the function
+            $f(n)$ grows faster than $A(n)$. This does mean that most algorithms are $\mathcal O(n!)$, but we wont this function to be as small as possible.
+            $n!$ grows extremely quick, but if we can get away with saying our algorithm is $\mathcal O(n)$ we'd prefer that, since this means that our algorithm
+            doesn't grow in complexity as fast when given more inputs. So big O notation is all about finding the slowest growing function that grows faster than
+            your algorithm's complexity.<br>
+            Spatial complexity has the same rules, however this quantifies how much extra memory is used when the number of inputs grow.
+            <br>
+            Big O notation has its variants; if we are talking about the worst case scenario we use $\mathcal O(f(n))$. When we are refering to the best case 
+            we use $\mathcal \Omega (f(n))$ and $\mathcal \Theta(f(n))$ when talking about the average case.
+        </div>
+        <div class="page">
+            <h2>Bubble Sort</h2>
+            <h3>What is Bubble Sort?</h3>
             <figure class="display bubbleSort"></figure>
             <p>
                 Bubble Sort works by comparing each entry in an array $array[i]$ with its immediate successor $array[i + 1]$.
@@ -68,9 +116,8 @@
                 </li>
             </ol>
             Implemented in JS:
-            <div class="insert-code" id="Sorting/bubblesort"></div>
             <div class="code-snippet 2 10" id="Sorting/bubblesort"></div>
-            <h4>2.2. Bubble Sort stats</h4>
+            <h3>Bubble Sort stats</h3>
             If $n$ is the number of entries in the unsorted array, this algorithm contains two loops, 
             one running from $i=0$ to $i= n - 1$ and the next loop, from $j=0$ to $j = n - 1 -i$. So the algorithm runs for 
             \[\sum_{k=0}^{n} \left(n-k\right)=\sum_{k=0}^{n} k=\frac{n(n+1)}{2}=\frac{n^2+n}{2}\]
@@ -85,8 +132,8 @@
             advantages of Bubble Sort. Another advantage is the algorithm's simplicity.
         </div>
         <div class="page">
-            <h2>3. Insertion Sort</h2>
-            <h3>3.1. What is Insertion Sort?</h3>
+            <h2>Insertion Sort</h2>
+            <h3>What is Insertion Sort?</h3>
             <figure class="display insertionSort"></figure>
             <p>
                 Insertion Sort resembles Bubble Sort, but it does have one advantage: it does not need to perform all steps if the array 
@@ -114,9 +161,8 @@
                 </li>
             </ol>
             Implemented in JS:
-            <div class="insert-code" id="Sorting/insertionsort"></div>
             <div class="code-snippet 2 10" id="Sorting/insertionsort"></div>
-            <h4>3.2. Insertion Sort stats</h4>
+            <h3>Insertion Sort stats</h3>
             Time complexity:<br>
             $\mathcal O(n^2) \quad \mathcal \Theta (n^2) \quad \mathcal \Omega(n)$<br>
             The best case $\mathcal \Omega(n)$ comes when the array is already sorted, in this case it would just 
@@ -142,10 +188,13 @@
                     sort.
                 </div>
             </div>
+            Insertion Sort, like Bubble Sort, only creates a single variable when swapping two elements, therefore the space complexity of Insertion Sort is
+            $\mathcal O(1)$
         </div>
     </div>
 </body>
 </html>
+<script src="../pages.js"></script>
 <script src="../prism.js"></script>
 <script src="main.js"></script>
 <script src="bubblesort.js"></script>

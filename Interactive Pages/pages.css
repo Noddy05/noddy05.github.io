@@ -32,7 +32,7 @@ h4{
     left: 50%;
     background: #ffffff;
     padding: 75px;
-    width: 800px;
+    width: 900px;
     box-shadow: rgba(0, 0, 0, 0.3) -6px 6px 30px;
 }
 
@@ -66,6 +66,9 @@ h1 {
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
 }
+.derivation label{
+    font-weight: 600;
+}
 
 .derivation input[type="checkbox"]{
     display: none;
@@ -81,4 +84,24 @@ h1 {
 }
 .derivation input[type="checkbox"]:checked + label::before{
     content: '-';
+}
+
+#table-of-contents{
+    list-style: none;
+    margin: 80px 40px;
+    align-items: center;
+}
+#table-of-contents h3{
+    margin-bottom: 5px;
+}
+#table-of-contents a{
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.i1{
+    margin-left: 20px;
+}
+.i2{
+    margin-left: 40px;
 }
