@@ -73,10 +73,13 @@
             an algorithm is $\mathcal O(f(n))$ if
             \[\exists x_0(\forall n>x_0, m\cdot f(n) \geq A(n))\quad(m\in\mathbb R)\]
             Where $A(n)$ is the number of steps an algorithm takes when given $n$ inputs. This means that an algorithm is $\mathcal O(f(n))$ if the function
-            $f(n)$ grows faster than $A(n)$. This does mean that most algorithms are $\mathcal O(n!)$, but we wont this function to be as small as possible.
+            $f(n)$ grows faster than $A(n)$. This does mean that most algorithms are $\mathcal O(n!)$, but we want this function to be as small as possible.
             $n!$ grows extremely quick, but if we can get away with saying our algorithm is $\mathcal O(n)$ we'd prefer that, since this means that our algorithm
             doesn't grow in complexity as fast when given more inputs. So big O notation is all about finding the slowest growing function that grows faster than
             your algorithm's complexity.<br>
+            If you have a function $f(n)=a(n)+b(n)$ that describes the time complexity of an algorithm, either the term $a(n)$ or $b(n)$ is omitted.
+            Since we do not care about the small changes, whichever $a(n)$ or $b(n)$ grows slower than the other is omitted. So if $b(n)$ is $\mathcal O (a(n))$
+            then the algorithm is $\mathcal O(a(n))$.<br>
             Spatial complexity has the same rules, however this quantifies how much extra memory is used when the number of inputs grow.
             <br>
             Big O notation has its variants; if we are talking about the worst case scenario we use $\mathcal O(f(n))$. When we are refering to the best case 
@@ -128,8 +131,8 @@
             \Theta(f(n))$ is the average case- and $\mathcal \Omega(f(n))$ is the best case time complexity).
             This time complexity is quite bad, and we can do way better with other algorithms.<br>
             The space complexity refers to the extra space taken up by an algorithm. For this algorithm, we only ever create a new variable
-            when swapping two elements, this means this algorithm has an auxiliary space of $\mathcal O(1)$. This is great, and one of the 
-            advantages of Bubble Sort. Another advantage is the algorithm's simplicity.
+            when swapping two elements or when creating an iterator for a for loop, this means this algorithm has an auxiliary space of $\mathcal O(1)$. 
+            This is great.
         </div>
         <div class="page">
             <h2>Insertion Sort</h2>
@@ -188,8 +191,13 @@
                     sort.
                 </div>
             </div>
-            Insertion Sort, like Bubble Sort, only creates a single variable when swapping two elements, therefore the space complexity of Insertion Sort is
-            $\mathcal O(1)$
+            Insertion Sort, like Bubble Sort, only creates a single variable when swapping two elements and when creating a for loop, 
+            therefore the space complexity of Insertion Sort is $\mathcal O(1)$.
+        </div>
+        <div class="page">
+            <h2>Merge Sort</h2>
+            <h3>What is Merge Sort?</h3>
+            <figure class="display mergeSort"></figure>
         </div>
     </div>
 </body>
@@ -199,6 +207,7 @@
 <script src="main.js"></script>
 <script src="bubblesort.js"></script>
 <script src="insertionsort.js"></script>
+<script src="mergesort.js"></script>
 <script src="../displayscripts.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

@@ -33,14 +33,14 @@ async function insertionSortVisual(sortingObject){
             //This is only for visualization purposes
             //It simply draws to the canvas, and then waits before 
             //moving on to the next iteration of the sorting algorithm.
-            await drawThenSleep(sortingObject, [j + 1, i], false);        
+            await drawThenSleep(sortingObject, [j + 1, j, i], false);        
         }
 
         if(loopIndex != sortingObject.loopIndex)
             return;
 
         //Again, purely for visualization:
-        await drawThenSleep(sortingObject, [ j ], false);        
+        await drawThenSleep(sortingObject, [ i + 1 ], false);        
     }
 
     finalizeArray(sortingObject);
