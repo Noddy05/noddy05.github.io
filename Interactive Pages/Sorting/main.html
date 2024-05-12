@@ -61,6 +61,7 @@
             <p>
                 Now that we have a random array, we have something to draw. Firstly we need a reference to the canvas
             </p>
+            <div class="code-snippet 3 5" id="Sorting/main"></div>
             <p>
                 The following code includes drawing a single element of the array, and then the whole array. The whole array is drawn by
                 using our method for drawing a single element on each element in the array.
@@ -195,11 +196,11 @@
                 <label for="insertionAverage">Derivation of the average case</label>
                 <div class="content">
                     Whenever we use Insertion Sort on an array, $\mathbf{A}$, everything to the left of the cursor $i$ will be sorted,
-                    while everything on the right will be randomly arranged. For any entry $\mathbf{A}_i$ that hasn't been sorted yet, 
+                    while everything on the right will be randomly arranged. For any entry $\mathbf{A}[i]$ that hasn't been sorted yet, 
                     it has $\frac{1}{i}$ probability of being larger than all elements to the left of $i$ 
-                    (Meaning all elements: $\mathbf{A}_{j< i}$). In fact, it has the same probability of being the second largest, third largest
-                    and so on... This means the average element $\mathbf{A}_i$ is the median of all elements to the left; $\mathbf{A}_{j< i}$. 
-                    Since all the elements, $\mathbf{A}_{j< i}$, are sorted, the element $\mathbf{A}_i$ must move $\frac i 2$ indices to the left.
+                    (Meaning all elements: $\mathbf{A}[{j< i}]$). In fact, it has the same probability of being the second largest, third largest
+                    and so on... This means the average element $\mathbf{A}[i]$ is the median of all elements to the left; $\mathbf{A}[{j< i}]$. 
+                    Since all the elements, $\mathbf{A}[{j< i}]$, are sorted, the element $\mathbf{A}[i]$ must move $\frac i 2$ indices to the left.
                     This means we must, on average, perform $\frac i 2$ checks for each element in the array. So the total number of checks comes out to
                     \[\sum_{i=0}^{n-1}\frac{i}{2}=\frac{1}{2}\sum_{i=0}^{n-1}i=\frac{n(n-1)}{4}=\frac{n^2-n}{4}\]
                     Which means the average time complexity of the Insertion Sort algorithm is $\mathcal \Theta(n^2)$.
@@ -214,19 +215,32 @@
             <h2>Merge Sort</h2>
             <h3>What is Merge Sort?</h3>
             <figure class="display mergeSort"></figure>
+            Merge Sort uses the divide-and-conquer algorithm to sort an array.
+            <img class="figure" src="../../Files/mergesort.png"><br>
+            As seen from the picture above, the algorithm divides an array into two equally sized arrays (if possible). 
+            It then recursively divides the new arrays into smaller arrays until the array only contains 1 element. 
+            <div class="code-snippet 6 35" id="Sorting/mergesort"></div>
+            When we reach the end of the dividing phase, we begin the
+            next phase, the conquering. Moving backwards from the arrows in the picture we now have two sorted arrays that needs to be merged together.
+            See that from the first step in this conquering phase, we have two arrays of size 1 we need to merge together (Since they only have 1 element we consider
+            these arrays sorted). When merging we have two pointers, $l$ and $r$, one for each array ($\mathbf L$ and $\mathbf R$) we are merging. 
+            We then check if$(\mathbf{L}[l]>\mathbf{R}[r])$ - if so we add $\mathbf{L}[l]$ to the combined array and increment $l$ by 1, if not we add 
+            $\mathbf{R}[r]$ to the combined array and increment $r$ by 1.
+            <div class="code-snippet 37 70" id="Sorting/mergesort"></div>
         </div>
         <div class="page">
             <h2>Joke sorts</h2>
             <h3>Stalin Sort</h3>
             <figure class="display stalinSort"></figure>
             Stalin Sort is very effective, with a time complexity of $\mathcal O(n)$, since it only ever compares each element to the largest 
-            element before it. However, as you might notice, a lot of the data is lost. This is where the name comes from, every single element not
+            element before it. However, as you might notice, a lot of the data is lost. This is where the name comes from, every element not
             already sorted will be eliminated. On average the amount of information lost per sort is $(1-\log_2 \sqrt[n]{n})\cdot100\%$.
             The figure below shows how much information is lost as Stalin Sort is performed on more elements<br>
             <div class="derivation">
                 <input type="checkbox" name="derivation" id="stalinLoss">
                 <label for="stalinLoss">Derivation of the average loss</label>
                 <div class="content">
+                    (Assuming no array contains the same element twice)<br>
                     Each element in the array $\mathbf A_0$ will, on average, be the middle-most (or the median) value in the array. 
                     So after the first element, on average, $50\%$ of the array will be eliminated - since, on average, $50\%$ of the array
                     will be less than the first element. That leaves us with a new array, this array will have length $|\mathbf A_1| = 
