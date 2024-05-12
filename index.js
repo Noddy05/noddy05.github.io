@@ -19,7 +19,7 @@ document.addEventListener('scroll', (e) => {
 
     //Detect wether an element should be shown (Depends on the scrolling):
     for(let i = 0; i < scrollByElements.length; i++){
-        if(screen.height / 2 >= scrollByElements[i].getBoundingClientRect().top){
+        if(window.screen.height / 4 * 3 >= scrollByElements[i].getBoundingClientRect().top){
             //Show element
             scrollByElements[i].classList.remove("hidden");
             scrollByElements[i].classList.add("visible");
@@ -61,16 +61,41 @@ const interactiveProjects = [
         thumbnail: "Files/maze2.png",
     },
     { 
+        url: "./Interactive%20Pages/Sorting/main.html", 
+        title: "Sorting Algorithms",
+        description: "Sammenligning af forskellige algoritmer til at sortere lister.",
+        thumbnail: "Files/bubblesort.png",
+    },
+    { 
         url: "./Interactive%20Pages/Maze/maze.html", 
         title: "Maze Generation",
         description: "Forskellige algoritmer (med justerbare parametre) til at danne labyrinter.",
         thumbnail: "Files/maze_bacteria.png",
+    },
+];
+//Selected projects
+const selectedProjects = [
+    { 
+        url: "https://github.com/Noddy05/fractal-viewer", 
+        title: "Fractal Viewer",
+        description: "Lavet i C# med OpenTK - Denne fractal viewer viser Mandelbrot sættet og det tilsvarende Julia sæt.<br>"
+        + "En kombination af komplekse tal og shader-magi.",
+        thumbnail: "Files/fractalviewer.gif",
     },
     { 
         url: "./Interactive%20Pages/Sorting/main.html", 
         title: "Sorting Algorithms",
         description: "Sammenligning af forskellige algoritmer til at sortere lister.",
         thumbnail: "Files/bubblesort.png",
+    },
+    { 
+        url: "", 
+        title: "Håndbold streaming",
+        description: "Jeg var hyret af Utoft Media (som er hyret af Dansk Håndbold TV) til at lave grafikken til streaming af håndbold kampe."
+        + "<br>Dette betød blandt andet at jeg skulle lave en app hvor man kunne indtaste hvem der scorede (eller fik timeout, rødt kort, redning osv.)"
+        + ", men også vise det på streamen. Yderligere skulle jeg holde styr på rednings procent og målprocent i et Google Sheets, som betød at "
+        + "jeg skulle lære hvordan Google API fungerede. Alt i alt en meget berigende oplevelse hvor jeg lærte en masse.",
+        thumbnail: "Files/håndbold.png",
     },
 ];
 
@@ -104,6 +129,16 @@ function displayProjects(){
         <p>${interactiveProjects[rightIndex].description}</p>
     `;
     rightProject[0].href = interactiveProjects[rightIndex].url;
+
+    var selectedProjectsHTML = document.getElementsByClassName('project github');
+    for(let i = 0; i < selectedProjectsHTML.length; i++){
+        selectedProjectsHTML[i].innerHTML = `
+        <img src="${selectedProjects[i].thumbnail}"><br>
+        <h4>${selectedProjects[i].title}</h4>
+        <p>${selectedProjects[i].description}</p>`;
+        if(selectedProjects[i].url != "")
+            selectedProjectsHTML[i].href = selectedProjects[i].url;
+    }
 }
 
 function moveProjects(increment){

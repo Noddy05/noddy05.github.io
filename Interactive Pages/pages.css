@@ -69,7 +69,6 @@ h1 {
 .derivation label{
     font-weight: 600;
 }
-
 .derivation input[type="checkbox"]{
     display: none;
 }
@@ -104,4 +103,23 @@ h1 {
 }
 .i2{
     margin-left: 40px;
+}
+
+.figure{
+    width: 70%;
+    left: 50%;
+    position: relative;
+    translate: -50% 0%;
+}
+
+.btn-container{
+    width: 300px;
+    translate: -50%;
+    left: 50%;
+    position: relative;
+    display:table;
+    table-layout: fixed;
+}
+.btn-container button{
+    width: 50%;
 }

@@ -102,10 +102,10 @@ for(let i = 0; i < figures.length; i++){
     let sortingAlgorithm = figures[i].classList[1];
     figures[i].innerHTML= `
         <canvas id="${sortingAlgorithm}" class="display-sort" width="300" height="300"></canvas>
-        <br>
-        <button onclick="${sortingAlgorithm}Visual(${sortingAlgorithm}Obj);">Sort Array</button>
-        <button onclick="unsortArray(${sortingAlgorithm}Obj);">Unsort Array</button>
-        <br>
+        <div class="btn-container">
+            <button onclick="${sortingAlgorithm}Visual(${sortingAlgorithm}Obj);">Sort Array</button>
+            <button onclick="unsortArray(${sortingAlgorithm}Obj);">Unsort Array</button>
+        </div>
 
         <div>
             <span>Entries: </span>

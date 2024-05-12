@@ -87,6 +87,8 @@ async function finalizeArray(sortingObject){
             return;
 
         drawEntry(sortingObject.array, sortingObject.ctx.canvas, sortingObject.ctx, i, "#20C020", true);
+        
+        //This simply waits a specified amount of time before moving on:
         await sleep(sortingObject.delay);
     }
 }

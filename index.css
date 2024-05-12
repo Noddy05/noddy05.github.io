@@ -24,7 +24,7 @@ a.inactivePage {
     color: black;
 }
 
-#find-mig{
+.header{
     text-align: center;
     margin: 30px 0px;
 }
@@ -47,7 +47,6 @@ a.inactivePage {
 }
 
 #interactive-projects {
-    display: inline-table;
     width: 100%;
     text-align: center;
 }
@@ -62,7 +61,10 @@ a.inactivePage {
     position: relative;
     display: block;
     opacity: 50%;
-    height: 500px;
+    height: 400px;
+}
+.project h4{
+    word-spacing: 3px;
 }
 .project.main:hover {
     transition: all 0.1s ease-in-out;
@@ -81,9 +83,50 @@ a.inactivePage {
 .project img {
     width: 100%;
 }
+.project.github{
+    text-decoration: none;
+}
 
 #explain-timeline{
     text-align: center;
+}
+
+h1{
+    text-align: center;
+    font-size: 72px;
+}
+
+.text{
+    width: 692px;
+    position: relative;
+    translate: -50% 0%;
+    left: 50%;
+    line-height: 1.2em;
+    margin-bottom: 250px;
+}
+.text p{
+    text-align:justify;
+}.text p:after{
+    content:'';
+    display:inline-block;
+    width:100%;
+    vertical-align:top;
+}
+
+
+.project.github {
+    transition: all 0.1s ease-in-out;
+    width: 300px;
+    margin: 30px;
+    position: relative;
+    display: block;
+    opacity: 50%;
+    height: 500px;
+    text-align:justify;
+}
+.project:not(.main):hover {
+    transition: all 0.1s ease-in-out;
+    opacity: 100%;
 }
 
 

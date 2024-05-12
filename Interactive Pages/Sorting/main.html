@@ -27,7 +27,18 @@
     <div id="container">
         <div class="page">
             <h1>Sorting Algorithms</h1>
+            <h2>Forord</h2>
+            <p>
+                Alle programmer er skrevet af mig, Noah Dirksen, og kan findes på min <a href="https://github.com/Noddy05/noddy05.github.io">GitHub</a>.
+                Alt tekst er skrevet af mig og alle matematiske udledninger er lavet af mig. Da mange fagord går lidt tabt på dansk har jeg skrevet
+                denne artikel på engelsk. Hvis du har svært ved at læse engelsk kan du altid bare lege rundt og se hvordan de forskellige algoritmer virker.
+                <br>
+                Denne artikel opdaterer automatisk og alt udvalgt kode bliver hentet fra min GitHub når hjemmesiden åbnes. Den nedenstående indholdsfortegnelse er
+                auto genereret og alt udvalgt kode kan udvides på "View source..."-knappen. Så kan man se hele scriptet.
+            </p>
             <ul id="table-of-contents"></ul>
+        </div>
+        <div class="page">
             <h2>Drawing an unsorted array</h2>
             <p>
                 Its impossible to show off a collection of algorithms without including sorting algorithms. This page will 
@@ -42,7 +53,7 @@
                 First we need to generate a random array, so that we can sort it. We first generate a sorted array, 
                 and then we randomly shuffle the entries around.
             </p>
-            <div class="code-snippet 13 29" id="Sorting/main"></div>
+            <div class="code-snippet 14 34" id="Sorting/main"></div>
             <p>
                 Notice the swap function referenced in the code above? This simply swaps two elements in an array, the code will be shown later
                 in the 'prerequisites' section.
@@ -50,17 +61,22 @@
             <p>
                 Now that we have a random array, we have something to draw. Firstly we need a reference to the canvas
             </p>
-            <div class="code-snippet 3 5" id="Sorting/main"></div>
             <p>
                 The following code includes drawing a single element of the array, and then the whole array. The whole array is drawn by
                 using our method for drawing a single element on each element in the array.
             </p>
-            <div class="code-snippet 46 81" id="Sorting/main"></div>
+            <div class="code-snippet 36 71" id="Sorting/main"></div>
             <p>
                 Thats it for drawing an empty array! For some finishing touches I've also added a method for drawing an animation to show that the 
                 array has been sorted - but you dont have to.
             </p>
-            <div class="code-snippet 83 102" id="Sorting/main"></div>
+            <div class="derivation">
+                <input type="checkbox" name="derivation" id="drawArray">
+                <label for="drawArray">Code for "sorting success" animation</label>
+                <div class="content">
+                    <div class="code-snippet 78 94" id="Sorting/main"></div>
+                </div>
+            </div>
         </div>
         <div class="page">
             <h2>Prerequisites</h2>
@@ -175,8 +191,8 @@
             Bubble Sort we find a worst case of $\mathcal O(n^2)$. The derivation of the average case is a bit more involved, but the result is a time 
             complexity of $\Theta(n^2)$
             <div class="derivation">
-                <input type="checkbox" name="derivation" id="first">
-                <label for="first">Derivation of the average case</label>
+                <input type="checkbox" name="derivation" id="insertionAverage">
+                <label for="insertionAverage">Derivation of the average case</label>
                 <div class="content">
                     Whenever we use Insertion Sort on an array, $\mathbf{A}$, everything to the left of the cursor $i$ will be sorted,
                     while everything on the right will be randomly arranged. For any entry $\mathbf{A}_i$ that hasn't been sorted yet, 
@@ -199,6 +215,42 @@
             <h3>What is Merge Sort?</h3>
             <figure class="display mergeSort"></figure>
         </div>
+        <div class="page">
+            <h2>Joke sorts</h2>
+            <h3>Stalin Sort</h3>
+            <figure class="display stalinSort"></figure>
+            Stalin Sort is very effective, with a time complexity of $\mathcal O(n)$, since it only ever compares each element to the largest 
+            element before it. However, as you might notice, a lot of the data is lost. This is where the name comes from, every single element not
+            already sorted will be eliminated. On average the amount of information lost per sort is $(1-\log_2 \sqrt[n]{n})\cdot100\%$.
+            The figure below shows how much information is lost as Stalin Sort is performed on more elements<br>
+            <div class="derivation">
+                <input type="checkbox" name="derivation" id="stalinLoss">
+                <label for="stalinLoss">Derivation of the average loss</label>
+                <div class="content">
+                    Each element in the array $\mathbf A_0$ will, on average, be the middle-most (or the median) value in the array. 
+                    So after the first element, on average, $50\%$ of the array will be eliminated - since, on average, $50\%$ of the array
+                    will be less than the first element. That leaves us with a new array, this array will have length $|\mathbf A_1| = 
+                    \frac 1 2 |\mathbf A_0|$. Again, it will be true that the first element of $\mathbf A_1$ will, on average, be the median of 
+                    $\mathbf A_1$ meaning we again eliminate $50\%$ of the array to create $\mathbf A_2$. This process keeps going until 
+                    $|\mathbf A_N| = 1$. Each array $A_k$ will, on average, be half the size of the previous array $\mathbf A_{k-1}$, and we are
+                    trying to find out when the size of the array is less than one. So we have an equation:
+                    \begin{equation}
+                    \begin{split}
+                    \left(\frac{1}{2}\right)^N n = 1\\
+                    \left(\frac{1}{2}\right)^N = \frac 1 n\\
+                    \frac{1}{2^N} = \frac 1 n\\
+                    2^N = n\\
+                    N = \log_2 n
+                    \end{split}
+                    \end{equation}
+                    This $\log_2 n$ is the number of elements the average Stalin Sort will leave you with. Meaning that $n-\log_2 n$ is the number
+                    of elements you lose per sort. Rewriting as a fraction we get 
+                    \[\frac {n-\log_2 n}n = 1-\frac {\log_2 n} n = 1-\log_2 n^{\frac{1}{n}} = 1-\log_2 \sqrt[n]n\]
+                    And finally, rewriting as a percentage we get $(1-\log_2 \sqrt[n]{n})\cdot100\%$.
+                </div>
+            </div>
+            <img class="figure" src="../../Files/stalin loss.png">
+        </div>
     </div>
 </body>
 </html>
@@ -208,6 +260,7 @@
 <script src="bubblesort.js"></script>
 <script src="insertionsort.js"></script>
 <script src="mergesort.js"></script>
+<script src="stalinsort.js"></script>
 <script src="../displayscripts.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
