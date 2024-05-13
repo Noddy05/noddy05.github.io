@@ -1,18 +1,32 @@
 
+const sortingObjects = new Map();
+
+const sortingObject = {
+    //Til at tegne array'et:
+    delay: 150,
+    ctx: null,
+    loopIndex: 0,
+    //For at oprette og sortere array'et:
+    entries: 50,
+    array: [],
+}
+
+const unsortedObj = Object.create(sortingObject);
 
 const unsortedCanvas = document.getElementById('unsorted-canvas');
 unsortedCanvas.width = 1000;
 unsortedCanvas.height = 1000;
 
+unsortedObj.ctx = unsortedCanvas.getContext('2d');
+
 //We define a variable called swap, so we can access this function in other scripts
-const swap = function swap(array, indexA, indexB){
+function swap(array, indexA, indexB){
     let temp = array[indexA];
     array[indexA] = array[indexB];
     array[indexB] = temp;
 }
 
-var unsortedArray = [];
-unsortedArray = generateArray(50);
+unsortedObj.array = generateArray(unsortedObj.entries);
 function generateArray(size){
     //Firstly, generated a sorted array with the specified size:
     let outputArray = [];
@@ -33,62 +47,78 @@ function randomlyUnsortArray(array){
     }
 }
 
-function drawEntry(array, canvas, ctx, i, color, drawBackground){
-    let margin = 10;
-    let spaceBetweenBars = canvas.width / array.length / 10;
-    
-    //Always assume max(array) = array.length
-    let unitHeight = 1 / array.length;
-    let width = (canvas.width - 2 * margin) / array.length;
-    let height = array[i] * unitHeight * (canvas.height - 2 * margin);
+function drawElement(sortingObject, index, color){
+    let canvas = sortingObject.ctx.canvas;
 
-    ctx.fillStyle = "#000000";
-    if(drawBackground)
-        ctx.fillRect(i * width + margin - 1, 0, width + 2, canvas.height);
-    ctx.fillStyle = color;
-    ctx.fillRect(i * width + margin + spaceBetweenBars / 2, canvas.height - height - margin, width - spaceBetweenBars, height);
-}
-function drawArray(array, canvas, selectedEntries){
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //Vi ønsker at danne en ramme rundt om elementerne i array'et, så vi opretter en margin variabel.
+    let margin = 10;
+    //Vi ønsker også en lille afstand mellem hvert element:
+    let spaceBetweenElements = canvas.width / sortingObject.array.length / 10;
     
-    for(let i = 0; i < array.length; i++){
-        let isSelected = false;
+    //Vi antager at max(array) = array.length, så ved vi at højden af et element skal være
+    // array[i] / array.length * (højden af lærred - 2 * margin);
+    let unitHeight = 1 / sortingObject.array.length;
+    let height = sortingObject.array[index] * unitHeight * (canvas.height - 2 * margin);
+
+    //Bredden er bare den mængde lærred vi kan tegne på (altså: bredde af lærred - 2 * margin)
+    //delt med antallet af elementer der skal tegnes.
+    let width = (canvas.width - 2 * margin) / sortingObject.array.length;
+    
+    //Vi kan nu vælge vores farve
+    sortingObject.ctx.fillStyle = color;
+    //Og tegne vores element
+    sortingObject.ctx.fillRect(index * width + margin + spaceBetweenElements / 2, 
+        canvas.height - height - margin, width - spaceBetweenElements, height);
+}
+function drawArray(sortingObject, selectedEntries){
+    //Først maler vi baggrunden sort, så vi har et rent lærred at arbejde med:
+    sortingObject.ctx.fillStyle = "black";
+    sortingObject.ctx.fillRect(0, 0, sortingObject.ctx.canvas.width, sortingObject.ctx.canvas.height);
+    
+    //Nu går vi alle elementer igennem og tegner dem:
+    for(let i = 0; i < sortingObject.array.length; i++){
+        //Et element tegnes som udgangspunkt med hvid:
         let color = "white";
+
+        //Vi tjekker om dette element er et af de markerede elementer defineret i 'selectedEntries'
+        //Ved at tjekke alle elementer i selectedEntries kan vi tjekke om dette indeks 'i' er en af de markerede indekser.
+        let isSelected = false;
         for(let j = 0; j < selectedEntries.length; j++){
+            //Hvis dette indeks findes i selectedEntries stopper vi for-løkken og sætter 'isSelected' til 'true'
             if(selectedEntries[j] == i){
                 isSelected = true;
                 break;
             }
         }
+        //Hvis vi fandt at dette indeks var markeret vil vi farve dette element grønt:
         if(isSelected)
             color = "green";
         
-        drawEntry(array, canvas, ctx, i, color, false);
+        //Til sidst tegner vi det individuelle element:
+        drawElement(sortingObject, i, color);
     }
 }
-drawArray(unsortedArray, unsortedCanvas, []);
+drawArray(unsortedObj, []);
 
-//Sleep simply waits the given duration (unless the duration is <= 0)
+//Sleep venter bare en given mængde af tid (medmindre varigheden er <= 0)
 function sleep(duration){
     if(duration > 0)
         return new Promise(resolve => setTimeout(resolve, duration));
 }
-//Finalize array draws an animation to show we've sorted the array succesfully!
+//En animation der skal vise at et array er sorteret!
 async function finalizeArray(sortingObject){
-    //Make sure we check wether or not this animation should be playing right now:
+    //Vi bruger denne variabel til at holde styr på om vi skal fortsætte igangværende animation:
     let loopIndex = ++sortingObject.loopIndex;
 
     for(let i = 0; i < sortingObject.entries; i++){
-        //If the 'loopIndex' changed mid-animation we should cancel the animation. 
-        //This would only happen if the array was unsorted while drawing this animation.
+        //Hvis 'loopIndex' ændrede sig midt i animationen skal vi aflyse denne animation. 
         if(loopIndex != sortingObject.loopIndex)
             return;
 
-        drawEntry(sortingObject.array, sortingObject.ctx.canvas, sortingObject.ctx, i, "#20C020", true);
+        //Ellers tegner vi det næste element (farven sættes til at være en lys grøn: #20C020):
+        drawElement(sortingObject, i, "#20C020");
         
-        //This simply waits a specified amount of time before moving on:
+        //Vent en tidsperiode før vi tegner næste element:
         await sleep(sortingObject.delay);
     }
 }
@@ -97,11 +127,14 @@ function unsortArray(sortObject) {
     sortObject.loopIndex++;
     sortObject.selectedEntries = [];
     sortObject.array = generateArray(sortObject.entries);
-    drawArray(sortObject.array, sortObject.ctx.canvas, []);
+    drawArray(sortObject, []);
 }
 
 async function drawThenSleep(sortingObject, selected, drawAlways){
     if(drawAlways || sortingObject.delay > 0)
-        drawArray(sortingObject.array, sortingObject.ctx.canvas, selected);
+        drawArray(sortingObject, selected);
     await sleep(sortingObject.delay);
 }
+
+//Til formatering af siden:
+generateFigures();

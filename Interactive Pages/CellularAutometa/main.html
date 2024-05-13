@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Sorting Algorithms</title>
+    <title>Cellular Autometa</title>
     <link rel="stylesheet" href="../prism.css">
     <link rel="stylesheet" href="../codedisplay.css">
     <link rel="stylesheet" href="main.css">
@@ -26,82 +26,59 @@
 
     <div id="container">
         <div class="page">
-            <h1>Sorting Algorithms</h1>
+            <h1>Cellular Autometa</h1>
             <h2>Forord</h2>
             <p>
                 Alle programmer er skrevet af mig, Noah Dirksen, og kan findes på min <a href="https://github.com/Noddy05/noddy05.github.io">GitHub</a>.
-                Alt tekst er skrevet af mig og alle matematiske udledninger er lavet af mig. <br>
+                Alt tekst er skrevet af mig og alle matematiske udledninger er lavet af mig. Da mange fagord går lidt tabt på dansk har jeg skrevet
+                denne artikel på engelsk. Hvis du har svært ved at læse engelsk kan du altid bare lege rundt og se hvordan de forskellige algoritmer virker.
+                <br>
                 Denne artikel opdaterer automatisk og alt udvalgt kode bliver hentet fra min GitHub når hjemmesiden åbnes. Den nedenstående indholdsfortegnelse er
                 auto genereret og alt udvalgt kode kan udvides på "View source..."-knappen. Så kan man se hele scriptet.
             </p>
             <ul id="table-of-contents"></ul>
         </div>
         <div class="page">
-            <h2>At tegne et array</h2>
+            <h2>Drawing an unsorted array</h2>
             <p>
-                Sammenligning af forskellige sorteringsalgoritmer er en klassiker og en must-have. Sorteringsalgoritmer er meget simple, men gennem denne artikel ses det hvordan dybere forståelse for algoritmiske paradigmer som ”divide-and-conquer” metoden kan lede til en optimeret sorteringsalgoritme. 
-                Før vi kan fremvise sorteringsalgoritmer, skal vi finde en måde at vise et array for brugeren. Dette skal give en visuel forståelse for algoritmen og hvordan hver algoritme adskiller sig fra andre.
-                I HTML har jeg defineret et ’canvas’ (på dansk: lærred) som kan tegnes på, for at begynde at tegne skal vi oprette en reference til dette lærred i JavaScript:
-                <div class="code-snippet 16 18" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Nu hvor vi har en reference til lærredet kan vi begynde at tegne på det. Vi opretter en funktion som tager et array og tegner det på skærmen. Det giver mening at bryde denne funktion op i to funktioner; den første kalder vi drawElement og drawArray. 
-                <pre><code class='language-js'>function drawElement(){ }
-function drawArray(){ }</code></pre>
-                <!-- <falsk kode bare hvis drawElement som en tom funktion samt drawArray>-->
-                Men i stedet for at give den et array, et canvas og en context, så lad os samle det i et objekt vi kalder sortingObject:
-                <pre><code class='language-js'>const sortingObject = {
-    //Til at tegne array'et:
-    ctx: null,
-    //For at oprette og sortere array'et:
-    entries: 50, //<---Dette er bare antallet af elementer vi ønsker i et array
-    array: [],
-}</code></pre>
-                <!-- <falsk kode der viser sortingObject kun med array, canvas og context>-->
-                Vi kan nu give dette sortingObject til drawArray:
-                <pre><code class='language-js'>function drawArray(sortingObject){ }</code></pre>
-                <!-- <falsk kode der bare viser sortingObject i parameter i drawArray>-->
-                Vi kan nu konstruere en funktion som tegner alle elementer i et array (Bemærk at vi har tilføjet en parameter 'selectedEntries', dette er for at vi eksempelvis visuelt kan markere hvis nogle elementer bliver sorteret ved at give dem en anden farve). 
-                <div class="code-snippet 75 102" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Vi skal også definere funktionen der tegner et enkelt element:
-                <div class="code-snippet 52 74" id="Sorting/main"></div>
-                <!-- <kode>-->
-                <img class="figure" src="../../Files/tegn element.png"><br>
-                Denne figur skal illustrere hvordan canvas’ koordinatsystem har y-aksen der peger nedad. Dette betyder at vi skal være lidt mere kreative når vi tegner et element. Den røde linje viser hvor langt ud på x-aksen vi skal, og den grønne viser hvor langt ud på y-aksen vi skal før vi rammer elementet vi vil tegne (det orange). Dette er elementets start koordinat og findes ved at gå 'bredden af et element' $\cdot$ 'indekset af det nuværende element' ud af x-aksen og 'højde af lærred' $–$ 'højde af element' ud af y-aksen. <br>
-                Det antages at det største element i array’et vil være lige med antallet af elementer i array’et. Så for at gøre plads til dette element skriver vi 'højde af lærred'$\cdot \frac{array[i]}{array.length}$, bredden findes til at være $\frac{\text{'bredde af lærred'}}{array.length}$ da der skal være plads til $array.length$ elementer på lærredet.<br>
-                Yderligere ønsker vi at have en kant rundt om elementerne og yderligere plads mellem hvert element. Kanten kalder vi 'margin' og pladsen mellem hvert element hedder 'spaceBetweenElements'. For at gøre plads til dette forskyder vi (ud af x-aksen) alt med 'margin' og 'spaceBetweenElements'$/ 2$ (Vi tager det kvarte fra begge sider, så der i alt bliver 'spaceBetweenElements' plads på hver side af et element). Vi skal så derfor også gøre bredden af elementet mindre for at reflektere både 'margin' og 'spaceBetweenElements'. Så vi skriver
-                <div class="code-snippet 65 67" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Og for højden skal vi kun tage forhold til 'margin' så højden af et element bliver:
-                <div class="code-snippet 60 63" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Vi skal også forskyde (ud af y-aksen) med $-$'margin' og så er vi færdige, vi kan nu tegne et element.<br><br>
-                Vi kan nu lave funktioner der tegner et array hver gang et trin udføres i sorteringsalgoritmen, men hvad nu hvis en bruger starter to sorterings algoritmer på samme lærred på samme tid? Så får vi kaos, derfor skal vi i hver ’animations-tråd’ holde styr på om der er blevet startet en ny sortering. Løsningen kan findes ved at ændre i vores ’sortingObject’:
-                <div class="code-snippet 4 12" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Nu vil vi, hver gang vi starter en animation sørge for at opdatere ’loopIndex’ og hele tiden sikre os at ’loopIndex’ er den der hører til vores animations-tråd. Vi kan starte med at lave en funktion der tegner alle elementer i array’et grønne. Vi kan spille denne animation når en sorteringsalgoritme er færdig:
-                <div class="code-snippet 110 126" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Tilfældige arrays
-                Vi ønsker også at lave ikke-sorterede arrays, og det bedste sted at starte er med et sorteret array. Et sorteret array genereres på følgende måde:
-                <div class="code-snippet 29 40" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Dernæst bytter vi bare rundt på alle elementer så det ikke længere er sorteret:
-                <div class="code-snippet 42 48" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Hvor ’swap’ funktionen bare bytter to elementer i et array:
-                <div class="code-snippet 22 27" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Til sidst har vi et array der bliver tilfældigt genereret hver gang hjemmeside loades:
+                Its impossible to show off a collection of algorithms without including sorting algorithms. This page will 
+                compare, explain and visualize different sorting algorithms.
+                <br>
+                Before we can implement any algorithm its important to write some methods for drawing an array. 
             </p>
             <figure>
                 <canvas id="unsorted-canvas" width="300" height="300"></canvas>
             </figure>
+            <p>
+                First we need to generate a random array, so that we can sort it. We first generate a sorted array, 
+                and then we randomly shuffle the entries around.
+            </p>
+            <div class="code-snippet 14 34" id="Sorting/main"></div>
+            <p>
+                Notice the swap function referenced in the code above? This simply swaps two elements in an array, the code will be shown later
+                in the 'prerequisites' section.
+            </p>
+            <p>
+                Now that we have a random array, we have something to draw. Firstly we need a reference to the canvas
+            </p>
+            <div class="code-snippet 3 5" id="Sorting/main"></div>
+            <p>
+                The following code includes drawing a single element of the array, and then the whole array. The whole array is drawn by
+                using our method for drawing a single element on each element in the array.
+            </p>
+            <div class="code-snippet 36 71" id="Sorting/main"></div>
+            <p>
+                Thats it for drawing an empty array! For some finishing touches I've also added a method for drawing an animation to show that the 
+                array has been sorted - but you dont have to.
+            </p>
+            <div class="derivation">
+                <input type="checkbox" name="derivation" id="drawArray">
+                <label for="drawArray">Code for "sorting success" animation</label>
+                <div class="content">
+                    <div class="code-snippet 78 94" id="Sorting/main"></div>
+                </div>
+            </div>
         </div>
-
-
-
-        
         <div class="page">
             <h2>Prerequisites</h2>
             <h3>Swapping elements</h3>
