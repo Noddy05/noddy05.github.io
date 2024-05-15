@@ -34,7 +34,7 @@ function addHeaders(){
 
     //Add header
     const header = document.createElement("h3");
-    var tableOfContentsHeader = pageTitle.innerHTML + " - Table of contents";
+    var tableOfContentsHeader = pageTitle.innerHTML + " - Indholdsfortegnelse";
     header.innerHTML = tableOfContentsHeader;
     tableOfContents.appendChild(header);
 

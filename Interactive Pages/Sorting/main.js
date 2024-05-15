@@ -19,7 +19,7 @@ unsortedCanvas.height = 1000;
 
 unsortedObj.ctx = unsortedCanvas.getContext('2d');
 
-//We define a variable called swap, so we can access this function in other scripts
+//Denne funktion bytter to elementer i et array.
 function swap(array, indexA, indexB){
     let temp = array[indexA];
     array[indexA] = array[indexB];
@@ -28,21 +28,21 @@ function swap(array, indexA, indexB){
 
 unsortedObj.array = generateArray(unsortedObj.entries);
 function generateArray(size){
-    //Firstly, generated a sorted array with the specified size:
+    //Først opretter vi et sorteret array:
     let outputArray = [];
     for(let i = 0; i < size; i++){
         outputArray[i] = i + 1;
     }
 
-    //Now randomly unsort the array:
+    //Nu gøres array'et tilfældigt:
     randomlyUnsortArray(outputArray, size);
     return outputArray;
 }
 
-//This function randomly unsorts an array by swapping elements around
+//Denne funktion flytter tilfældigt rundt på alle elementer i et array
 function randomlyUnsortArray(array){
     for(let i = 0; i < array.length * 2; i++){
-        //Swap with a random element in the array:
+        //Byt med et tilfældigt element i array'et:
         swap(array, i % array.length, Math.floor(Math.random() * array.length));
     }
 }

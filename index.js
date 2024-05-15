@@ -58,11 +58,11 @@ const interactiveProjects = [
         url: "./Interactive%20Pages/CellularAutometa/main.html", 
         title: "Cellular Autometa",
         description: "Ingen beskrivelse",
-        thumbnail: "Files/maze2.png",
+        thumbnail: "Files/cellularautometa.png",
     },
     { 
         url: "./Interactive%20Pages/Sorting/main.html", 
-        title: "Sorting Algorithms",
+        title: "Sorterings Algoritmer",
         description: "Sammenligning af forskellige algoritmer til at sortere lister.",
         thumbnail: "Files/bubblesort.png",
     },
@@ -84,7 +84,7 @@ const selectedProjects = [
     },
     { 
         url: "./Interactive%20Pages/Sorting/main.html", 
-        title: "Sorting Algorithms",
+        title: "Sorterings Algoritmer",
         description: "Sammenligning af forskellige algoritmer til at sortere lister.",
         thumbnail: "Files/bubblesort.png",
     },

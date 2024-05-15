@@ -133,7 +133,7 @@ h1{
 
 /* Timeline */
 #timeline{
-    height: 4000px;
+    height: 4500px;
     background-color: #2d2d2d;
     overflow: hidden;
     margin: 5%;
@@ -142,7 +142,7 @@ h1{
 }
 #timeline .line{
     width: 5px;
-    height: 4000px;
+    height: 4500px;
     position: absolute;
     left: 50%;
     translate: -50%;

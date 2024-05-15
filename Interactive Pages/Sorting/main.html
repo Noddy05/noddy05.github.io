@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Sorting Algorithms</title>
+    <title>Sortering Algoritmer</title>
     <link rel="stylesheet" href="../prism.css">
     <link rel="stylesheet" href="../codedisplay.css">
     <link rel="stylesheet" href="main.css">
@@ -26,63 +26,76 @@
 
     <div id="container">
         <div class="page">
-            <h1>Sorting Algorithms</h1>
+            <h1>Sortering Algoritmer</h1>
             <h2>Forord</h2>
             <p>
                 Alle programmer er skrevet af mig, Noah Dirksen, og kan findes på min <a href="https://github.com/Noddy05/noddy05.github.io">GitHub</a>.
                 Alt tekst er skrevet af mig og alle matematiske udledninger er lavet af mig. <br>
                 Denne artikel opdaterer automatisk og alt udvalgt kode bliver hentet fra min GitHub når hjemmesiden åbnes. Den nedenstående indholdsfortegnelse er
-                auto genereret og alt udvalgt kode kan udvides på "View source..."-knappen. Så kan man se hele scriptet.
+                auto genereret og alt udvalgt kode kan udvides på "View source..."-knappen. Så kan man se hele scriptet.<br>
+                Du skal være velkommen til at lege rundt med de forskellige algortimer og se hvordan de adskiller sig fra hinanden.
+                <br>
+                Originalt skrev jeg hjemmesiden på engelsk, men er i gang med at omskrive det hele til dansk, så hver klar på begge dele.
             </p>
             <ul id="table-of-contents"></ul>
         </div>
         <div class="page">
-            <h2>At tegne et array</h2>
+            <h2>Opstilling</h2>
+            <h3>At tegne et array</h3>
             <p>
                 Sammenligning af forskellige sorteringsalgoritmer er en klassiker og en must-have. Sorteringsalgoritmer er meget simple, men gennem denne artikel ses det hvordan dybere forståelse for algoritmiske paradigmer som ”divide-and-conquer” metoden kan lede til en optimeret sorteringsalgoritme. 
-                Før vi kan fremvise sorteringsalgoritmer, skal vi finde en måde at vise et array for brugeren. Dette skal give en visuel forståelse for algoritmen og hvordan hver algoritme adskiller sig fra andre.
-                I HTML har jeg defineret et ’canvas’ (på dansk: lærred) som kan tegnes på, for at begynde at tegne skal vi oprette en reference til dette lærred i JavaScript:
-                <div class="code-snippet 16 18" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Nu hvor vi har en reference til lærredet kan vi begynde at tegne på det. Vi opretter en funktion som tager et array og tegner det på skærmen. Det giver mening at bryde denne funktion op i to funktioner; den første kalder vi drawElement og drawArray. 
-                <pre><code class='language-js'>function drawElement(){ }
+                <br>
+                Opstillingen behøvet for at tegne et lærred i JS er en længere proces
+                - for overskuelighedens skyld, hvis du kun er interesseret i algoritmerne, er dette minimeret, men man kan læse mere ved at trykke på plusset
+                <div class="derivation">
+                    <input type="checkbox" name="derivation" id="opstilling">
+                    <label for="opstilling">Opstilling</label>
+                    <div class="content">
+                        Før vi kan fremvise sorteringsalgoritmer, skal vi finde en måde at vise et array for brugeren. Dette skal give en visuel forståelse for algoritmen og hvordan hver algoritme adskiller sig fra andre.
+                        I HTML har jeg defineret et ’canvas’ (på dansk: lærred) som kan tegnes på, for at begynde at tegne skal vi oprette en reference til dette lærred i JavaScript:
+                        <div class="code-snippet 16 18" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        Nu hvor vi har en reference til lærredet kan vi begynde at tegne på det. Vi opretter en funktion som tager et array og tegner det på skærmen. Det giver mening at bryde denne funktion op i to funktioner; den første kalder vi drawElement og drawArray. 
+                        <pre><code class='language-js'>function drawElement(){ }
 function drawArray(){ }</code></pre>
-                <!-- <falsk kode bare hvis drawElement som en tom funktion samt drawArray>-->
-                Men i stedet for at give den et array, et canvas og en context, så lad os samle det i et objekt vi kalder sortingObject:
-                <pre><code class='language-js'>const sortingObject = {
+                        <!-- <falsk kode bare hvis drawElement som en tom funktion samt drawArray>-->
+                        Men i stedet for at give den et array, et canvas og en context, så lad os samle det i et objekt vi kalder sortingObject:
+                        <pre><code class='language-js'>const sortingObject = {
     //Til at tegne array'et:
     ctx: null,
     //For at oprette og sortere array'et:
     entries: 50, //<---Dette er bare antallet af elementer vi ønsker i et array
     array: [],
 }</code></pre>
-                <!-- <falsk kode der viser sortingObject kun med array, canvas og context>-->
-                Vi kan nu give dette sortingObject til drawArray:
-                <pre><code class='language-js'>function drawArray(sortingObject){ }</code></pre>
-                <!-- <falsk kode der bare viser sortingObject i parameter i drawArray>-->
-                Vi kan nu konstruere en funktion som tegner alle elementer i et array (Bemærk at vi har tilføjet en parameter 'selectedEntries', dette er for at vi eksempelvis visuelt kan markere hvis nogle elementer bliver sorteret ved at give dem en anden farve). 
-                <div class="code-snippet 75 102" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Vi skal også definere funktionen der tegner et enkelt element:
-                <div class="code-snippet 52 74" id="Sorting/main"></div>
-                <!-- <kode>-->
-                <img class="figure" src="../../Files/tegn element.png"><br>
-                Denne figur skal illustrere hvordan canvas’ koordinatsystem har y-aksen der peger nedad. Dette betyder at vi skal være lidt mere kreative når vi tegner et element. Den røde linje viser hvor langt ud på x-aksen vi skal, og den grønne viser hvor langt ud på y-aksen vi skal før vi rammer elementet vi vil tegne (det orange). Dette er elementets start koordinat og findes ved at gå 'bredden af et element' $\cdot$ 'indekset af det nuværende element' ud af x-aksen og 'højde af lærred' $–$ 'højde af element' ud af y-aksen. <br>
-                Det antages at det største element i array’et vil være lige med antallet af elementer i array’et. Så for at gøre plads til dette element skriver vi 'højde af lærred'$\cdot \frac{array[i]}{array.length}$, bredden findes til at være $\frac{\text{'bredde af lærred'}}{array.length}$ da der skal være plads til $array.length$ elementer på lærredet.<br>
-                Yderligere ønsker vi at have en kant rundt om elementerne og yderligere plads mellem hvert element. Kanten kalder vi 'margin' og pladsen mellem hvert element hedder 'spaceBetweenElements'. For at gøre plads til dette forskyder vi (ud af x-aksen) alt med 'margin' og 'spaceBetweenElements'$/ 2$ (Vi tager det kvarte fra begge sider, så der i alt bliver 'spaceBetweenElements' plads på hver side af et element). Vi skal så derfor også gøre bredden af elementet mindre for at reflektere både 'margin' og 'spaceBetweenElements'. Så vi skriver
-                <div class="code-snippet 65 67" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Og for højden skal vi kun tage forhold til 'margin' så højden af et element bliver:
-                <div class="code-snippet 60 63" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Vi skal også forskyde (ud af y-aksen) med $-$'margin' og så er vi færdige, vi kan nu tegne et element.<br><br>
-                Vi kan nu lave funktioner der tegner et array hver gang et trin udføres i sorteringsalgoritmen, men hvad nu hvis en bruger starter to sorterings algoritmer på samme lærred på samme tid? Så får vi kaos, derfor skal vi i hver ’animations-tråd’ holde styr på om der er blevet startet en ny sortering. Løsningen kan findes ved at ændre i vores ’sortingObject’:
-                <div class="code-snippet 4 12" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Nu vil vi, hver gang vi starter en animation sørge for at opdatere ’loopIndex’ og hele tiden sikre os at ’loopIndex’ er den der hører til vores animations-tråd. Vi kan starte med at lave en funktion der tegner alle elementer i array’et grønne. Vi kan spille denne animation når en sorteringsalgoritme er færdig:
-                <div class="code-snippet 110 126" id="Sorting/main"></div>
-                <!-- <kode>-->
-                Tilfældige arrays
+                        <!-- <falsk kode der viser sortingObject kun med array, canvas og context>-->
+                        Vi kan nu give dette sortingObject til drawArray:
+                        <pre><code class='language-js'>function drawArray(sortingObject){ }</code></pre>
+                        <!-- <falsk kode der bare viser sortingObject i parameter i drawArray>-->
+                        Vi kan nu konstruere en funktion som tegner alle elementer i et array (Bemærk at vi har tilføjet en parameter 'selectedEntries', dette er for at vi eksempelvis visuelt kan markere hvis nogle elementer bliver sorteret ved at give dem en anden farve). 
+                        <div class="code-snippet 73 100" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        Vi skal også definere funktionen der tegner et enkelt element:
+                        <div class="code-snippet 50 72" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        <img class="figure" src="../../Files/tegn element.png"><br>
+                        Denne figur skal illustrere hvordan canvas’ koordinatsystem har y-aksen der peger nedad. Dette betyder at vi skal være lidt mere kreative når vi tegner et element. Den røde linje viser hvor langt ud på x-aksen vi skal, og den grønne viser hvor langt ud på y-aksen vi skal før vi rammer elementet vi vil tegne (det orange). Dette er elementets start koordinat og findes ved at gå 'bredden af et element' $\cdot$ 'indekset af det nuværende element' ud af x-aksen og 'højde af lærred' $–$ 'højde af element' ud af y-aksen. <br>
+                        Det antages at det største element i array’et vil være lige med antallet af elementer i array’et. Så for at gøre plads til dette element skriver vi 'højde af lærred'$\cdot \frac{array[i]}{array.length}$, bredden findes til at være $\frac{\text{'bredde af lærred'}}{array.length}$ da der skal være plads til $array.length$ elementer på lærredet.<br>
+                        Yderligere ønsker vi at have en kant rundt om elementerne og yderligere plads mellem hvert element. Kanten kalder vi 'margin' og pladsen mellem hvert element hedder 'spaceBetweenElements'. For at gøre plads til dette forskyder vi (ud af x-aksen) alt med 'margin' og 'spaceBetweenElements'$/ 2$ (Vi tager det kvarte fra begge sider, så der i alt bliver 'spaceBetweenElements' plads på hver side af et element). Vi skal så derfor også gøre bredden af elementet mindre for at reflektere både 'margin' og 'spaceBetweenElements'. Så vi skriver
+                        <div class="code-snippet 63 65" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        Og for højden skal vi kun tage forhold til 'margin' så højden af et element bliver:
+                        <div class="code-snippet 58 61" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        Vi skal også forskyde (ud af y-aksen) med $-$'margin' og så er vi færdige, vi kan nu tegne et element.<br><br>
+                        Vi kan nu lave funktioner der tegner et array hver gang et trin udføres i sorteringsalgoritmen, men hvad nu hvis en bruger starter to sorterings algoritmer på samme lærred på samme tid? Så får vi kaos, derfor skal vi i hver ’animations-tråd’ holde styr på om der er blevet startet en ny sortering. Løsningen kan findes ved at ændre i vores ’sortingObject’:
+                        <div class="code-snippet 4 12" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        Nu vil vi, hver gang vi starter en animation sørge for at opdatere ’loopIndex’ og hele tiden sikre os at ’loopIndex’ er den der hører til vores animations-tråd. Vi kan starte med at lave en funktion der tegner alle elementer i array’et grønne. Vi kan spille denne animation når en sorteringsalgoritme er færdig:
+                        <div class="code-snippet 108 128" id="Sorting/main"></div>
+                        <!-- <kode>-->
+                        </div>
+                    </div>
+                <h3>Tilfældige arrays</h3>
                 Vi ønsker også at lave ikke-sorterede arrays, og det bedste sted at starte er med et sorteret array. Et sorteret array genereres på følgende måde:
                 <div class="code-snippet 29 40" id="Sorting/main"></div>
                 <!-- <kode>-->
@@ -98,118 +111,80 @@ function drawArray(){ }</code></pre>
                 <canvas id="unsorted-canvas" width="300" height="300"></canvas>
             </figure>
         </div>
-
-
-
         
         <div class="page">
-            <h2>Prerequisites</h2>
-            <h3>Swapping elements</h3>
-            In order to swap two elements we have to create a third variable to temporarily store the information of one the two elements we are swapping.
-            The swap method looks like this:
-            <div class="code-snippet 7 12" id="Sorting/main"></div>
-            <h3>Time complexity and big O notation</h3>
-            Time complexity is meassuring how the number of steps grow, as the number of inputs grow. Mathematically we say that 
-            an algorithm is $\mathcal O(f(n))$ if
-            \[\exists x_0(\forall n>x_0, m\cdot f(n) \geq A(n))\quad(m\in\mathbb R)\]
-            Where $A(n)$ is the number of steps an algorithm takes when given $n$ inputs. This means that an algorithm is $\mathcal O(f(n))$ if the function
-            $f(n)$ grows faster than $A(n)$. This does mean that most algorithms are $\mathcal O(n!)$, but we want this function to be as small as possible.
-            $n!$ grows extremely quick, but if we can get away with saying our algorithm is $\mathcal O(n)$ we'd prefer that, since this means that our algorithm
-            doesn't grow in complexity as fast when given more inputs. So big O notation is all about finding the slowest growing function that grows faster than
-            your algorithm's complexity.<br>
-            If you have a function $f(n)=a(n)+b(n)$ that describes the time complexity of an algorithm, either the term $a(n)$ or $b(n)$ is omitted.
-            Since we do not care about the small changes, whichever $a(n)$ or $b(n)$ grows slower than the other is omitted. So if $b(n)$ is $\mathcal O (a(n))$
-            then the algorithm is $\mathcal O(a(n))$.<br>
-            Spatial complexity has the same rules, however this quantifies how much extra memory is used when the number of inputs grow.
-            <br>
-            Big O notation has its variants; if we are talking about the worst case scenario we use $\mathcal O(f(n))$. When we are refering to the best case 
-            we use $\mathcal \Omega (f(n))$ and $\mathcal \Theta(f(n))$ when talking about the average case.
-        </div>
-        <div class="page">
             <h2>Bubble Sort</h2>
-            <h3>What is Bubble Sort?</h3>
+            <h3>Hvad er Bubble Sort?</h3>
             <figure class="display bubbleSort"></figure>
             <p>
-                Bubble Sort works by comparing each entry in an array $array[i]$ with its immediate successor $array[i + 1]$.
-                Since the goal of this sorting algorithm is to have the smallest entries to the left, and the largest to the right we swap the
-                two entries if $array[i] > array[i + 1]$. We now increase $i$ by 1 and repeat this checking and swapping.
-                Whenever $i$ reaches the end of the array we know that the largest entry in the array must be in its place. 
+                Bubble Sort, på dansk Boble Sortering virker ved at sammenligne alle elementer i et array, $\mathbf A[i]$ med det næste element 
+                i array'et, $\mathbf A[i+1]$. Siden målet for sådan en algoritme er at få de mindste elementer til venstre og de største til højre, 
+                bytter vi de to elementer hvis  $\mathbf A[i] > \mathbf A[i+1]$, på den måde er de to elementer 'lokalt sorteret'. Når de to elementer er 
+                blevet sorteret øger vi $i$ med 1 og gør det samme igen. Vi bliver ved indtil vi ikke kan længere - altså når $i+1$ er udenfor array'et.<br>
+                Når vi har gjort dette vil det højeste element være rykket helt hen til højre i vores array - dette sker fordi, hvis $\mathbf A[i]$ er det største
+                element i array'et, vil det naturligvis betyde at $\mathbf A[i] > \mathbf A[i+1]$, så derfor bytter vi disse to, og det der før var $\mathbf A[i]$ 
+                er nu $\mathbf A[i + 1]$. Så når vi øger $i$ med 1 skal vi sammenligne det samme element (som jo var det største) og igen vil det være sandt at 
+                $\mathbf A[i] > \mathbf A[i+1]$. Dette forsætter indtil det største element er helt til højre i array'et. (Det er derfor den hedder Bubble Sort
+                - Fordi de største elementer flyder til toppen)
                 <br>
-                - This is why its called Bubble Sort, since the largest entry always floats to the top.
+                Bubble Sort gør brug af en 'Greedy Algorithm', på dansk en 'grådig algoritme', hvor man hele tiden tager lokalt optimale valg for at sortere array'et.
+                Altså vi bytter rundt på to elementer hvis de er usorteret i forhold til hinanden.
                 <br>
-                But we're not done yet, we need to repeat this process again, until every element of the array is sorted. The algorithm looks like this:
-            </p>
-            <ol>
-                <li>
-                    Let $i = 0$ and let $j=0$
-                </li>
-                <li>
-                    Compare if$\left(array[j] > array[j + 1]\right)$ - if this is true swap the two entries; 
-                    swap$(array, j, j + 1)$
-                </li>
-                <li>
-                    Increment $j$ by 1
-                </li>
-                <li>
-                    If $j \geq array.length - 1 - i$ we reached the end of the unsorted array. 
-                    This means we can increment $i$ by 1 and reset $j = 0$
-                </li>
-                <li>
-                    Repeat from step 2 until $i \geq array.length$
-                </li>
-            </ol>
-            Implemented in JS:
+                Algoritmen's pseudokode er følgende:
+<pre><code class='language-js'>function bubbleSort(array)
+    i = 0
+    WHILE( i < array.length )
+        j = 0
+        WHILE( j < array.length - 1 - i )
+            IF( array[j] > array[j + 1] )
+                SWAP( array[j] WITH array[j + 1] )
+            j++
+        i++
+</code></pre><br>
+            Skrevet i JavaScript, ser algoritmen sådan ud:
             <div class="code-snippet 2 10" id="Sorting/bubblesort"></div>
-            <h3>Bubble Sort stats</h3>
-            If $n$ is the number of entries in the unsorted array, this algorithm contains two loops, 
-            one running from $i=0$ to $i= n - 1$ and the next loop, from $j=0$ to $j = n - 1 -i$. So the algorithm runs for 
+            <h3>Hvor god er Bubble Sort?</h3>
+            Hvis $n$ er antallet af elementer i et usorteret array, kan vi udregne tidskompleksiteten for denne algoritme.
+            Algoritmen indeholder 2 løkker, den ene går fra $i=0$ til $i= n - 1$ og den næste løkke fra $j=0$ til $j = n - 1 -i$. 
+            Derfor er antallet af trin denne algoritme gennemgår:
             \[\sum_{k=0}^{n} \left(n-k\right)=\sum_{k=0}^{n} k=\frac{n(n+1)}{2}=\frac{n^2+n}{2}\]
-            iterations. Since the term $n^2$ grows way faster than $n$ we ignore this last term when determining time complexity.
-            So that leaves this algorithm with a worst case time complexity of $\mathcal O(n^2)$. Notice that even if the array is 
-            already sorted it still uses the same number of iterations to sort the array, therefore the average and best case time complexity
-            is also $\mathcal\Theta(n^2)$ and $\mathcal\Omega(n^2)$ (Where $\mathcal O(f(n))$ is the worst case- $\mathcal 
-            \Theta(f(n))$ is the average case- and $\mathcal \Omega(f(n))$ is the best case time complexity).
-            This time complexity is quite bad, and we can do way better with other algorithms.<br>
-            The space complexity refers to the extra space taken up by an algorithm. For this algorithm, we only ever create a new variable
-            when swapping two elements or when creating an iterator for a for loop, this means this algorithm has an auxiliary space of $\mathcal O(1)$. 
-            This is great.
+            Tidskompleksiteten for denne algoritme er derfor $\frac{n^2+n}{2}$, men fordi vi kun er interesseret i hvordan kompleksiteten vokser
+            og ikke hvor meget den vokser skriver man at tidskompleksiteten er $n^2+n$. Udover det er vi kun interesseret i det hurtigst voksende
+            led, så vi ignorerer $n$ og skriver at tidskompleksiteten er $\mathcal O (n^2)$. <br>
+            $\mathcal O(f(n))$ fortæller om 'worst-case' scenariet for algoritmen, hvor $\mathcal \Theta(f(n))$ er et gennemsnitligt scenarie
+            og $\mathcal \Omega(f(n))$ er 'best-case'. Da tidskompleksiteten ikke ændrer sig uanset hvilket array der sorteres er denne algoritmes
+            tidskompleksitet
+            \[ \mathcal O(n^2)=\mathcal \Theta(n^2)=\mathcal \Omega(n^2) \]
+            Rumkompleksiteten beskriver hvor meget ekstra plads en algoritme bruger, og da denne algoritme kun laver to variabler $i$ og $j$ og en ekstra 
+            variabel hver gang vi bytter 2 elementer er dens rumkompleksitet $\mathcal O(1)$.
         </div>
         <div class="page">
             <h2>Insertion Sort</h2>
-            <h3>What is Insertion Sort?</h3>
+            <h3>Hvad er Insertion Sort?</h3>
             <figure class="display insertionSort"></figure>
             <p>
-                Insertion Sort resembles Bubble Sort, but it does have one advantage: it does not need to perform all steps if the array 
-                is already sorted or partially sorted. For this algorithm we again compare $array[j]$ with its immediate successor $array[j + 1]$ but this time we 
-                keep decreasing j by 1 until it no longer satisfies $array[j] > array[j + 1]$ or $j=0$. We now increase an iterator $i$ by 1 and let $j = i$ 
-                before we repeat the previous steps. The algorithm goes like this
-            </p>
-            <ol>
-                <li>
-                    Let $i = 0$ and let $j=i$
-                </li>
-                <li>
-                    Compare if$\left(array[j] > array[j + 1]\right)$ - if this is true swap the two entries; 
-                    swap$(array, j, j + 1)$
-                </li>
-                <li>
-                    Decrease $j$ by 1 and repeat previous step until either: $array[j] < array[j + 1]$ or $j=0$
-                </li>
-                <li>
-                    If $j \geq array.length - 1 - i$ we reached the end of the unsorted array. 
-                    This means we can increment $i$ by 1 and reset $j = i$
-                </li>
-                <li>
-                    Repeat from step 2 until $i \geq array.length - 1$
-                </li>
-            </ol>
-            Implemented in JS:
+                Insertion Sort, på dansk Indsættelses Sortering, minder om Bubble Sort men har én stor forskel. Hvor Bubble Sort bytter to elementer
+                hvis $\mathbf A[i] > \mathbf A[i+1]$, bliver Insertion Sort ved med at bytte indtil den ikke kan længere. Så altså hver gang 
+                $\mathbf A[i] > \mathbf A[i+1]$ bliver de to elementer byttet og $i$ formindsket med 1.  Igen tjekkes det om $\mathbf A[i] > \mathbf A[i+1]$
+                og der byttes hvis nødvendigt, når det ikke længere er tilfældet starter vi forfra og sætter $i$ 1 højere end den startede.
+                <br>
+                Algoritmen's pseudokode er følgende:
+<pre><code class='language-js'>function insertionSort(array)
+    i = 0
+    WHILE( i < array.length - 1 )
+        j = i
+        WHILE( j > 0 AND array[j] > array[j + 1] )
+            SWAP( array[j] WITH array[j + 1] )
+            j--
+        i++
+</code></pre><br>
+            Skrevet i JavaScript, ser algoritmen sådan ud:
             <div class="code-snippet 2 10" id="Sorting/insertionsort"></div>
-            <h3>Insertion Sort stats</h3>
-            Time complexity:<br>
+            <h3>Hvor god er Insertion Sort?</h3>
+            Tidskompleksiteten for denne algoritme er:<br>
             $\mathcal O(n^2) \quad \mathcal \Theta (n^2) \quad \mathcal \Omega(n)$<br>
-            The best case $\mathcal \Omega(n)$ comes when the array is already sorted, in this case it would just 
-            loop over every entry and perform no swaps. <br>
+            The bedste scenarie er når array'et allerede er sorteret, i dette tilfælde vil while-løkken aldrig køre og tidskompleksitet bliver $\mathcal \Omega(n)$.
+            <br>
             The worst case occurs whenever the array is sorted backwards. In this case the while loop will keep running until $j=0$ for all values of $i$, 
             since it will always be the case that any element to the left will be larger than any element to the right. Repeating the calculations from 
             Bubble Sort we find a worst case of $\mathcal O(n^2)$. The derivation of the average case is a bit more involved, but the result is a time 
