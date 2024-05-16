@@ -107,6 +107,11 @@ function sleep(duration){
 }
 //En animation der skal vise at et array er sorteret!
 async function finalizeArray(sortingObject){
+    if(sortingObject.delay <= 0){
+        //Tegn array'et færdigt hvis der ikke er delay på længere
+        drawArray(sortingObject, []);
+    }
+    
     //Vi bruger denne variabel til at holde styr på om vi skal fortsætte igangværende animation:
     let loopIndex = ++sortingObject.loopIndex;
 
