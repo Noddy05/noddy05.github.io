@@ -1,0 +1,24 @@
+\shortname{Sorting Algorithms}
+\section{A Needlessly Thorough Analysis of Known Sorting Algorithms}
+Introduction
+
+\subsection{Selection sort}
+The simplest sorting algorithm is selection sort, this algorithm starts by finding
+the smallest value in the array and placing it in the front. Afterwards it will find the
+smallest value in the array, but this time it will exclude the first value, subsequently 
+finding the second smallest value and placing it in the second slot in the array. 
+Doing this continously will eventually lead to a sorted array. 
+\subsubsection{Pseudocode}
+\code{SelectionSort(~A~)
+    for i = 0 to |~A~| - 2
+        minIndex = i
+        for j = i + 1 to |~A~| - 1
+            if ~A~[j] < ~A~[minIndex]
+                minIndex = j
+        
+        Swap(~A~, i, minIndex)
+    return ~A~}
+
+\subsubsection{Oki}
+
+whaaat?

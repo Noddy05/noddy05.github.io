@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../article.css">
+    <link rel="icon" type="image/png" href="../../zeta_icon_32.png">
+    <link href="https://fonts.cdnfonts.com/css/newyork" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/kepler-std-3" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/cmu-serif" rel="stylesheet">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                tags: 'ams'
+            },
+            svg:{
+                fontCache: 'global'
+            }
+        }
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<title>Sorting Algorithms</title>
+</head>
+<body><div class="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>A Needlessly Thorough Analysis of Known Sorting Algorithms</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>Introduction<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Selection sort</a><br><a href="#2_1">$\quad$2.1) Pseudocode</a><br><a href="#2_2">$\quad$2.2) Oki</a></p></div></p></div><div class="page"><p><h2 id="2">2) Selection sort</h2>The simplest sorting algorithm is selection sort, this algorithm starts by findingthe smallest value in the array and placing it in the front. Afterwards it will find thesmallest value in the array, but this time it will exclude the first value, subsequently finding the second smallest value and placing it in the second slot in the array. Doing this continously will eventually lead to a sorted array. <h3 id="2_1">2.1) Pseudocode</h3><pre><code class="language-html">SelectionSort(<keyword class="variable">A</keyword>)
+    <keyword class="keyword">for</keyword> i <keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> <keyword class="literal">2</keyword>
+        minIndex <keyword class="operation">=</keyword> i
+        <keyword class="keyword">for</keyword> j <keyword class="operation">=</keyword> i <keyword class="operation">+</keyword> <keyword class="literal">1</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+            <keyword class="keyword">if</keyword> <keyword class="variable">A</keyword>[j] <keyword class="operation"><</keyword> <keyword class="variable">A</keyword>[minIndex]
+                minIndex <keyword class="operation">=</keyword> j
+        
+        Swap(<keyword class="variable">A</keyword>, i, minIndex)
+    return <keyword class="variable">A</keyword></code></pre><h3 id="2_2">2.2) Oki</h3>whaaat?</p></div></div></body></html>
