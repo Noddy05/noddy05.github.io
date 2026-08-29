@@ -24,6 +24,7 @@ class HTMLBuilder():
         'end': 'keyword',
         'from': 'keyword',
         'output': 'keyword',
+        'return': 'keyword',
         'break': 'keyword',
 
         '+': 'operation',
@@ -60,6 +61,7 @@ class HTMLBuilder():
     custom_keywords = {
         '~': [ '~', 'variable', True ],
         '//': [ '\n', 'comment', False ],
+        '##': [ '##', 'built-in', True ],
     }
 
     format_commands = {
@@ -78,6 +80,7 @@ class HTMLBuilder():
         self.math_fields: MathField = []
         self.num_footnotes = 0
         self.num_figures = 0
+        self.scripts = []
 
 
     def starts_with(self, compare_to, all_text):
@@ -191,7 +194,7 @@ class HTMLBuilder():
 
     def parse(self, char, all_text):
         if char == '\n':
-            return ''
+            return char
 
         if char == '$':
             self.is_math_field = not self.is_math_field
@@ -239,6 +242,11 @@ class HTMLBuilder():
                 self.move_command(command)
                 return ''
             
+            elif command[0] == '\\script':
+                self.move_command(command)
+                self.scripts.append(command[1])
+                return ''
+            
             elif command[0] == '\\section':
                 self.title = command[1]
                 self.move_command(command)
@@ -247,6 +255,10 @@ class HTMLBuilder():
             elif command[0] == '\\figtext':
                 self.move_command(command)
                 return f'<p class="image-text">Figure {self.num_figures}: {command[1]}</p>'
+            
+            elif command[0] == '\\div':
+                self.move_command(command)
+                return f'<div id="{command[1]}" class="{command[2]}"></div>'
             
             elif command[0] == '\\code':
                 self.move_command(command)
@@ -335,7 +347,8 @@ class HTMLBuilder():
         with open('html_header.txt') as html_header:
             with open(file_name, 'w') as file:
                 file.write(html_header.read() + "\n")
-                file.write('\t<title>' + self.short_name + '</title>\n</head>\n<body>')
+                file.write('\t<title>' + self.short_name + '</title>\n')
+                file.write('</head>\n<body>\n')
 
                 file.write('<div class="content">')
 
@@ -356,6 +369,8 @@ class HTMLBuilder():
                 file.write('</div>')
 
                 file.write('</body></html>')
+                for script in self.scripts:
+                    file.write(f'\n<script src="../../dest/{self.short_name}/{script}"></script>')
 
     def blog_folder_path(self):
         return 'Blogs/' + self.short_name
