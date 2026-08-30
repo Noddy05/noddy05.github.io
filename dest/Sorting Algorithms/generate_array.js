@@ -14,7 +14,7 @@ function genSortedArray(n) {
 }
 function extendSortedArray(sortingObj, new_size) {
     const array = [];
-    const max = sortingObj.max();
+    const max = sortingObj.max;
     for (let i = 0; i < new_size; i++) {
         if (i < sortingObj.length()) {
             array[i] = sortingObj.array[i];
@@ -34,7 +34,7 @@ function genReverseSortedArray(n) {
 }
 function extendReverseSortedArray(sortingObj, new_size) {
     const array = [];
-    const min = sortingObj.min();
+    const min = sortingObj.min;
     for (let i = 0; i < new_size; i++) {
         if (i < sortingObj.length()) {
             array[i] = sortingObj.array[i];
@@ -81,7 +81,7 @@ function extendRandomArray(sortingObj, new_size) {
     const originalSize = sortingObj.length();
     const array = extendSortedArray(sortingObj, new_size);
     for (let i = originalSize; i < new_size; i++) {
-        array[i] = Math.random() * (sortingObj.max() - 1) + 1;
+        array[i] = Math.random() * (sortingObj.max - 1) + 1;
     }
     return array;
 }

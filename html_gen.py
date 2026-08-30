@@ -15,12 +15,15 @@ class HTMLBuilder():
         '\\P': '\\mathbb{P}',
         '\\E': '\\mathbb{E}',
         '\\N': '\\mathbb{N}',
+        '\\A': '\\mathbf{A}',   
     }
     color_codes = {
         'loop': 'keyword',
         'for': 'keyword',
+        'while': 'keyword',
         'to': 'keyword',
         'if': 'keyword',
+        'else': 'keyword',
         'end': 'keyword',
         'from': 'keyword',
         'output': 'keyword',
@@ -28,18 +31,16 @@ class HTMLBuilder():
         'break': 'keyword',
 
         '+': 'operation',
-        '+=': 'operation',
         '-': 'operation',
-        '-=': 'operation',
         '*': 'operation',
-        '*=': 'operation',
         '/': 'operation',
-        '/=': 'operation',
         '>': 'operation',
-        '>=': 'operation',
         '<': 'operation',
-        '<=': 'operation',
         '=': 'operation',
+        'not': 'operation',
+        'and': 'operation',
+        'or': 'operation',
+        '..': 'operation',
 
         '...': 'literal',
         '1': 'literal',
@@ -81,6 +82,7 @@ class HTMLBuilder():
         self.num_footnotes = 0
         self.num_figures = 0
         self.scripts = []
+        self.styles = []
 
 
     def starts_with(self, compare_to, all_text):
@@ -247,6 +249,11 @@ class HTMLBuilder():
                 self.scripts.append(command[1])
                 return ''
             
+            elif command[0] == '\\style':
+                self.move_command(command)
+                self.styles.append(command[1])
+                return ''
+            
             elif command[0] == '\\section':
                 self.title = command[1]
                 self.move_command(command)
@@ -348,6 +355,10 @@ class HTMLBuilder():
             with open(file_name, 'w') as file:
                 file.write(html_header.read() + "\n")
                 file.write('\t<title>' + self.short_name + '</title>\n')
+
+                for stylesheet in self.styles:
+                    file.write(f'\t<link rel="stylesheet" type="text/css" href="./{stylesheet}">')
+
                 file.write('</head>\n<body>\n')
 
                 file.write('<div class="content">')

@@ -1,10 +1,16 @@
 \shortname{Sorting Algorithms}
+\style{sorting.css}
 \script{generate_array.js}
 \script{sorting.js}
-\script{selection_sort.js}
+\script{simple_sorts.js}
+\script{clever_sorts.js}
+\script{compare_sorts.js}
 
 \section{A Needlessly Thorough Analysis of Known Sorting Algorithms}
 Introduction
+
+\subsection{Compare sorting algorithms}
+\div{compare_sort}{compare_algo}
 
 \subsection{Simple sorting algorithms}
 \subsubsection{Selection sort}
@@ -22,9 +28,13 @@ Doing this continously will eventually lead to a sorted array.
         for j = i + 1 to |~A~| - 1
             if ~A~[j] < ~A~[minIndex]
                 minIndex = j
+            endif
+        endfor
         
         //When we've found the smallest element, we place it on the i'th index
         ##Swap##(~A~, i, minIndex) 
+    endfor
+
     return ~A~}
 
 <h4>Time- and spatial complexity</h4>
@@ -79,13 +89,170 @@ left of $n-1$ are in sorted order (since $a_j$ $\forall j< i$ is smaller than an
 to the right of it - by our invariant)
 
 \subsubsection{Bubble sort}
+\div{bubble_sort}{sorting_algo}
+<h4>Pseudocode</h4>
+\code{##BubbleSort##(~A~)
+    for i = 0 to |~A~| - 2
+        swapped = false
+        for j = 0 to |~A~| - i - 1
+            //Swap all elements that are larger than the element after it
+            if ~A~[j] > ~A~[j + 1]
+                ##Swap##(~A~, j, j + 1) 
+                swapped = true
+            endif
+        endfor
+
+        //If no elements are swapped we can stop early
+        if not swapped
+            break
+        endif
+    endfor
+        
+    return ~A~}
+
+<h4>Time- and spatial complexity</h4>
+Bubble sort only uses extra storage when swapping elements, thus the spatial complexity is $\O(1)$.\\
+The time complexity for bubble sort is in the worst case and average case $\O(n^2)$, but $\O(n)$ in the 
+best case.
+\\\\
+Because our implementation of \textsc{BubbleSort} allows for a quick exit then the array is sorted the time
+complexity gets a bit more complicated to calculate, but not impossible. \\\\
+We start our analysis by letting $h(i)$ be a function that for each index in $\A$ returns the index where 
+$\A[i]$ belongs in a sorted array.\\
+Now if $h(i)< i$ it would take $a=i-h(i)$ iterations of the outer loop before $\A[i]$ is where it belongs,
+since an element only moves back once. If on the other hand $h(i)>i$, then it can be carried to where it belongs
+after \textsc{BubbleSort} has placed all elements that will go to the right of $h(i)$, i.e after $b=|\A|-1-h(i)$ 
+iterations of the outer loop (except if $h(i)=i$, then it is already in its place and $b=0$). 
+Therefore the number of iterations of the 
+outer loop is exactly $\mathcal S=1+\displaystyle\max_{0\leq i<|\A|} \big\{\max(a,b)\big\}$ 
+(plus one, since we always run the loop before we realize that we didn't have to).\\
+From this we find that the runtime of \textsc{BubbleSort} is 
+\begin{equation*}
+    \begin{split}
+        \sum_{i=1}^{\mathcal S} (n - i)=\sum_{i=1}^{\mathcal S} n-\sum_{i=1}^{\mathcal S} i\quad(n=|\A|)\\
+        =n\mathcal S-\frac{\mathcal S(\mathcal S + 1)}{2}=
+        \Theta\left(\mathcal S\left[n-\frac{\mathcal S + 1}{2}\right]\right)
+    \end{split}
+\end{equation*}
+but since $S\leq n$, $\Theta\left(\mathcal S(n-\frac{\mathcal S + 1}{2})\right)=\Theta(\mathcal S n)$.
+Thus the problem of determing time complexity is narrowed down to finding an expression of $\mathcal S$ 
+in terms of $n$. Now if the array is sorted $h(i)=i$ for all $i$, therefore $a=i-h(i)=0$ and $b=0$ making 
+$\mathcal S=1$. This is the best case scenario and the time complexity is $\Theta(n)$. 
+\\
+\textsc{BubbleSort} enters a worst case scenario if for example the smallest element was placed at the last index,
+if this happens $\mathcal S=1+i-h(i)$ with $i=n-1$ and $h(i)=0$ making $\mathcal S=n$ and the time complexity is 
+in turn $\Theta(n^2)$.
+\\
+In the average case $\mathcal S$ will be proportional to $n$, i.e $\mathcal S=\Theta(n)$, since the average
+element would be just as likely to be larger than, as it is likely to be smaller than any other element. 
+Meaning the average element is the median of the array. Thus the first element would have $n/2$ elements
+larger than it, and $b=|\A|-1-h(i)=n-1-n/2=n/2-1=\Theta(n)$. Making the average case time complexity at least
+$\Theta(n^2)$.
+
+
 \subsubsection{Insertion sort}
+\div{insertion_sort}{sorting_algo}
+<h4>Pseudocode</h4>
+\code{##InsertionSort##(~A~)
+    for i = 1 to |~A~| - 1
+        key = ~A~[i]
+        j = i - 1
+
+        //Shift earlier elements forward until all are larger than the key
+        while j >= 0 and ~A~[j] > key
+            ~A~[j + 1] = ~A~[j]
+            j--
+        endwhile
+
+        //Place key into the gap we created by shifting all other elements
+        ~A~[j + 1] = key
+    endfor
+        
+    return ~A~}
+Although for visualization purposes it made more sense to use this alternative formulation
+\code{##AlternativeInsertionSort##(~A~)
+    for i = 1 to |~A~| - 1
+        j = i - 1
+
+        //Shift A[i] back as long as it's smaller than the element before it
+        while j >= 0 and ~A~[j] > ~A~[j + 1]
+            ##Swap##(~A~, j, j + 1)
+            j--
+        endwhile
+    endfor
+        
+    return ~A~}
 
 \subsection{Clever sorting algorithms}
 \subsubsection{Merge sort}
+\div{merge_sort}{sorting_algo}
+
+<h4>Pseudocode</h4>
+\code{##MergeSort##(~A~)
+    //Start the recursion:
+    ##MergeSort##(~A~, 0, |~A~|)
+    return ~A~
+    
+##MergeSort##(~A~, ~l~, ~r~)
+    //If this partition of the array has only 1 element, it's already trivially sorted
+    if ~r~ - ~l~ <= 1
+        return
+    endif
+
+    m = ##Floor##((~l~ + ~r~) / 2)
+
+    //Recursively sort both halves of the array
+    ##MergeSort##(~A~, ~l~, m)
+    ##MergeSort##(~A~, m, ~r~)
+
+    //And now merge the two sorted halves
+    ##Merge##(~A~, ~l~, m, ~r~)
+    
+##Merge##(~A~, ~l~, ~m~, ~r~)
+    //Copy the left and right halves of the array
+    leftHalf = ~A~[~l~..~m~]
+    rightHalf = ~A~[~m~..~r~]
+    
+    //These pointers will point to indices in the left and right half respectively
+    L = 0
+    R = 0
+    //While both halves have elements left pick the smallest element in both arrays
+    while L < len(leftHalf) and R < len(rightHalf)
+        i = l + L + R
+
+        //Since the halves are sorted, the smallest element in each array is the first element
+        //This is what makes merge O(n)
+        if leftHalf[L] < rightHalf[R]
+            ~A~[i] = leftHalf[L]
+            L++
+        else
+            ~A~[i] = rightHalf[R]
+            R++
+        endif
+    endwhile
+    
+    //If there are no elements left in the right half, copy the remaining elements of the left half
+    while L < len(leftHalf)
+        i = l + L + R
+        ~A~[i] = leftHalf[L]
+        L++
+    endwhile
+    
+    //If there are no elements left in the left half, copy the remaining elements of the right half
+    while R < len(rightHalf)
+        i = l + L + R
+        ~A~[i] = rightHalf[R]
+        R++
+    endwhile}
 \subsubsection{Quick sort}
+\div{quick_sort}{sorting_algo}
+
 \subsubsection{Heap sort}
+\div{heap_sort}{sorting_algo}
+
 \subsubsection{Introspective sort (Intro sort)}
+\div{intro_sort}{sorting_algo}
+
 \subsubsection{Shell sort}
 
 \subsection{Theoretical limits for comparison-based sorts}

@@ -21,7 +21,7 @@
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 	<title>Sorting Algorithms</title>
-</head>
+	<link rel="stylesheet" type="text/css" href="./sorting.css"></head>
 <body>
 <div class="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>A Needlessly Thorough Analysis of Known Sorting Algorithms</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
 
@@ -29,10 +29,16 @@
 
 
 
+
+
+
 Introduction
 
-<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Simple sorting algorithms</a><br><a href="#2_1">$\quad$2.1) Selection sort</a><br><a href="#2_2">$\quad$2.2) Bubble sort</a><br><a href="#2_3">$\quad$2.3) Insertion sort</a><br><a href="#3">3) Clever sorting algorithms</a><br><a href="#3_1">$\quad$3.1) Merge sort</a><br><a href="#3_2">$\quad$3.2) Quick sort</a><br><a href="#3_3">$\quad$3.3) Heap sort</a><br><a href="#3_4">$\quad$3.4) Introspective sort (Intro sort)</a><br><a href="#3_5">$\quad$3.5) Shell sort</a><br><a href="#4">4) Theoretical limits for comparison-based sorts</a></p></div></p></div><div class="page"><p><h2 id="2">2) Simple sorting algorithms</h2>
-<h3 id="2_1">2.1) Selection sort</h3>
+<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Compare sorting algorithms</a><br><a href="#3">3) Simple sorting algorithms</a><br><a href="#3_1">$\quad$3.1) Selection sort</a><br><a href="#3_2">$\quad$3.2) Bubble sort</a><br><a href="#3_3">$\quad$3.3) Insertion sort</a><br><a href="#4">4) Clever sorting algorithms</a><br><a href="#4_1">$\quad$4.1) Merge sort</a><br><a href="#4_2">$\quad$4.2) Quick sort</a><br><a href="#4_3">$\quad$4.3) Heap sort</a><br><a href="#4_4">$\quad$4.4) Introspective sort (Intro sort)</a><br><a href="#4_5">$\quad$4.5) Shell sort</a><br><a href="#5">5) Theoretical limits for comparison-based sorts</a></p></div></p></div><div class="page"><p><h2 id="2">2) Compare sorting algorithms</h2>
+<div id="compare_sort" class="compare_algo"></div>
+
+</p></div><div class="page"><p><h2 id="3">3) Simple sorting algorithms</h2>
+<h3 id="3_1">3.1) Selection sort</h3>
 <div id="selection_sort" class="sorting_algo"></div>
 The simplest sorting algorithm is selection sort, this algorithm starts by finding
 the smallest value in the array and placing it in the front. Afterwards it will find the
@@ -47,9 +53,13 @@ Doing this continously will eventually lead to a sorted array.
         <keyword class="keyword">for</keyword> j <keyword class="operation">=</keyword> i <keyword class="operation">+</keyword> <keyword class="literal">1</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
             <keyword class="keyword">if</keyword> <keyword class="variable">A</keyword>[j] <keyword class="operation"><</keyword> <keyword class="variable">A</keyword>[minIndex]
                 minIndex <keyword class="operation">=</keyword> j
+            <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
         
         <keyword class="comment">//When we've found the smallest element, we place it on the i'th index</keyword>
         <keyword class="built-in">Swap</keyword>(<keyword class="variable">A</keyword>, i, minIndex) 
+    <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
+
     <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
 
 <h4>Time- and spatial complexity</h4>
@@ -103,17 +113,174 @@ Once $i=n-1$ we get that the element at $n-1$ is the largest and that all elemen
 left of $n-1$ are in sorted order (since $a_j$ $\forall j< i$ is smaller than any element 
 to the right of it - by our invariant)
 
-<h3 id="2_2">2.2) Bubble sort</h3>
-<h3 id="2_3">2.3) Insertion sort</h3>
+<h3 id="3_2">3.2) Bubble sort</h3>
+<div id="bubble_sort" class="sorting_algo"></div>
+<h4>Pseudocode</h4>
+<pre><code class="language-html"><keyword class="built-in">BubbleSort</keyword>(<keyword class="variable">A</keyword>)
+    <keyword class="keyword">for</keyword> i <keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> <keyword class="literal">2</keyword>
+        swapped <keyword class="operation">=</keyword> <keyword class="literal">false</keyword>
+        <keyword class="keyword">for</keyword> j <keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> i <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+            <keyword class="comment">//Swap all elements that are larger than the element after it</keyword>
+            <keyword class="keyword">if</keyword> <keyword class="variable">A</keyword>[j] <keyword class="operation">></keyword> <keyword class="variable">A</keyword>[j <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>]
+                <keyword class="built-in">Swap</keyword>(<keyword class="variable">A</keyword>, j, j <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>) 
+                swapped <keyword class="operation">=</keyword> <keyword class="literal">true</keyword>
+            <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
 
-</p></div><div class="page"><p><h2 id="3">3) Clever sorting algorithms</h2>
-<h3 id="3_1">3.1) Merge sort</h3>
-<h3 id="3_2">3.2) Quick sort</h3>
-<h3 id="3_3">3.3) Heap sort</h3>
-<h3 id="3_4">3.4) Introspective sort (Intro sort)</h3>
-<h3 id="3_5">3.5) Shell sort</h3>
+        <keyword class="comment">//If no elements are swapped we can stop early</keyword>
+        <keyword class="keyword">if</keyword> <keyword class="operation">not</keyword> swapped
+            <keyword class="keyword">break</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
+        
+    <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
 
-</p></div><div class="page"><p><h2 id="4">4) Theoretical limits for comparison-based sorts</h2>
+<h4>Time- and spatial complexity</h4>
+Bubble sort only uses extra storage when swapping elements, thus the spatial complexity is $\mathcal{O}(1)$.<br>
+The time complexity for bubble sort is in the worst case and average case $\mathcal{O}(n^2)$, but $\mathcal{O}(n)$ in the 
+best case.
+<br><br>
+Because our implementation of <textsc>BubbleSort</textsc>  allows for a quick exit then the array is sorted the time
+complexity gets a bit more complicated to calculate, but not impossible. <br><br>
+We start our analysis by letting $h(i)$ be a function that for each index in $\mathbf{A}$ returns the index where 
+$\mathbf{A}[i]$ belongs in a sorted array.<br>
+Now if $h(i)< i$ it would take $a=i-h(i)$ iterations of the outer loop before $\mathbf{A}[i]$ is where it belongs,
+since an element only moves back once. If on the other hand $h(i)>i$, then it can be carried to where it belongs
+after <textsc>BubbleSort</textsc>  has placed all elements that will go to the right of $h(i)$, i.e after $b=|\mathbf{A}|-1-h(i)$ 
+iterations of the outer loop (except if $h(i)=i$, then it is already in its place and $b=0$). 
+Therefore the number of iterations of the 
+outer loop is exactly $\mathcal S=1+\displaystyle\max_{0\leq i<|\mathbf{A}|} \big\{\max(a,b)\big\}$ 
+(plus one, since we always run the loop before we realize that we didn't have to).<br>
+From this we find that the runtime of <textsc>BubbleSort</textsc>  is 
+\begin{equation*}
+    \begin{split}
+        \sum_{i=1}^{\mathcal S} (n - i)=\sum_{i=1}^{\mathcal S} n-\sum_{i=1}^{\mathcal S} i\quad(n=|\mathbf{A}|)\\
+        =n\mathcal S-\frac{\mathcal S(\mathcal S + 1)}{2}=
+        \Theta\left(\mathcal S\left[n-\frac{\mathcal S + 1}{2}\right]\right)
+    \end{split}
+\end{equation*}
+but since $S\leq n$, $\Theta\left(\mathcal S(n-\frac{\mathcal S + 1}{2})\right)=\Theta(\mathcal S n)$.
+Thus the problem of determing time complexity is narrowed down to finding an expression of $\mathcal S$ 
+in terms of $n$. Now if the array is sorted $h(i)=i$ for all $i$, therefore $a=i-h(i)=0$ and $b=0$ making 
+$\mathcal S=1$. This is the best case scenario and the time complexity is $\Theta(n)$. 
+<br>
+<textsc>BubbleSort</textsc>  enters a worst case scenario if for example the smallest element was placed at the last index,
+if this happens $\mathcal S=1+i-h(i)$ with $i=n-1$ and $h(i)=0$ making $\mathcal S=n$ and the time complexity is 
+in turn $\Theta(n^2)$.
+<br>
+In the average case $\mathcal S$ will be proportional to $n$, i.e $\mathcal S=\Theta(n)$, since the average
+element would be just as likely to be larger than, as it is likely to be smaller than any other element. 
+Meaning the average element is the median of the array. Thus the first element would have $n/2$ elements
+larger than it, and $b=|\mathbf{A}|-1-h(i)=n-1-n/2=n/2-1=\Theta(n)$. Making the average case time complexity at least
+$\Theta(n^2)$.
+
+
+<h3 id="3_3">3.3) Insertion sort</h3>
+<div id="insertion_sort" class="sorting_algo"></div>
+<h4>Pseudocode</h4>
+<pre><code class="language-html"><keyword class="built-in">InsertionSort</keyword>(<keyword class="variable">A</keyword>)
+    <keyword class="keyword">for</keyword> i <keyword class="operation">=</keyword> <keyword class="literal">1</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+        key <keyword class="operation">=</keyword> <keyword class="variable">A</keyword>[i]
+        j <keyword class="operation">=</keyword> i <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+
+        <keyword class="comment">//Shift earlier elements forward until all are larger than the key</keyword>
+        <keyword class="keyword">while</keyword> j <keyword class="operation">></keyword><keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="operation">and</keyword> <keyword class="variable">A</keyword>[j] <keyword class="operation">></keyword> key
+            <keyword class="variable">A</keyword>[j <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>] <keyword class="operation">=</keyword> <keyword class="variable">A</keyword>[j]
+            j<keyword class="operation">-</keyword><keyword class="operation">-</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
+
+        <keyword class="comment">//Place key into the gap we created by shifting all other elements</keyword>
+        <keyword class="variable">A</keyword>[j <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>] <keyword class="operation">=</keyword> key
+    <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
+        
+    <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
+Although for visualization purposes it made more sense to use this alternative formulation
+<pre><code class="language-html"><keyword class="built-in">AlternativeInsertionSort</keyword>(<keyword class="variable">A</keyword>)
+    <keyword class="keyword">for</keyword> i <keyword class="operation">=</keyword> <keyword class="literal">1</keyword> <keyword class="keyword">to</keyword> |<keyword class="variable">A</keyword>| <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+        j <keyword class="operation">=</keyword> i <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+
+        <keyword class="comment">//Shift A[i] back as long as it's smaller than the element before it</keyword>
+        <keyword class="keyword">while</keyword> j <keyword class="operation">></keyword><keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="operation">and</keyword> <keyword class="variable">A</keyword>[j] <keyword class="operation">></keyword> <keyword class="variable">A</keyword>[j <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>]
+            <keyword class="built-in">Swap</keyword>(<keyword class="variable">A</keyword>, j, j <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>)
+            j<keyword class="operation">-</keyword><keyword class="operation">-</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
+        
+    <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
+
+</p></div><div class="page"><p><h2 id="4">4) Clever sorting algorithms</h2>
+<h3 id="4_1">4.1) Merge sort</h3>
+<div id="merge_sort" class="sorting_algo"></div>
+
+<h4>Pseudocode</h4>
+<pre><code class="language-html"><keyword class="built-in">MergeSort</keyword>(<keyword class="variable">A</keyword>)
+    <keyword class="comment">//Start the recursion:</keyword>
+    <keyword class="built-in">MergeSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="literal">0</keyword>, |<keyword class="variable">A</keyword>|)
+    <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword>
+    
+<keyword class="built-in">MergeSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, <keyword class="variable">r</keyword>)
+    <keyword class="comment">//If this partition of the array has only 1 element, it's already trivially sorted</keyword>
+    <keyword class="keyword">if</keyword> <keyword class="variable">r</keyword> <keyword class="operation">-</keyword> <keyword class="variable">l</keyword> <keyword class="operation"><</keyword><keyword class="operation">=</keyword> <keyword class="literal">1</keyword>
+        <keyword class="keyword">return</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+
+    m <keyword class="operation">=</keyword> <keyword class="built-in">Floor</keyword>((<keyword class="variable">l</keyword> <keyword class="operation">+</keyword> <keyword class="variable">r</keyword>) <keyword class="operation">/</keyword> <keyword class="literal">2</keyword>)
+
+    <keyword class="comment">//Recursively sort both halves of the array</keyword>
+    <keyword class="built-in">MergeSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, m)
+    <keyword class="built-in">MergeSort</keyword>(<keyword class="variable">A</keyword>, m, <keyword class="variable">r</keyword>)
+
+    <keyword class="comment">//And now merge the two sorted halves</keyword>
+    <keyword class="built-in">Merge</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, m, <keyword class="variable">r</keyword>)
+    
+<keyword class="built-in">Merge</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, <keyword class="variable">m</keyword>, <keyword class="variable">r</keyword>)
+    <keyword class="comment">//Copy the left and right halves of the array</keyword>
+    leftHalf <keyword class="operation">=</keyword> <keyword class="variable">A</keyword>[<keyword class="variable">l</keyword><keyword class="operation">..</keyword><keyword class="variable">m</keyword>]
+    rightHalf <keyword class="operation">=</keyword> <keyword class="variable">A</keyword>[<keyword class="variable">m</keyword><keyword class="operation">..</keyword><keyword class="variable">r</keyword>]
+    
+    <keyword class="comment">//These pointers will point to indices in the left and right half respectively</keyword>
+    L <keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
+    R <keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
+    <keyword class="comment">//While both halves have elements left pick the smallest element in both arrays</keyword>
+    <keyword class="keyword">while</keyword> L <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(leftHalf) <keyword class="operation">and</keyword> R <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(rightHalf)
+        i <keyword class="operation">=</keyword> l <keyword class="operation">+</keyword> L <keyword class="operation">+</keyword> R
+
+        <keyword class="comment">//Since the halves are sorted, the smallest element in each array is the first element</keyword>
+        <keyword class="comment">//This is what makes merge O(n)</keyword>
+        <keyword class="keyword">if</keyword> leftHalf[L] <keyword class="operation"><</keyword> rightHalf[R]
+            <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> leftHalf[L]
+            L<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
+        <keyword class="keyword">else</keyword>
+            <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> rightHalf[R]
+            R<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
+    
+    <keyword class="comment">//If there are no elements left in the right half, copy the remaining elements of the left half</keyword>
+    <keyword class="keyword">while</keyword> L <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(leftHalf)
+        i <keyword class="operation">=</keyword> l <keyword class="operation">+</keyword> L <keyword class="operation">+</keyword> R
+        <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> leftHalf[L]
+        L<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
+    
+    <keyword class="comment">//If there are no elements left in the left half, copy the remaining elements of the right half</keyword>
+    <keyword class="keyword">while</keyword> R <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(rightHalf)
+        i <keyword class="operation">=</keyword> l <keyword class="operation">+</keyword> L <keyword class="operation">+</keyword> R
+        <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> rightHalf[R]
+        R<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword></code></pre>
+<h3 id="4_2">4.2) Quick sort</h3>
+<div id="quick_sort" class="sorting_algo"></div>
+
+<h3 id="4_3">4.3) Heap sort</h3>
+<div id="heap_sort" class="sorting_algo"></div>
+
+<h3 id="4_4">4.4) Introspective sort (Intro sort)</h3>
+<div id="intro_sort" class="sorting_algo"></div>
+
+<h3 id="4_5">4.5) Shell sort</h3>
+
+</p></div><div class="page"><p><h2 id="5">5) Theoretical limits for comparison-based sorts</h2>
 Assume we have an array $\mathbf A=\left< a_0,a_1,\cdots a_{n-1}\right>$ of $n$ distinct elements, there are exactly $n!$ 
 different permutations of this array
 and only one of these permutations is the sorted array, so our algorithm will have to distinguish between all
@@ -159,4 +326,6 @@ of sorting algorithms is $f(n)=\Omega(n\log n)$. By the existance of algorithms 
 we know that this theoretical limit is also achievable.</p></div></div></body></html>
 <script src="../../dest/Sorting Algorithms/generate_array.js"></script>
 <script src="../../dest/Sorting Algorithms/sorting.js"></script>
-<script src="../../dest/Sorting Algorithms/selection_sort.js"></script>
+<script src="../../dest/Sorting Algorithms/simple_sorts.js"></script>
+<script src="../../dest/Sorting Algorithms/clever_sorts.js"></script>
+<script src="../../dest/Sorting Algorithms/compare_sorts.js"></script>

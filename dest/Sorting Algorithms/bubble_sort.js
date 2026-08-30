@@ -9,33 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-function selectionSort(sortingObj) {
+function bubbleSort(sortingObj) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
         for (let i = 0; i < sortingObj.length() - 1; i++) {
-            let minIndex = i;
-            for (let j = i + 1; j < sortingObj.length(); j++) {
-                if (sortingObj.array[j] < sortingObj.array[minIndex])
-                    minIndex = j;
+            let swapped = false;
+            for (let j = 0; j < sortingObj.length() - i - 1; j++) {
+                if (sortingObj.array[j] > sortingObj.array[j + 1]) {
+                    swap(sortingObj.array, j, j + 1);
+                    swapped = true;
+                }
                 sortingObj.colors = new Map([
-                    [i, 'green'],
                     [j, 'red'],
-                    [minIndex, 'blue'],
+                    [j + 1, 'red'],
                 ]);
                 yield sleep(sortingObj.delay());
                 yield draw(sortingObj, true);
                 if (!sortingObj.isRunning(loopIndex))
                     return;
             }
-            swap(sortingObj.array, i, minIndex);
-            yield sleep(sortingObj.delay());
-            yield draw(sortingObj, true);
-            if (!sortingObj.isRunning(loopIndex))
-                return;
+            if (!swapped)
+                break;
         }
         finalizeArray(sortingObj);
     });
 }
-const selectionSortDiv = new SortingDiv(document.getElementById('selection_sort'));
-selectionSortDiv.sortingAlgorithm = selectionSort;
+const bubbleSortDiv = new SortingDiv(document.getElementById('bubble_sort'));
+bubbleSortDiv.sortingAlgorithm = bubbleSort;
 //selectionSort(sortingObj);
