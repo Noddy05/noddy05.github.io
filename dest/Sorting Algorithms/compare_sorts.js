@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const comparableAlgorithms = [
     ['Selection Sort', selectionSort,],
     ['Bubble Sort', bubbleSort,],
@@ -61,7 +52,7 @@ class CompareDiv {
         this.delaySlider.setAttribute('value', '50');
         this.sortButton = document.createElement('button');
         this.sortButton.innerHTML = 'Sort';
-        this.sortButton.onclick = (e) => __awaiter(this, void 0, void 0, function* () {
+        this.sortButton.onclick = async (e) => {
             if (this.sortingAlgorithmA != null) {
                 this.sortingObjA.paused = false;
                 this.algorithmA()(this.sortingObjA, false);
@@ -70,7 +61,7 @@ class CompareDiv {
                 this.sortingObjB.paused = false;
                 this.algorithmB()(this.sortingObjB, false);
             }
-        });
+        };
         const ticks = [100, 500, 1500, 2500, 5000, 10000];
         this.accuracySlider = document.createElement('input');
         this.accuracySlider.setAttribute('type', 'range');
@@ -87,7 +78,7 @@ class CompareDiv {
         }
         this.timeButton = document.createElement('button');
         this.timeButton.innerHTML = 'Meassure actual time';
-        this.timeButton.onclick = (e) => __awaiter(this, void 0, void 0, function* () {
+        this.timeButton.onclick = async (e) => {
             const newArray = this.sortingObjA.scrambleMethod()(+this.accuracySlider.value);
             const reuseArray = [...newArray];
             if (this.sortingAlgorithmA != null) {
@@ -97,7 +88,7 @@ class CompareDiv {
                 this.sortingObjA.setArray(newArray);
                 this.delaySlider.value = '0';
                 const start = Date.now();
-                yield this.algorithmA()(this.sortingObjA, true);
+                await this.algorithmA()(this.sortingObjA, true);
                 console.log(`Sorting A took: ${(Date.now() - start)}ms`);
                 this.sortingObjA.setArray(previousArray);
                 this.delaySlider.value = sliderVal;
@@ -109,12 +100,12 @@ class CompareDiv {
                 this.sortingObjB.setArray(reuseArray);
                 this.delaySlider.value = '0';
                 const start = Date.now();
-                yield this.algorithmB()(this.sortingObjB, true);
+                await this.algorithmB()(this.sortingObjB, true);
                 console.log(`Sorting B took: ${(Date.now() - start)}ms`);
                 this.sortingObjB.setArray(previousArray);
                 this.delaySlider.value = sliderVal;
             }
-        });
+        };
         this.pauseButton = document.createElement('button');
         this.pauseButton.innerHTML = 'Pause';
         this.pauseButton.onclick = (e) => {

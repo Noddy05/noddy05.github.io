@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 class SortingObject {
     constructor(canvas, delaySlider, scrambleSelect, sizeSlider) {
         this.max = 1;
@@ -190,23 +181,19 @@ function swapArray(A, i, j) {
     A[i] = A[j];
     A[j] = tmp;
 }
-function sleepFor(time) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (time > 0)
-            return new Promise(resolve => setTimeout(resolve, time));
-    });
+async function sleepFor(time) {
+    if (time > 0)
+        return new Promise(resolve => setTimeout(resolve, time));
 }
-function sleep(sortingObj) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const loopIndex = sortingObj.loopIndex;
-        while (sortingObj.paused) {
-            yield sleepFor(1);
-            if (loopIndex != sortingObj.loopIndex)
-                return;
-        }
-        if (sortingObj.delay() > 0)
-            return new Promise(resolve => setTimeout(resolve, sortingObj.delay()));
-    });
+async function sleep(sortingObj) {
+    const loopIndex = sortingObj.loopIndex;
+    while (sortingObj.paused) {
+        await sleepFor(1);
+        if (loopIndex != sortingObj.loopIndex)
+            return;
+    }
+    if (sortingObj.delay() > 0)
+        return new Promise(resolve => setTimeout(resolve, sortingObj.delay()));
 }
 function draw(sortingObj, drawUnlessDelayIsZero = false, ignoreColors = false, resetColors = true) {
     if (drawUnlessDelayIsZero && sortingObj.delay() <= 0)
@@ -238,42 +225,40 @@ function draw(sortingObj, drawUnlessDelayIsZero = false, ignoreColors = false, r
 const finalizeCheckTime = 1000;
 const finalizeResetTime = 1000;
 const finalizeFlickerTime = 100;
-function finalizeArray(sortingObj) {
-    return __awaiter(this, void 0, void 0, function* () {
-        sortingObj.isFinishing = true;
-        const loopIndex = sortingObj.loopIndex;
-        sortingObj.colors = new Map([[0, 'green']]);
-        yield draw(sortingObj, false, false, false);
-        for (let i = 1; i < sortingObj.length(); i++) {
-            if (sortingObj.get(i) >= sortingObj.get(i - 1)) {
-                sortingObj.playSound(sortingObj.get(i));
-                sortingObj.playSound(sortingObj.get(i - 1));
-                sortingObj.colors.set(i, 'green');
-            }
-            else {
-                sortingObj.colors.set(i, 'red');
-            }
-            yield sleepFor(finalizeCheckTime / sortingObj.length());
-            yield draw(sortingObj, false, false, false);
-            if (!sortingObj.isRunning(loopIndex))
-                return;
+async function finalizeArray(sortingObj) {
+    sortingObj.isFinishing = true;
+    const loopIndex = sortingObj.loopIndex;
+    sortingObj.colors = new Map([[0, 'green']]);
+    await draw(sortingObj, false, false, false);
+    for (let i = 1; i < sortingObj.length(); i++) {
+        if (sortingObj.get(i) >= sortingObj.get(i - 1)) {
+            sortingObj.playSound(sortingObj.get(i));
+            sortingObj.playSound(sortingObj.get(i - 1));
+            sortingObj.colors.set(i, 'green');
         }
-        yield sleepFor(finalizeResetTime);
-        yield draw(sortingObj, false, true, false);
+        else {
+            sortingObj.colors.set(i, 'red');
+        }
+        await sleepFor(finalizeCheckTime / sortingObj.length());
+        await draw(sortingObj, false, false, false);
         if (!sortingObj.isRunning(loopIndex))
             return;
-        for (let i = 0; i < 3; i++) {
-            yield sleepFor(finalizeFlickerTime);
-            yield draw(sortingObj, false, false, false);
-            sound(1200 - (i % 2) * 400);
-            if (!sortingObj.isRunning(loopIndex))
-                return;
-            yield sleepFor(finalizeFlickerTime);
-            yield draw(sortingObj, false, true, false);
-            if (!sortingObj.isRunning(loopIndex))
-                return;
-        }
-        sortingObj.colors = new Map([]);
-        sortingObj.isFinishing = false;
-    });
+    }
+    await sleepFor(finalizeResetTime);
+    await draw(sortingObj, false, true, false);
+    if (!sortingObj.isRunning(loopIndex))
+        return;
+    for (let i = 0; i < 3; i++) {
+        await sleepFor(finalizeFlickerTime);
+        await draw(sortingObj, false, false, false);
+        sound(1200 - (i % 2) * 400);
+        if (!sortingObj.isRunning(loopIndex))
+            return;
+        await sleepFor(finalizeFlickerTime);
+        await draw(sortingObj, false, true, false);
+        if (!sortingObj.isRunning(loopIndex))
+            return;
+    }
+    sortingObj.colors = new Map([]);
+    sortingObj.isFinishing = false;
 }
