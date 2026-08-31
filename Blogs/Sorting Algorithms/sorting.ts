@@ -84,12 +84,20 @@ class SortingObject {
         this.set(index, value);
     }
 
+    public getArray() {
+        return this.array;
+    }
+
+    public setArray(array: number[]) {
+        this.array = array;
+    }
+
     public playSound(value: number){
         let volumeMult = 1;
         if(!this.isFinishing)
             volumeMult = Math.max(0.2, Math.min(1, Math.log(1 + this.delay() / 100)));
         
-        sound(((value - this.min) / (this.max - this.min) + this.min) * 1100 + 132, volumeMult);
+        sound(((value - this.min) / (this.max - this.min)) * 1100 + 132, volumeMult);
     }
 
     public calculateBounds(): void {

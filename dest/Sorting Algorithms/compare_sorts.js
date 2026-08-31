@@ -37,7 +37,7 @@ class CompareDiv {
         this.createCanvas();
         this.sortingObjA = new SortingObject(this.canvasA, this.delaySlider, this.scrambleMethod, this.sizeSlider);
         this.sortingObjB = new SortingObject(this.canvasB, this.delaySlider, this.scrambleMethod, this.sizeSlider);
-        this.sortingObjB.array = [...this.sortingObjA.array];
+        this.sortingObjB.setArray([...this.sortingObjA.getArray()]);
         draw(this.sortingObjA);
         draw(this.sortingObjB);
     }
@@ -93,25 +93,25 @@ class CompareDiv {
             if (this.sortingAlgorithmA != null) {
                 this.sortingObjA.paused = false;
                 const sliderVal = this.delaySlider.value;
-                const previousArray = this.sortingObjA.array;
-                this.sortingObjA.array = newArray;
+                const previousArray = this.sortingObjA.getArray();
+                this.sortingObjA.setArray(newArray);
                 this.delaySlider.value = '0';
                 const start = Date.now();
                 yield this.algorithmA()(this.sortingObjA, true);
                 console.log(`Sorting A took: ${(Date.now() - start)}ms`);
-                this.sortingObjA.array = previousArray;
+                this.sortingObjA.setArray(previousArray);
                 this.delaySlider.value = sliderVal;
             }
             if (this.sortingAlgorithmB != null) {
                 this.sortingObjB.paused = false;
                 const sliderVal = this.delaySlider.value;
-                const previousArray = this.sortingObjB.array;
-                this.sortingObjB.array = reuseArray;
+                const previousArray = this.sortingObjB.getArray();
+                this.sortingObjB.setArray(reuseArray);
                 this.delaySlider.value = '0';
                 const start = Date.now();
                 yield this.algorithmB()(this.sortingObjB, true);
                 console.log(`Sorting B took: ${(Date.now() - start)}ms`);
-                this.sortingObjB.array = previousArray;
+                this.sortingObjB.setArray(previousArray);
                 this.delaySlider.value = sliderVal;
             }
         });
@@ -125,7 +125,7 @@ class CompareDiv {
         this.scrambleButton.innerHTML = 'Scramble';
         this.scrambleButton.onclick = (e) => {
             this.sortingObjA.scramble();
-            this.sortingObjB.array = [...this.sortingObjA.array];
+            this.sortingObjB.setArray([...this.sortingObjA.getArray()]);
             draw(this.sortingObjA);
             draw(this.sortingObjB);
         };

@@ -17,7 +17,7 @@ function extendSortedArray(sortingObj, new_size) {
     const max = sortingObj.max;
     for (let i = 0; i < new_size; i++) {
         if (i < sortingObj.length()) {
-            array[i] = sortingObj.array[i];
+            array[i] = sortingObj.get(i);
         }
         else {
             array[i] = max + 1 + i - sortingObj.length();
@@ -37,7 +37,7 @@ function extendReverseSortedArray(sortingObj, new_size) {
     const min = sortingObj.min;
     for (let i = 0; i < new_size; i++) {
         if (i < sortingObj.length()) {
-            array[i] = sortingObj.array[i];
+            array[i] = sortingObj.get(i);
         }
         else {
             array[i] = min - 1 - (i - sortingObj.length());
