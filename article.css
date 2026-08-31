@@ -13,8 +13,9 @@ body{
     align-items: center; /* vertical centering, replaces vertical-align: middle */
 }
 #header-text{
-    width: 600px;
-    margin: 0 45px;
+    width: 100%;
+    margin-left: 45px;
+    margin-right: 90px;
     position: relative;
     /* no need for display: inline-block or height: 100% anymore */
 }
@@ -27,7 +28,9 @@ body{
     margin: 0px;
 }
 .logo{
-    height: 300px;
+    max-width: 20%;
+    max-height: 100%;
+    aspect-ratio: inherit;
     position: relative;
     vertical-align: top;
 }
@@ -35,8 +38,7 @@ body{
 .page canvas {
     margin-left: 50%;
     translate: -50% 0%;
-    width: 800px;
-    height: 500px;
+    width: 100%;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 6px 6px;
 }
 .page img {
@@ -52,11 +54,19 @@ body{
 }
 
 #content{
-    width: 1000px;
+    width: 900px;
     translate: -50% 0%;
     position: absolute;
     left: 50%;
     margin: 50px 0px 50px 0px;
+}
+
+pre {
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
 pre code .comment {

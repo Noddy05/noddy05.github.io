@@ -89,7 +89,7 @@ class SortingObject {
         if(!this.isFinishing)
             volumeMult = Math.max(0.2, Math.min(1, Math.log(1 + this.delay() / 100)));
         
-        sound(value / this.length() * 1100 + 132, volumeMult);
+        sound(((value - this.min) / (this.max - this.min) + this.min) * 1100 + 132, volumeMult);
     }
 
     public calculateBounds(): void {
