@@ -29,7 +29,7 @@ async function recursiveBacktracker(maze) {
             }
         }
         if (maze.delay() > 0 && iteration % iterationsInALoop == 0) {
-            await sleep(maze.delay());
+            await sleepFor(maze.delay());
             if (!maze.isRunning(loopIndex))
                 return;
             await maze.draw(true);
@@ -38,7 +38,7 @@ async function recursiveBacktracker(maze) {
             path[path.length - 1].setColor('green');
             path.pop();
             if (maze.delay() > 0 && iteration % iterationsInALoop == 0) {
-                await sleep(maze.delay());
+                await sleepFor(maze.delay());
                 if (!maze.isRunning(loopIndex))
                     return;
                 await maze.draw(true);

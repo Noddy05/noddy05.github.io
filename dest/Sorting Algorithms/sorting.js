@@ -181,10 +181,6 @@ function swapArray(A, i, j) {
     A[i] = A[j];
     A[j] = tmp;
 }
-async function sleepFor(time) {
-    if (time > 0)
-        return new Promise(resolve => setTimeout(resolve, time));
-}
 async function sleep(sortingObj) {
     const loopIndex = sortingObj.loopIndex;
     while (sortingObj.paused) {

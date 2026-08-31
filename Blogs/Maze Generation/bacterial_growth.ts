@@ -25,7 +25,7 @@ async function bacterialGrowth(maze: Maze) {
         }
     }
 
-    await sleep(maze.delay());
+    await sleepFor(maze.delay());
     if(!maze.isRunning(loopIndex))
         return;
     await maze.draw();
@@ -58,7 +58,7 @@ async function bacterialGrowth(maze: Maze) {
             cellsDone++;
             //sound((cellsDone / (maze.w * maze.h)) * 1100 + 130);
             if(maze.delay() > delayCutoff && iteration % iterationsInALoop == 0){
-                await sleep(maze.delay());
+                await sleepFor(maze.delay());
                 if(!maze.isRunning(loopIndex))
                     return;
                 await maze.draw(true);
@@ -92,7 +92,7 @@ async function bacterialGrowth(maze: Maze) {
         //sound((1 - cellsLeft / (maze.w * maze.h)) * 1100 + 130);
 
         if(maze.delay() > 0 && iteration % iterationsInALoop == 0){
-            await sleep(maze.delay());
+            await sleepFor(maze.delay());
             if(!maze.isRunning(loopIndex))
                 return;
             await maze.draw(true);
@@ -102,7 +102,7 @@ async function bacterialGrowth(maze: Maze) {
         iteration++;
     }
 
-    await sleep(maze.delay());
+    await sleepFor(maze.delay());
     if(!maze.isRunning(loopIndex))
         return;
     await maze.draw(false);

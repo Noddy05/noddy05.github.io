@@ -35,7 +35,7 @@ async function recursiveBacktracker(maze: Maze){
         }
 
         if(maze.delay() > 0 && iteration % iterationsInALoop == 0){
-            await sleep(maze.delay());
+            await sleepFor(maze.delay());
             if(!maze.isRunning(loopIndex))
                 return;
             await maze.draw(true);
@@ -46,7 +46,7 @@ async function recursiveBacktracker(maze: Maze){
             path.pop();
 
             if(maze.delay() > 0 && iteration % iterationsInALoop == 0){
-                await sleep(maze.delay());
+                await sleepFor(maze.delay());
                 if(!maze.isRunning(loopIndex))
                     return;
                 await maze.draw(true);

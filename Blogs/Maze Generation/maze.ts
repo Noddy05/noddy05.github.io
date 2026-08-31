@@ -341,8 +341,3 @@ class MazeWindow {
         this.mazeDiv.appendChild(this.sizeSlider);
     }
 }
-
-async function sleep(time: number){
-    if(time > 0)
-        return new Promise(resolve => setTimeout(resolve, time));
-}
