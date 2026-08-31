@@ -361,7 +361,7 @@ class HTMLBuilder():
 
                 file.write('</head>\n<body>\n')
 
-                file.write('<div class="content">')
+                file.write('<div id="content">')
 
                 file.write('<flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png">' +
                     '<div id="header-text"><h1>' + self.title + '</h1></div></flexbox>')

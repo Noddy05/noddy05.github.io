@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 function mergeSort(sortingObj, skipAnimation) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
-        yield merge_sort(sortingObj, 0, sortingObj.array.length, loopIndex);
+        yield merge_sort(sortingObj, 0, sortingObj.length(), loopIndex);
         if (!skipAnimation)
             yield finalizeArray(sortingObj);
     });
@@ -39,22 +39,22 @@ function merge(sortingObj, l, m, r, loopIndex) {
             sortingObj.colors.set(i, "red");
         }
         for (let i = l; i < m; i++) {
-            leftArray.push(sortingObj.array[i]);
+            leftArray.push(sortingObj.read(i));
         }
         let rightArray = [];
         for (let i = m; i < r; i++) {
-            rightArray.push(sortingObj.array[i]);
+            rightArray.push(sortingObj.read(i));
         }
         let L = 0;
         let R = 0;
         while (L < leftArray.length && R < rightArray.length) {
             if (leftArray[L] < rightArray[R]) {
-                sortingObj.array[l + L + R] = leftArray[L];
+                sortingObj.write(l + L + R, leftArray[L]);
                 sortingObj.colors.set(l + L + R, "green");
                 L++;
             }
             else {
-                sortingObj.array[l + L + R] = rightArray[R];
+                sortingObj.write(l + L + R, rightArray[R]);
                 sortingObj.colors.set(l + L + R, "green");
                 R++;
             }
@@ -64,7 +64,7 @@ function merge(sortingObj, l, m, r, loopIndex) {
                 return;
         }
         while (L < leftArray.length) {
-            sortingObj.array[l + L + R] = leftArray[L];
+            sortingObj.write(l + L + R, leftArray[L]);
             sortingObj.colors.set(l + L + R, "green");
             L++;
             yield sleep(sortingObj);
@@ -73,7 +73,7 @@ function merge(sortingObj, l, m, r, loopIndex) {
                 return;
         }
         while (R < rightArray.length) {
-            sortingObj.array[l + L + R] = rightArray[R];
+            sortingObj.write(l + L + R, rightArray[R]);
             sortingObj.colors.set(l + L + R, "green");
             R++;
             yield sleep(sortingObj);
@@ -93,7 +93,7 @@ naiveButton.setAttribute('checked', 'true');
 function quickSort(sortingObj, skipAnimation) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
-        yield quick_sort(sortingObj, 0, sortingObj.array.length - 1, loopIndex);
+        yield quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
         if (!skipAnimation)
             yield finalizeArray(sortingObj);
     });
@@ -126,18 +126,14 @@ function partition(sortingObj_1, l_1, r_1, loopIndex_1) {
             return 0;
         const pivotIndex = Math.floor((l + r) / 2);
         if (!naiveButton.checked || !canBeNaive) {
-            let tmp = sortingObj.array[pivotIndex];
-            sortingObj.array[pivotIndex] = sortingObj.array[r];
-            sortingObj.array[r] = tmp;
+            swap(sortingObj, pivotIndex, r);
         }
-        let x = sortingObj.array[r];
+        let x = sortingObj.read(r);
         let i = l - 1;
         for (let j = l; j < r; j++) {
-            if (sortingObj.array[j] <= x) {
+            if (sortingObj.read(j) <= x) {
                 i++;
-                let tmp = sortingObj.array[i];
-                sortingObj.array[i] = sortingObj.array[j];
-                sortingObj.array[j] = tmp;
+                swap(sortingObj, i, j);
             }
             sortingObj.colors = new Map([
                 [r, 'red'],
@@ -150,8 +146,8 @@ function partition(sortingObj_1, l_1, r_1, loopIndex_1) {
                 return i + 1;
             r = Math.min(r, sortingObj.length());
         }
-        sortingObj.array[r] = sortingObj.array[i + 1];
-        sortingObj.array[i + 1] = x;
+        sortingObj.write(r, sortingObj.read(i + 1));
+        sortingObj.write(i + 1, x);
         return i + 1;
     });
 }
@@ -163,12 +159,12 @@ function maxHeapify(sortingObj, length, i, loopIndex) {
         let largest = i;
         let l = 2 * i + 1;
         let r = l + 1;
-        if (l < length && sortingObj.array[l] > sortingObj.array[largest])
+        if (l < length && sortingObj.read(l) > sortingObj.read(largest))
             largest = l;
-        if (r < length && sortingObj.array[r] > sortingObj.array[largest])
+        if (r < length && sortingObj.read(r) > sortingObj.read(largest))
             largest = r;
         if (largest != i) {
-            swap(sortingObj.array, largest, i);
+            swap(sortingObj, largest, i);
             sortingObj.colors = new Map([[i, 'red'], [l, 'blue'], [r, 'blue'], [largest, 'green']]);
             yield sleep(sortingObj);
             yield draw(sortingObj, true);
@@ -202,7 +198,7 @@ function heapSort(sortingObj, skipAnimation) {
         const loopIndex = ++sortingObj.loopIndex;
         yield buildHeap(sortingObj, sortingObj.length(), loopIndex);
         for (let i = sortingObj.length() - 1; i > 0; i--) {
-            swap(sortingObj.array, 0, i);
+            swap(sortingObj, 0, i);
             sortingObj.colors = new Map([[i, 'red'], [0, 'red']]);
             yield sleep(sortingObj);
             yield draw(sortingObj, true);
@@ -223,7 +219,9 @@ heapSortDiv.sortingAlgorithm = heapSort;
 function introSort(sortingObj, skipAnimation) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
-        yield intro_sort(sortingObj, 0, sortingObj.array.length - 1, loopIndex);
+        yield intro_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
+        if (loopIndex != sortingObj.loopIndex)
+            return;
         yield insertionSort(sortingObj, true);
         if (!skipAnimation)
             yield finalizeArray(sortingObj);

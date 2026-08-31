@@ -4,7 +4,7 @@ async function selectionSort(sortingObj: SortingObject, skipAnimation: boolean){
     for(let i = 0; i < sortingObj.length() - 1; i++){
         let minIndex = i;
         for(let j = i + 1; j < sortingObj.length(); j++){
-            if(sortingObj.array[j] < sortingObj.array[minIndex])
+            if(sortingObj.read(j) < sortingObj.get(minIndex))
                 minIndex = j
         
             sortingObj.colors = new Map([ 
@@ -18,7 +18,7 @@ async function selectionSort(sortingObj: SortingObject, skipAnimation: boolean){
                 return;
         }
 
-        swap(sortingObj.array, i, minIndex);
+        swap(sortingObj, i, minIndex);
         await sleep(sortingObj);
         await draw(sortingObj, true);
         if(!sortingObj.isRunning(loopIndex))
@@ -41,8 +41,8 @@ async function bubbleSort(sortingObj: SortingObject, skipAnimation: boolean){
         let swapped = false;
 
         for(let j = 0; j < sortingObj.length() - i - 1; j++){
-            if(sortingObj.array[j] > sortingObj.array[j + 1]){
-                swap(sortingObj.array, j, j + 1);
+            if(sortingObj.read(j) > sortingObj.read(j + 1)){
+                swap(sortingObj, j, j + 1);
                 swapped = true;
             } 
 
@@ -80,14 +80,14 @@ async function insertionSort(sortingObj: SortingObject, skipAnimation: boolean){
             return;
 
         let j = i - 1;
-        while(j >= 0 && sortingObj.array[j] > sortingObj.array[j + 1]){
+        while(j >= 0 && sortingObj.read(j) > sortingObj.read(j + 1)){
             sortingObj.colors = new Map([ 
                 [ j, 'red' ], 
                 [ j + 1, 'red' ], 
                 [ i, 'green' ], 
             ]);
             
-            swap(sortingObj.array, j, j + 1);
+            swap(sortingObj, j, j + 1);
             await sleep(sortingObj);
             await draw(sortingObj, true);
             if(!sortingObj.isRunning(loopIndex))

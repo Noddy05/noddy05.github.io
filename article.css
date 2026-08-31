@@ -51,7 +51,7 @@ body{
     font-style: italic;
 }
 
-.content{
+#content{
     width: 1000px;
     translate: -50% 0%;
     position: absolute;
@@ -89,7 +89,7 @@ pre code .variable {
     margin: 0px;
 }
 
-.content .page{
+#content .page{
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
     background-color: rgb(238, 238, 238);
     padding: 70px;

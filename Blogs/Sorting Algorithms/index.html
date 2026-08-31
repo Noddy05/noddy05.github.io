@@ -23,7 +23,8 @@
 	<title>Sorting Algorithms</title>
 	<link rel="stylesheet" type="text/css" href="./sorting.css"></head>
 <body>
-<div class="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>A Needlessly Thorough Analysis of Known Sorting Algorithms</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
+<div id="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>A Needlessly Thorough Analysis of Known Sorting Algorithms</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
+
 
 
 
@@ -271,6 +272,9 @@ Although for visualization purposes it made more sense to use this alternative f
     <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword></code></pre>
 <h3 id="4_2">4.2) Quick sort</h3>
 <div id="quick_sort" class="sorting_algo"></div>
+<pre><code class="language-html"><keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>)
+    <keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="literal">0</keyword>, |<keyword class="variable">A</keyword>|)
+</code></pre>
 
 <h3 id="4_3">4.3) Heap sort</h3>
 <div id="heap_sort" class="sorting_algo"></div>
@@ -324,6 +328,7 @@ Now combine (\ref{f n geq n fac}) with (\ref{log2 n factorial}) and
 we've succesfully arrived at the theoretical limit of the time complexity 
 of sorting algorithms is $f(n)=\Omega(n\log n)$. By the existance of algorithms like MergeSort
 we know that this theoretical limit is also achievable.</p></div></div></body></html>
+<script src="../../dest/Sorting Algorithms/sound.js"></script>
 <script src="../../dest/Sorting Algorithms/generate_array.js"></script>
 <script src="../../dest/Sorting Algorithms/sorting.js"></script>
 <script src="../../dest/Sorting Algorithms/simple_sorts.js"></script>

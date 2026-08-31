@@ -1,8 +1,8 @@
-.content .page .compare_algo {
+#content .page .compare_algo {
     width: 100%;
     display: inline-block;
 }
-.content .page .compare_algo canvas {
+#content .page .compare_algo canvas {
     width: 48%;
     height: 400px;
     margin: 1%;

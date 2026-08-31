@@ -1,6 +1,6 @@
 async function mergeSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
-    await merge_sort(sortingObj, 0, sortingObj.array.length, loopIndex);
+    await merge_sort(sortingObj, 0, sortingObj.length(), loopIndex);
 
     if(!skipAnimation)
         await finalizeArray(sortingObj);
@@ -31,22 +31,22 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
     }
 
     for(let i = l; i < m; i++){
-        leftArray.push(sortingObj.array[i]);
+        leftArray.push(sortingObj.read(i));
     }
     let rightArray = [];
     for(let i = m; i < r; i++){
-        rightArray.push(sortingObj.array[i]);
+        rightArray.push(sortingObj.read(i));
     }
     
     let L = 0;
     let R = 0;
     while(L < leftArray.length && R < rightArray.length){
         if(leftArray[L] < rightArray[R]){
-            sortingObj.array[l + L + R] = leftArray[L];
+            sortingObj.write(l + L + R, leftArray[L]);
             sortingObj.colors.set(l + L + R, "green");
             L++;
         } else {
-            sortingObj.array[l + L + R] = rightArray[R];
+            sortingObj.write(l + L + R, rightArray[R]);
             sortingObj.colors.set(l + L + R, "green");
             R++;
         }
@@ -57,7 +57,7 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
             return;
     }
     while(L < leftArray.length){
-        sortingObj.array[l + L + R] = leftArray[L];
+        sortingObj.write(l + L + R, leftArray[L]);
         sortingObj.colors.set(l + L + R, "green");
         L++;
         
@@ -67,7 +67,7 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
             return;
     }
     while(R < rightArray.length){
-        sortingObj.array[l + L + R] = rightArray[R];
+        sortingObj.write(l + L + R, rightArray[R]);
         sortingObj.colors.set(l + L + R, "green");
         R++;
             
@@ -91,7 +91,7 @@ naiveButton.setAttribute('checked', 'true');
 
 async function quickSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
-    await quick_sort(sortingObj, 0, sortingObj.array.length - 1, loopIndex);
+    await quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
     
     if(!skipAnimation)
         await finalizeArray(sortingObj);
@@ -131,19 +131,15 @@ async function partition(sortingObj: SortingObject, l: number,
 
     const pivotIndex = Math.floor((l + r) / 2);
     if(!naiveButton.checked || !canBeNaive){
-        let tmp = sortingObj.array[pivotIndex];
-        sortingObj.array[pivotIndex] = sortingObj.array[r];
-        sortingObj.array[r] = tmp;
+        swap(sortingObj, pivotIndex, r);
     }
 
-    let x = sortingObj.array[r];
+    let x = sortingObj.read(r);
     let i = l - 1;
     for(let j = l; j < r; j++){
-        if(sortingObj.array[j] <= x){
+        if(sortingObj.read(j) <= x){
             i++;
-            let tmp = sortingObj.array[i];
-            sortingObj.array[i] = sortingObj.array[j];
-            sortingObj.array[j] = tmp;
+            swap(sortingObj, i, j);
         }
         
         sortingObj.colors = new Map([ 
@@ -160,8 +156,8 @@ async function partition(sortingObj: SortingObject, l: number,
         r = Math.min(r, sortingObj.length());
     }
     
-    sortingObj.array[r] = sortingObj.array[i + 1];
-    sortingObj.array[i + 1] = x;
+    sortingObj.write(r, sortingObj.read(i + 1));
+    sortingObj.write(i + 1, x);
 
     return i + 1;
 }
@@ -176,14 +172,14 @@ async function maxHeapify(sortingObj: SortingObject, length: number, i: number, 
     let l = 2 * i + 1;
     let r = l + 1;
 
-    if(l < length && sortingObj.array[l] > sortingObj.array[largest])
+    if(l < length && sortingObj.read(l) > sortingObj.read(largest))
         largest = l;
 
-    if(r < length && sortingObj.array[r] > sortingObj.array[largest])
+    if(r < length && sortingObj.read(r) > sortingObj.read(largest))
         largest = r;
 
     if(largest != i){
-        swap(sortingObj.array, largest, i);
+        swap(sortingObj, largest, i);
 
         sortingObj.colors = new Map([ [ i, 'red'], [ l, 'blue' ], [ r, 'blue' ], [ largest, 'green' ] ]);
 
@@ -219,7 +215,7 @@ async function heapSort(sortingObj: SortingObject, skipAnimation: boolean){
     await buildHeap(sortingObj, sortingObj.length(), loopIndex);
 
     for(let i = sortingObj.length() - 1; i > 0; i--){
-        swap(sortingObj.array, 0, i);
+        swap(sortingObj, 0, i);
         sortingObj.colors = new Map([ [ i, 'red' ], [ 0, 'red' ] ]);
         
         await sleep(sortingObj);
@@ -246,15 +242,16 @@ heapSortDiv.sortingAlgorithm = heapSort;
 
 async function introSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
-    await intro_sort(sortingObj, 0, sortingObj.array.length - 1, loopIndex);
+    await intro_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
+    if(loopIndex != sortingObj.loopIndex)
+        return;
     await insertionSort(sortingObj, true);
 
     if(!skipAnimation)
         await finalizeArray(sortingObj);
 }
 
-async function intro_sort(sortingObj: SortingObject, 
-    l: number, r: number, loopIndex: number){
+async function intro_sort(sortingObj: SortingObject, l: number, r: number, loopIndex: number){
     if(r - l <= 8){
         return;
     }

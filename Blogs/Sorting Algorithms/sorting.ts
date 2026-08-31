@@ -1,11 +1,12 @@
 class SortingObject {
     public canvas: HTMLCanvasElement;
-    public array: number[];
+    private array: number[];
     public colors: Map<number, string>;
     public delaySlider: HTMLInputElement;
     public scrambleSelect: HTMLSelectElement;
     public sizeSlider: HTMLInputElement;
     public paused: boolean;
+    public isFinishing: boolean;
 
     public max: number = 1;
     public min: number = 0;
@@ -21,6 +22,7 @@ class SortingObject {
         this.scrambleSelect = scrambleSelect;
         this.sizeSlider = sizeSlider;
         this.paused = false;
+        this.isFinishing = false;
 
         this.loopIndex = 0;
 
@@ -41,6 +43,39 @@ class SortingObject {
 
     public length(): number {
         return this.array.length;
+    }
+
+    //Get and set modifies the array without making noises
+    public get(index: number): number {
+        return this.array[index];
+    }
+    public set(index: number, value: number): void {
+        this.array[index] = value;
+    }
+
+    //Read and write are used for the animations
+    public read(index: number): number {
+        const val = this.get(index);
+        if(this.delay() > 0 || this.isFinishing){
+            //Play sound
+            this.playSound(val);
+        }
+        return val;
+    }
+    public write(index: number, value: number): void {
+        if(this.delay() > 0 || this.isFinishing){
+            //Play sound
+            this.playSound(value);
+        }
+        this.set(index, value);
+    }
+
+    public playSound(value: number){
+        let volumeMult = 1;
+        if(this.delay() > 0)
+            volumeMult = Math.min(1, Math.log(1 + this.delay() / 100))
+        
+        sound(value / this.length() * 1100 + 132, volumeMult);
     }
 
     public calculateBounds(): void {
@@ -123,6 +158,7 @@ class SortingDiv {
                 return;
 
             this.sortingObj!.paused = false;
+            this.sortingObj!.isFinishing = false;
             this.sortingAlgorithm(this.sortingObj!, false);
         }
 
@@ -167,7 +203,12 @@ class SortingDiv {
     }
 }
 
-function swap(A: number[], i: number, j: number){
+function swap(A: SortingObject, i: number, j: number){
+    const tmp = A.read(i);
+    A.write(i, A.read(j));
+    A.write(j, tmp);
+}
+function swapArray(A: number[], i: number, j: number){
     const tmp = A[i];
     A[i] = A[j];
     A[j] = tmp;
@@ -191,14 +232,13 @@ function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false,
 
     const canvas = sortingObj.canvas;
     const ctx = sortingObj.ctx;
-    const array = sortingObj.array;
 
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     var padding = 20;
     var w = canvas.width - 2 * padding, h = canvas.height - 2 * padding;
-    var n = array.length;
+    var n = sortingObj.length();
     var barW = w / n;
     var spacing = 2;
 
@@ -211,7 +251,7 @@ function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false,
             ctx.fillStyle = 'black';
         }
         ctx.fillRect(padding + barW * i + spacing,      padding + h, 
-            barW - 2 * spacing,         - h * (array[i] + 1 - sortingObj.min) / size);
+            barW - 2 * spacing,         - h * (sortingObj.get(i) + 1 - sortingObj.min) / size);
     }
 }
 // adding scrambled and then sorted elements behaves weird
@@ -221,13 +261,14 @@ const finalizeCheckTime = 1000;
 const finalizeResetTime = 1000;
 const finalizeFlickerTime = 100;
 async function finalizeArray(sortingObj: SortingObject){
+    sortingObj.isFinishing = true;
     const loopIndex = sortingObj.loopIndex;
 
     sortingObj.colors = new Map([ [ 0, 'green' ] ]);
     await draw(sortingObj, false);
 
     for(let i = 1; i < sortingObj.length(); i++){
-        if(sortingObj.array[i] >= sortingObj.array[i - 1]){
+        if(sortingObj.read(i) >= sortingObj.read(i - 1)){
             sortingObj.colors.set(i, 'green')
         } else {
             sortingObj.colors.set(i, 'red')
@@ -246,6 +287,8 @@ async function finalizeArray(sortingObj: SortingObject){
     for(let i = 0; i < 3; i++){
         await sleepFor(finalizeFlickerTime);
         await draw(sortingObj, false);
+        sound(1200 - (i % 2) * 400);
+
         if(!sortingObj.isRunning(loopIndex))
             return;
 
@@ -255,5 +298,5 @@ async function finalizeArray(sortingObj: SortingObject){
             return;
     }
 
-    sortingObj.colors = new Map([ ]);
+    sortingObj.isFinishing = false;
 }
