@@ -2,7 +2,7 @@ async function mergeSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
     await merge_sort(sortingObj, 0, sortingObj.length(), loopIndex);
 
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
         await finalizeArray(sortingObj);
 }
 async function merge_sort(sortingObj: SortingObject, l: number, r: number, loopIndex: number){
@@ -52,7 +52,7 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
         }
             
         await sleep(sortingObj);
-        await draw(sortingObj, true);
+        await draw(sortingObj, true, false, false);
         if(loopIndex != sortingObj.loopIndex)
             return;
     }
@@ -62,7 +62,7 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
         L++;
         
         await sleep(sortingObj);
-        await draw(sortingObj, true);
+        await draw(sortingObj, true, false, false);
         if(loopIndex != sortingObj.loopIndex)
             return;
     }
@@ -72,7 +72,7 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
         R++;
             
         await sleep(sortingObj);
-        await draw(sortingObj, true)
+        await draw(sortingObj, true, false, false)
         if(loopIndex != sortingObj.loopIndex)
             return;
     }
@@ -93,7 +93,7 @@ async function quickSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
     await quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
     
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
         await finalizeArray(sortingObj);
 }
 async function quick_sort(sortingObj: SortingObject, 
@@ -116,11 +116,10 @@ async function quick_sort(sortingObj: SortingObject,
     if(loopIndex != sortingObj.loopIndex)
         return;
 
-    sortingObj.colors = new Map([ ]);
     await sleep(sortingObj);
-    await draw(sortingObj, true);
     if(loopIndex != sortingObj.loopIndex)
         return;
+    await draw(sortingObj, true);
 }
 
 async function partition(sortingObj: SortingObject, l: number, 
@@ -142,16 +141,13 @@ async function partition(sortingObj: SortingObject, l: number,
             swap(sortingObj, i, j);
         }
         
-        sortingObj.colors = new Map([ 
-            [ r, 'red' ], 
-            [ i, 'blue' ], 
-            [ j, 'green' ], 
-        ]);
+        sortingObj.colors.set(r, 'blue');
+        sortingObj.colors.set(i, 'green');
 
         await sleep(sortingObj);
-        await draw(sortingObj, true);
         if(loopIndex != sortingObj.loopIndex)
-            return i + 1;
+            return 0;
+        await draw(sortingObj, true);
 
         r = Math.min(r, sortingObj.length());
     }
@@ -172,6 +168,9 @@ async function maxHeapify(sortingObj: SortingObject, length: number, i: number, 
     let l = 2 * i + 1;
     let r = l + 1;
 
+    if(l >= length)
+        return;
+
     if(l < length && sortingObj.read(l) > sortingObj.read(largest))
         largest = l;
 
@@ -180,8 +179,7 @@ async function maxHeapify(sortingObj: SortingObject, length: number, i: number, 
 
     if(largest != i){
         swap(sortingObj, largest, i);
-
-        sortingObj.colors = new Map([ [ i, 'red'], [ l, 'blue' ], [ r, 'blue' ], [ largest, 'green' ] ]);
+        sortingObj.colors.set(i, 'green');
 
         await sleep(sortingObj);
         await draw(sortingObj, true);
@@ -191,11 +189,9 @@ async function maxHeapify(sortingObj: SortingObject, length: number, i: number, 
         //Now make sure we keep heap-shape in the subtree
         await maxHeapify(sortingObj, length, largest, loopIndex);
     } else {
-        sortingObj.colors = new Map([ [ i, 'red' ] ]);
-        if(l < length)
-            sortingObj.colors.set(l, 'blue');
-        if(r < length)
-            sortingObj.colors.set(r, 'blue');
+        sortingObj.colors.set(i, 'green');
+        sortingObj.colors.set(l, 'blue');
+        sortingObj.colors.set(r, 'blue');
 
         await sleep(sortingObj);
         await draw(sortingObj, true);
@@ -216,7 +212,6 @@ async function heapSort(sortingObj: SortingObject, skipAnimation: boolean){
 
     for(let i = sortingObj.length() - 1; i > 0; i--){
         swap(sortingObj, 0, i);
-        sortingObj.colors = new Map([ [ i, 'red' ], [ 0, 'red' ] ]);
         
         await sleep(sortingObj);
         await draw(sortingObj, true);
@@ -232,7 +227,7 @@ async function heapSort(sortingObj: SortingObject, skipAnimation: boolean){
             return;
     }
 
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
     await finalizeArray(sortingObj);
 }
 
@@ -247,7 +242,7 @@ async function introSort(sortingObj: SortingObject, skipAnimation: boolean){
         return;
     await insertionSort(sortingObj, true);
 
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex + 1))
         await finalizeArray(sortingObj);
 }
 
@@ -271,7 +266,6 @@ async function intro_sort(sortingObj: SortingObject, l: number, r: number, loopI
     if(loopIndex != sortingObj.loopIndex)
         return;
 
-    sortingObj.colors = new Map([ ]);
     await sleep(sortingObj);
     await draw(sortingObj, true);
     if(loopIndex != sortingObj.loopIndex)

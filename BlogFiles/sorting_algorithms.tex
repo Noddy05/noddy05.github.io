@@ -249,7 +249,28 @@ Although for visualization purposes it made more sense to use this alternative f
 \div{quick_sort}{sorting_algo}
 \code{##QuickSort##(~A~)
     ##QuickSort##(~A~, 0, |~A~|)
-}
+
+##QuickSort##(~A~, ~l~, ~r~)
+    if(~r~ <= ~l~)
+        return
+
+    mid = ##Partition##(~A~, ~l~, ~r~)
+
+    ##QuickSort##(~A~, ~l~, mid - 1)
+    ##QuickSort##(~A~, mid + 1, ~r~)
+
+##Partition##(~A~, ~l~, ~r~)
+    x = ~A~[r]
+    i = ~l~ - 1
+    for j = ~l~ to ~r~ - 1
+        if ~A~[j] <= x
+            i++
+            ##Swap##(~A~, i, j)
+
+    ~A~[~r~] = ~A~[i + 1]
+    ~A~[i + 1] = x
+    
+    return i + 1}
 
 \subsubsection{Heap sort}
 \div{heap_sort}{sorting_algo}

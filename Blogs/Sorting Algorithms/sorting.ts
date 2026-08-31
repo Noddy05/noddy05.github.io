@@ -7,6 +7,8 @@ class SortingObject {
     public sizeSlider: HTMLInputElement;
     public paused: boolean;
     public isFinishing: boolean;
+    public numWrites: number;
+    public numReads: number;
 
     public max: number = 1;
     public min: number = 0;
@@ -23,6 +25,8 @@ class SortingObject {
         this.sizeSlider = sizeSlider;
         this.paused = false;
         this.isFinishing = false;
+        this.numWrites = 0;
+        this.numReads = 0;
 
         this.loopIndex = 0;
 
@@ -47,9 +51,11 @@ class SortingObject {
 
     //Get and set modifies the array without making noises
     public get(index: number): number {
+        this.numReads++;
         return this.array[index];
     }
     public set(index: number, value: number): void {
+        this.numWrites++;
         this.array[index] = value;
     }
 
@@ -59,6 +65,10 @@ class SortingObject {
         if(this.delay() > 0 || this.isFinishing){
             //Play sound
             this.playSound(val);
+
+            if(this.delay() > 0){
+                this.colors.set(index, 'red');
+            }
         }
         return val;
     }
@@ -66,6 +76,10 @@ class SortingObject {
         if(this.delay() > 0 || this.isFinishing){
             //Play sound
             this.playSound(value);
+
+            if(this.delay() > 0){
+                this.colors.set(index, 'red');
+            }
         }
         this.set(index, value);
     }
@@ -157,6 +171,8 @@ class SortingDiv {
             if(this.sortingAlgorithm == null)
                 return;
 
+            this.sortingObj!.numWrites = 0;
+            this.sortingObj!.numReads = 0;
             this.sortingObj!.paused = false;
             this.sortingObj!.isFinishing = false;
             this.sortingAlgorithm(this.sortingObj!, false);
@@ -172,7 +188,7 @@ class SortingDiv {
         this.scrambleButton.innerHTML = 'Scramble';
         this.scrambleButton.onclick = (e) => {
             this.sortingObj!.scramble();
-            draw(this.sortingObj!);
+            draw(this.sortingObj!, false, false, false);
         }
 
         this.scrambleMethod = document.createElement('select');
@@ -190,7 +206,7 @@ class SortingDiv {
         this.sizeSlider.setAttribute('value', '30');
         this.sizeSlider.oninput = (e) => {
             this.sortingObj!.resize();
-            draw(this.sortingObj!);
+            draw(this.sortingObj!, false, false, false);
         }
 
         this.sortDiv.appendChild(this.canvas);
@@ -219,14 +235,18 @@ async function sleepFor(time: number){
         return new Promise(resolve => setTimeout(resolve, time));
 }
 async function sleep(sortingObj: SortingObject){
+    const loopIndex = sortingObj.loopIndex;
     while(sortingObj.paused){
         await sleepFor(1);
+        if(loopIndex != sortingObj.loopIndex)
+            return;
     }
 
     if(sortingObj.delay() > 0)
         return new Promise(resolve => setTimeout(resolve, sortingObj.delay()));
 }
-function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false, ignoreColors: boolean = false){
+function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false, 
+    ignoreColors: boolean = false, resetColors: boolean = true){
     if(drawUnlessDelayIsZero && sortingObj.delay() <= 0)
         return;
 
@@ -253,6 +273,9 @@ function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false,
         ctx.fillRect(padding + barW * i + spacing,      padding + h, 
             barW - 2 * spacing,         - h * (sortingObj.get(i) + 1 - sortingObj.min) / size);
     }
+
+    if(resetColors)
+        sortingObj.colors = new Map([]);
 }
 // adding scrambled and then sorted elements behaves weird
 // also for reverse sorted
@@ -265,38 +288,42 @@ async function finalizeArray(sortingObj: SortingObject){
     const loopIndex = sortingObj.loopIndex;
 
     sortingObj.colors = new Map([ [ 0, 'green' ] ]);
-    await draw(sortingObj, false);
+    await draw(sortingObj, false, false, false);
 
     for(let i = 1; i < sortingObj.length(); i++){
-        if(sortingObj.read(i) >= sortingObj.read(i - 1)){
-            sortingObj.colors.set(i, 'green')
+        if(sortingObj.get(i) >= sortingObj.get(i - 1)){
+            sortingObj.playSound(sortingObj.get(i));
+            sortingObj.playSound(sortingObj.get(i - 1));
+            
+            sortingObj.colors.set(i, 'green');
         } else {
-            sortingObj.colors.set(i, 'red')
+            sortingObj.colors.set(i, 'red');
         }
         await sleepFor(finalizeCheckTime / sortingObj.length());
-        await draw(sortingObj, false);
+        await draw(sortingObj, false, false, false);
         if(!sortingObj.isRunning(loopIndex))
             return;
     }
 
     await sleepFor(finalizeResetTime);
-    await draw(sortingObj, false, true);
+    await draw(sortingObj, false, true, false);
     if(!sortingObj.isRunning(loopIndex))
         return;
 
     for(let i = 0; i < 3; i++){
         await sleepFor(finalizeFlickerTime);
-        await draw(sortingObj, false);
+        await draw(sortingObj, false, false, false);
         sound(1200 - (i % 2) * 400);
 
         if(!sortingObj.isRunning(loopIndex))
             return;
 
         await sleepFor(finalizeFlickerTime);
-        await draw(sortingObj, false, true);
+        await draw(sortingObj, false, true, false);
         if(!sortingObj.isRunning(loopIndex))
             return;
     }
 
+    sortingObj.colors = new Map([]);
     sortingObj.isFinishing = false;
 }

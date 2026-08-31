@@ -16,11 +16,7 @@ function selectionSort(sortingObj, skipAnimation) {
             for (let j = i + 1; j < sortingObj.length(); j++) {
                 if (sortingObj.read(j) < sortingObj.get(minIndex))
                     minIndex = j;
-                sortingObj.colors = new Map([
-                    [i, 'green'],
-                    [j, 'red'],
-                    [minIndex, 'blue'],
-                ]);
+                sortingObj.colors.set(minIndex, 'green');
                 yield sleep(sortingObj);
                 yield draw(sortingObj, true);
                 if (!sortingObj.isRunning(loopIndex))
@@ -32,7 +28,7 @@ function selectionSort(sortingObj, skipAnimation) {
             if (!sortingObj.isRunning(loopIndex))
                 return;
         }
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex))
             finalizeArray(sortingObj);
     });
 }
@@ -48,10 +44,6 @@ function bubbleSort(sortingObj, skipAnimation) {
                     swap(sortingObj, j, j + 1);
                     swapped = true;
                 }
-                sortingObj.colors = new Map([
-                    [j, 'red'],
-                    [j + 1, 'red'],
-                ]);
                 yield sleep(sortingObj);
                 yield draw(sortingObj, true);
                 if (!sortingObj.isRunning(loopIndex))
@@ -60,7 +52,7 @@ function bubbleSort(sortingObj, skipAnimation) {
             if (!swapped)
                 break;
         }
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex))
             finalizeArray(sortingObj);
     });
 }
@@ -70,20 +62,12 @@ function insertionSort(sortingObj, skipAnimation) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
         for (let i = 0; i < sortingObj.length(); i++) {
-            sortingObj.colors = new Map([
-                [i, 'green'],
-            ]);
             yield sleep(sortingObj);
             yield draw(sortingObj, true);
             if (!sortingObj.isRunning(loopIndex))
                 return;
             let j = i - 1;
             while (j >= 0 && sortingObj.read(j) > sortingObj.read(j + 1)) {
-                sortingObj.colors = new Map([
-                    [j, 'red'],
-                    [j + 1, 'red'],
-                    [i, 'green'],
-                ]);
                 swap(sortingObj, j, j + 1);
                 yield sleep(sortingObj);
                 yield draw(sortingObj, true);
@@ -92,7 +76,7 @@ function insertionSort(sortingObj, skipAnimation) {
                 j--;
             }
         }
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex))
             finalizeArray(sortingObj);
     });
 }

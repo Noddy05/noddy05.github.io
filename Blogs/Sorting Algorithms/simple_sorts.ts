@@ -7,11 +7,7 @@ async function selectionSort(sortingObj: SortingObject, skipAnimation: boolean){
             if(sortingObj.read(j) < sortingObj.get(minIndex))
                 minIndex = j
         
-            sortingObj.colors = new Map([ 
-                [ i, 'green' ], 
-                [ j, 'red' ], 
-                [ minIndex, 'blue' ], 
-            ]);
+            sortingObj.colors.set(minIndex, 'green');
             await sleep(sortingObj);
             await draw(sortingObj, true)
             if(!sortingObj.isRunning(loopIndex))
@@ -25,7 +21,7 @@ async function selectionSort(sortingObj: SortingObject, skipAnimation: boolean){
             return;
     }
 
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
         finalizeArray(sortingObj);
 }
 
@@ -46,10 +42,6 @@ async function bubbleSort(sortingObj: SortingObject, skipAnimation: boolean){
                 swapped = true;
             } 
 
-            sortingObj.colors = new Map([ 
-                [ j, 'red' ], 
-                [ j + 1, 'red' ], 
-            ]);
             await sleep(sortingObj);
             await draw(sortingObj, true);
             if(!sortingObj.isRunning(loopIndex))
@@ -60,7 +52,7 @@ async function bubbleSort(sortingObj: SortingObject, skipAnimation: boolean){
             break;
     }
 
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
         finalizeArray(sortingObj);
 }
 
@@ -71,9 +63,6 @@ async function insertionSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
 
     for(let i = 0; i < sortingObj.length(); i++){
-        sortingObj.colors = new Map([ 
-            [ i, 'green' ], 
-        ]);
         await sleep(sortingObj);
         await draw(sortingObj, true);
         if(!sortingObj.isRunning(loopIndex))
@@ -81,12 +70,6 @@ async function insertionSort(sortingObj: SortingObject, skipAnimation: boolean){
 
         let j = i - 1;
         while(j >= 0 && sortingObj.read(j) > sortingObj.read(j + 1)){
-            sortingObj.colors = new Map([ 
-                [ j, 'red' ], 
-                [ j + 1, 'red' ], 
-                [ i, 'green' ], 
-            ]);
-            
             swap(sortingObj, j, j + 1);
             await sleep(sortingObj);
             await draw(sortingObj, true);
@@ -96,7 +79,7 @@ async function insertionSort(sortingObj: SortingObject, skipAnimation: boolean){
         }
     }
 
-    if(!skipAnimation)
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
         finalizeArray(sortingObj);
 }
 

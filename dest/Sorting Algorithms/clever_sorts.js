@@ -12,7 +12,7 @@ function mergeSort(sortingObj, skipAnimation) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
         yield merge_sort(sortingObj, 0, sortingObj.length(), loopIndex);
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex))
             yield finalizeArray(sortingObj);
     });
 }
@@ -59,7 +59,7 @@ function merge(sortingObj, l, m, r, loopIndex) {
                 R++;
             }
             yield sleep(sortingObj);
-            yield draw(sortingObj, true);
+            yield draw(sortingObj, true, false, false);
             if (loopIndex != sortingObj.loopIndex)
                 return;
         }
@@ -68,7 +68,7 @@ function merge(sortingObj, l, m, r, loopIndex) {
             sortingObj.colors.set(l + L + R, "green");
             L++;
             yield sleep(sortingObj);
-            yield draw(sortingObj, true);
+            yield draw(sortingObj, true, false, false);
             if (loopIndex != sortingObj.loopIndex)
                 return;
         }
@@ -77,7 +77,7 @@ function merge(sortingObj, l, m, r, loopIndex) {
             sortingObj.colors.set(l + L + R, "green");
             R++;
             yield sleep(sortingObj);
-            yield draw(sortingObj, true);
+            yield draw(sortingObj, true, false, false);
             if (loopIndex != sortingObj.loopIndex)
                 return;
         }
@@ -94,7 +94,7 @@ function quickSort(sortingObj, skipAnimation) {
     return __awaiter(this, void 0, void 0, function* () {
         const loopIndex = ++sortingObj.loopIndex;
         yield quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex))
             yield finalizeArray(sortingObj);
     });
 }
@@ -113,11 +113,10 @@ function quick_sort(sortingObj, l, r, loopIndex) {
         yield quick_sort(sortingObj, mid + 1, r, loopIndex);
         if (loopIndex != sortingObj.loopIndex)
             return;
-        sortingObj.colors = new Map([]);
         yield sleep(sortingObj);
-        yield draw(sortingObj, true);
         if (loopIndex != sortingObj.loopIndex)
             return;
+        yield draw(sortingObj, true);
     });
 }
 function partition(sortingObj_1, l_1, r_1, loopIndex_1) {
@@ -135,15 +134,12 @@ function partition(sortingObj_1, l_1, r_1, loopIndex_1) {
                 i++;
                 swap(sortingObj, i, j);
             }
-            sortingObj.colors = new Map([
-                [r, 'red'],
-                [i, 'blue'],
-                [j, 'green'],
-            ]);
+            sortingObj.colors.set(r, 'blue');
+            sortingObj.colors.set(i, 'green');
             yield sleep(sortingObj);
-            yield draw(sortingObj, true);
             if (loopIndex != sortingObj.loopIndex)
-                return i + 1;
+                return 0;
+            yield draw(sortingObj, true);
             r = Math.min(r, sortingObj.length());
         }
         sortingObj.write(r, sortingObj.read(i + 1));
@@ -159,13 +155,15 @@ function maxHeapify(sortingObj, length, i, loopIndex) {
         let largest = i;
         let l = 2 * i + 1;
         let r = l + 1;
+        if (l >= length)
+            return;
         if (l < length && sortingObj.read(l) > sortingObj.read(largest))
             largest = l;
         if (r < length && sortingObj.read(r) > sortingObj.read(largest))
             largest = r;
         if (largest != i) {
             swap(sortingObj, largest, i);
-            sortingObj.colors = new Map([[i, 'red'], [l, 'blue'], [r, 'blue'], [largest, 'green']]);
+            sortingObj.colors.set(i, 'green');
             yield sleep(sortingObj);
             yield draw(sortingObj, true);
             if (loopIndex != sortingObj.loopIndex)
@@ -174,11 +172,9 @@ function maxHeapify(sortingObj, length, i, loopIndex) {
             yield maxHeapify(sortingObj, length, largest, loopIndex);
         }
         else {
-            sortingObj.colors = new Map([[i, 'red']]);
-            if (l < length)
-                sortingObj.colors.set(l, 'blue');
-            if (r < length)
-                sortingObj.colors.set(r, 'blue');
+            sortingObj.colors.set(i, 'green');
+            sortingObj.colors.set(l, 'blue');
+            sortingObj.colors.set(r, 'blue');
             yield sleep(sortingObj);
             yield draw(sortingObj, true);
             if (loopIndex != sortingObj.loopIndex)
@@ -199,7 +195,6 @@ function heapSort(sortingObj, skipAnimation) {
         yield buildHeap(sortingObj, sortingObj.length(), loopIndex);
         for (let i = sortingObj.length() - 1; i > 0; i--) {
             swap(sortingObj, 0, i);
-            sortingObj.colors = new Map([[i, 'red'], [0, 'red']]);
             yield sleep(sortingObj);
             yield draw(sortingObj, true);
             if (loopIndex != sortingObj.loopIndex)
@@ -210,7 +205,7 @@ function heapSort(sortingObj, skipAnimation) {
             if (loopIndex != sortingObj.loopIndex)
                 return;
         }
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex))
             yield finalizeArray(sortingObj);
     });
 }
@@ -223,7 +218,7 @@ function introSort(sortingObj, skipAnimation) {
         if (loopIndex != sortingObj.loopIndex)
             return;
         yield insertionSort(sortingObj, true);
-        if (!skipAnimation)
+        if (!skipAnimation && sortingObj.isRunning(loopIndex + 1))
             yield finalizeArray(sortingObj);
     });
 }
@@ -243,7 +238,6 @@ function intro_sort(sortingObj, l, r, loopIndex) {
         yield intro_sort(sortingObj, mid + 1, r, loopIndex);
         if (loopIndex != sortingObj.loopIndex)
             return;
-        sortingObj.colors = new Map([]);
         yield sleep(sortingObj);
         yield draw(sortingObj, true);
         if (loopIndex != sortingObj.loopIndex)

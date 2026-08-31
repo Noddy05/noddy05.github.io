@@ -274,7 +274,28 @@ Although for visualization purposes it made more sense to use this alternative f
 <div id="quick_sort" class="sorting_algo"></div>
 <pre><code class="language-html"><keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>)
     <keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="literal">0</keyword>, |<keyword class="variable">A</keyword>|)
-</code></pre>
+
+<keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, <keyword class="variable">r</keyword>)
+    <keyword class="keyword">if</keyword>(<keyword class="variable">r</keyword> <keyword class="operation"><</keyword><keyword class="operation">=</keyword> <keyword class="variable">l</keyword>)
+        <keyword class="keyword">return</keyword>
+
+    mid <keyword class="operation">=</keyword> <keyword class="built-in">Partition</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, <keyword class="variable">r</keyword>)
+
+    <keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, mid <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>)
+    <keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, mid <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>, <keyword class="variable">r</keyword>)
+
+<keyword class="built-in">Partition</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, <keyword class="variable">r</keyword>)
+    x <keyword class="operation">=</keyword> <keyword class="variable">A</keyword>[r]
+    i <keyword class="operation">=</keyword> <keyword class="variable">l</keyword> <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+    <keyword class="keyword">for</keyword> j <keyword class="operation">=</keyword> <keyword class="variable">l</keyword> <keyword class="keyword">to</keyword> <keyword class="variable">r</keyword> <keyword class="operation">-</keyword> <keyword class="literal">1</keyword>
+        <keyword class="keyword">if</keyword> <keyword class="variable">A</keyword>[j] <keyword class="operation"><</keyword><keyword class="operation">=</keyword> x
+            i<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
+            <keyword class="built-in">Swap</keyword>(<keyword class="variable">A</keyword>, i, j)
+
+    <keyword class="variable">A</keyword>[<keyword class="variable">r</keyword>] <keyword class="operation">=</keyword> <keyword class="variable">A</keyword>[i <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>]
+    <keyword class="variable">A</keyword>[i <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>] <keyword class="operation">=</keyword> x
+    
+    <keyword class="keyword">return</keyword> i <keyword class="operation">+</keyword> 1</code></pre>
 
 <h3 id="4_3">4.3) Heap sort</h3>
 <div id="heap_sort" class="sorting_algo"></div>
