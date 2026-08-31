@@ -4,7 +4,7 @@ async function gnomeSort(sortingObj: SortingObject, skipAnimation: boolean){
     let pos = 1;
 
     while(pos < sortingObj.length()){
-        if(pos == 0 || sortingObj.read(pos) >= sortingObj.get(pos - 1)){
+        if(pos == 0 || sortingObj.read(pos) >= sortingObj.read(pos - 1)){
             sortingObj.colors = new Map([ [pos, 'blue'] ]);
             pos++;
         }
