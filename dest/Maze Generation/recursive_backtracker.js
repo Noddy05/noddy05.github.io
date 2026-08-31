@@ -19,9 +19,10 @@ async function recursiveBacktracker(maze) {
         if (maze.delay() < delayCutoff)
             iterationsInALoop = 1 + Math.floor((delayCutoff - maze.delay()) * 0.5);
         const pathEnd = path[path.length - 1];
-        const offset = Math.floor(Math.random() * blocksPerCell * 2);
-        for (let i = 0; i < blocksPerCell * 2; i++) {
-            const nextPath = maze.carve(pathEnd, (i + offset) % (blocksPerCell * 2));
+        let nextPath = pathEnd;
+        while (nextPath == pathEnd && !maze.isSurrounded(pathEnd)) {
+            let direction = Math.floor(Math.random() * blocksPerCell * 2);
+            nextPath = maze.carve(pathEnd, direction);
             if (nextPath != pathEnd) {
                 path.push(nextPath);
                 nextPath.setColor('red');
