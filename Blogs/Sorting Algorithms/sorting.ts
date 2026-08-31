@@ -72,8 +72,8 @@ class SortingObject {
 
     public playSound(value: number){
         let volumeMult = 1;
-        if(this.delay() > 0)
-            volumeMult = Math.min(1, Math.log(1 + this.delay() / 100))
+        if(!this.isFinishing)
+            volumeMult = Math.max(0.2, Math.min(1, Math.log(1 + this.delay() / 100)));
         
         sound(value / this.length() * 1100 + 132, volumeMult);
     }
