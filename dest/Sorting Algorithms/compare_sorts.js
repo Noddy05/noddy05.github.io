@@ -6,7 +6,8 @@ const comparableAlgorithms = [
     ['Merge Sort', mergeSort,],
     ['Quick Sort', quickSort,],
     ['Heap Sort', heapSort,],
-    ['Intro Sort', introSort]
+    ['Intro Sort', introSort],
+    ['Gnome Sort', gnomeSort],
 ];
 class CompareDiv {
     constructor(sortDiv) {

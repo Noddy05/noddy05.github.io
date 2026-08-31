@@ -75,6 +75,10 @@ class Cell {
         this.hasChanged = true;
     }
 
+    public change(): void {
+        this.hasChanged = true;
+    }
+
     public isBlocked(index: number): boolean{
         return this.blocked[index];
     }
@@ -93,13 +97,20 @@ class Cell {
         return new Vec2(this.x, this.y);
     }
 
-    public draw(w: number, h: number){
+    public draw(maze: Maze){
         if(!this.hasChanged)
             return;
         this.hasChanged = false;
+
+        const canvas = maze.getCanvas();
+        const ctx = maze.getCtx();
+
+        let w = canvas.width / maze.width();
+        let h = canvas.height / maze.height();
         
         ctx.fillStyle = this.color;
-        ctx.fillRect(w * this.x, canvas.height - h * this.y, w, - h);
+        ctx.fillRect(Math.floor(w * this.x), Math.floor(canvas.height - h * this.y), 
+            Math.ceil(w), -Math.ceil(h));
         
         ctx.strokeStyle = "black";
         let halfWidth = 1;
@@ -124,29 +135,74 @@ class Cell {
 }
 
 class Maze {
-    public w: number;
-    public h: number;
+    private w: number = 8;
+    private h: number = 5;
 
     private loopIndex: number = 0;
-    private cells: Cell[][];
+    private cells: Cell[][] = [];
 
-    constructor(w: number, h: number){
-        this.w = w;
-        this.h = h;
+    private canvas: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D;
 
-        this.cells = [];
-        for(let x = 0; x < w; x++){
-            this.cells[x] = [];
-            for(let y = 0; y < h; y++){
-                this.cells[x][y] = new Cell(x, y);
-            }
-        }
+    public delaySlider: HTMLInputElement | null = null;
+    public sizeSlider: HTMLInputElement | null = null;
+
+    private prevW = 0;
+    private prevH = 0;
+
+    constructor(canvas: HTMLCanvasElement, delaySlider: HTMLInputElement, sizeSlider: HTMLInputElement){
+        this.delaySlider = delaySlider;
+        this.sizeSlider = sizeSlider;
+
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        this.resize();
 
         this.clear();
     }
-    
+
+    public getCanvas() {
+        return this.canvas;
+    }
+
+    public getCtx() {
+        return this.ctx;
+    }
+
+    private size(): number {
+        return +this.sizeSlider!.value;
+    }
+
+    public width() {
+        return this.w * this.size();
+    }
+
+    public height() {
+        return this.h * this.size();
+    }
+
+    public resize(){
+        if(this.prevW == 0)
+            this.cells = [];
+
+        for(let x = 0; x < this.width(); x++){
+            if(x >= this.prevW)
+                this.cells[x] = [];
+            for(let y = 0; y < this.height(); y++){
+                if(x >= this.prevW || y >= this.prevH)
+                    this.cells[x][y] = new Cell(x, y);
+                else
+                    this.cells[x][y].change();
+            }
+        }
+
+        this.prevW = this.width();
+        this.prevH = this.height();
+    }
+
     public delay(): number {
-        return 0;
+        return +this.delaySlider!.value;
     }
 
     public isRunning(loopIndex: number): boolean {
@@ -158,8 +214,8 @@ class Maze {
     }
 
     public reset(){
-        for(let x = 0; x < this.w; x++){
-            for(let y = 0; y < this.h; y++){
+        for(let x = 0; x < this.width(); x++){
+            for(let y = 0; y < this.height(); y++){
                 this.cells[x][y].setColor('white');
                 this.cells[x][y].block(Directions.Up);
                 this.cells[x][y].block(Directions.Right);
@@ -167,8 +223,8 @@ class Maze {
         }
     }
 
-    private isOutsideBounds(pos: Vec2): boolean {
-        return pos.x < 0 || pos.x >= this.w || pos.y < 0 || pos.y >= this.h;
+    public isOutsideBounds(pos: Vec2): boolean {
+        return pos.x < 0 || pos.x >= this.width() || pos.y < 0 || pos.y >= this.height();
     }
 
     public next(cell: Cell, direction: Directions): Cell {
@@ -194,6 +250,9 @@ class Maze {
             return cell;
 
         const nextCell = this.cells[pos.x][pos.y];
+        if(nextCell.getColor() != 'white')
+            return cell;
+
         if(direction.valueOf() < blocksPerCell){
             cell.unblock(direction);
         } else {
@@ -206,18 +265,17 @@ class Maze {
     }
 
     public clear(){
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     public draw(drawUnlessDelayIsZero: boolean = false){
         if(this.delay() == 0 && drawUnlessDelayIsZero)
             return;
 
-
-        for(let x = 0; x < this.w; x++){
-            for(let y = 0; y < this.h; y++){
-                this.cells[x][y].draw(canvas.width / this.w, canvas.height / this.h);
+        for(let x = 0; x < this.width(); x++){
+            for(let y = 0; y < this.height(); y++){
+                this.cells[x][y].draw(this);
             }
         }
     }
@@ -227,6 +285,60 @@ class Maze {
             return null;
 
         return this.cells[x][y];
+    }
+}
+
+class MazeWindow {
+    public mazeDiv: HTMLDivElement;
+    public mazeObj: Maze;
+
+    public canvas: HTMLCanvasElement | null = null;
+    public delaySlider: HTMLInputElement | null = null;
+    public startButton: HTMLButtonElement | null = null;
+    public sizeSlider: HTMLInputElement | null = null;
+
+    public algorithm: ((maze: Maze) => void) | null = null;
+
+    public constructor(mazeDiv: HTMLDivElement){
+        this.mazeDiv = mazeDiv;
+        this.createCanvas();
+
+        this.mazeObj = new Maze(this.canvas!, this.delaySlider!, this.sizeSlider!);
+        this.mazeObj.draw();
+    }
+
+    public createCanvas(){
+        this.canvas = document.createElement('canvas') as HTMLCanvasElement;
+        this.canvas.setAttribute('width', '1600');
+        this.canvas.setAttribute('height', '1000');
+
+        this.delaySlider = document.createElement('input');
+        this.delaySlider.setAttribute('type', 'range');
+        this.delaySlider.setAttribute('min', '0');
+        this.delaySlider.setAttribute('max', '200');
+        this.delaySlider.setAttribute('value', '50');
+
+        this.startButton = document.createElement('button') as HTMLButtonElement;
+        this.startButton.innerHTML = "Generate";
+        this.startButton.onclick = (e) => {
+            this.mazeObj.reset();
+            this.algorithm!(this.mazeObj);
+        }
+
+        this.sizeSlider = document.createElement('input');
+        this.sizeSlider.setAttribute('type', 'range');
+        this.sizeSlider.setAttribute('min', '1');
+        this.sizeSlider.setAttribute('max', '20');
+        this.sizeSlider.setAttribute('value', '2');
+        this.sizeSlider.oninput = (e) => {
+            this.mazeObj.resize();
+            this.mazeObj.draw();
+        }
+
+        this.mazeDiv.appendChild(this.canvas);
+        this.mazeDiv.appendChild(this.delaySlider);
+        this.mazeDiv.appendChild(this.startButton);
+        this.mazeDiv.appendChild(this.sizeSlider);
     }
 }
 

@@ -26,3 +26,32 @@ async function gnomeSort(sortingObj: SortingObject, skipAnimation: boolean){
 
 const gnomeSortDiv = new SortingDiv(document.getElementById('gnome_sort') as HTMLDivElement);
 gnomeSortDiv.sortingAlgorithm = gnomeSort;
+
+async function bogoSort(sortingObj: SortingObject, skipAnimation: boolean){
+    const loopIndex = ++sortingObj.loopIndex;
+
+    let pos = 1;
+
+    while(pos < sortingObj.length()){
+        if(pos == 0 || sortingObj.read(pos) >= sortingObj.read(pos - 1)){
+            sortingObj.colors = new Map([ [pos, 'blue'] ]);
+            pos++;
+        }
+        else{
+            swap(sortingObj, pos, pos - 1);
+            sortingObj.colors = new Map([ [pos, 'blue'], [pos - 1, 'red'] ]);
+            pos--;
+        }
+
+        await sleep(sortingObj);
+        if(!sortingObj.isRunning(loopIndex))
+            return;
+        await draw(sortingObj, true)
+    }
+
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
+        finalizeArray(sortingObj);
+}
+
+const bogoSortDiv = new SortingDiv(document.getElementById('bogo_sort') as HTMLDivElement);
+bogoSortDiv.sortingAlgorithm = bogoSort;

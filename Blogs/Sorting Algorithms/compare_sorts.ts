@@ -5,7 +5,8 @@ const comparableAlgorithms: [ string, (sortingObj: SortingObject, skipAnimation:
     [ 'Merge Sort', mergeSort, ],
     [ 'Quick Sort', quickSort, ],
     [ 'Heap Sort', heapSort, ],
-    [ 'Intro Sort', introSort ]
+    [ 'Intro Sort', introSort ],
+    [ 'Gnome Sort', gnomeSort ],
 ]
 
 class CompareDiv {
