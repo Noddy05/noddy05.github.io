@@ -1,5 +1,48 @@
-
 const delayCutoff = 50;
+
+/*
+async function bacterialGrowth(maze: Maze) {
+    const loopIndex = maze.newLoop();
+
+    let prevW = maze.width();
+    let prevH = maze.height();
+
+    const x = Math.floor(Math.random() * maze.width());
+    const y = Math.floor(Math.random() * maze.height());
+
+    const startCell = maze.cell(x, y)!;
+    const bacteria: Cell[] = [ startCell ];
+    startCell.setColor('red');
+
+    while(bacteria.length > 0){
+        const deadBacteria = [];
+
+        const numBacteria = bacteria.length;
+        for(let i = 0; i < numBacteria; i++){
+            const neighbours = maze.unvisitedDirections(bacteria[i]);
+
+            if(neighbours.length == 0){
+                deadBacteria.push(i);
+            } else {
+                const pickedDirection = neighbours[Math.floor(Math.random() * neighbours.length)];
+                bacteria.push(maze.carve(bacteria[i], pickedDirection));
+            }
+        }
+
+        if(maze.delay() > 0){
+            await sleepFor(maze.delay());
+            if(!maze.isRunning(loopIndex))
+                return;
+            await maze.draw(true);
+        }
+
+        for(let i = 0; i < deadBacteria.length; i++){
+            bacteria.splice(deadBacteria[i] - i, 1);
+        }
+    }
+
+    await maze.draw(false);
+}*/
 
 async function bacterialGrowth(maze: Maze) {
     const loopIndex = maze.newLoop();

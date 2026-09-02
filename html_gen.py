@@ -21,6 +21,7 @@ class HTMLBuilder():
         'loop': 'keyword',
         'for': 'keyword',
         'while': 'keyword',
+        'continue': 'keyword',
         'to': 'keyword',
         'if': 'keyword',
         'else': 'keyword',

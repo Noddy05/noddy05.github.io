@@ -32,11 +32,60 @@
 
 
 
-<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Bacterial growth</a><br><a href="#3">3) Recursive backtracker</a></p></div></p></div><div class="page"><p><h2 id="2">2) Bacterial growth</h2>
-<div id="bacterial_growth" class="algorithm_window"></div>
+<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Recursive backtracker</a><br><a href="#3">3) Bacterial growth</a></p></div></p></div><div class="page"><p><h2 id="2">2) Recursive backtracker</h2>
+<div id="recursive_backtracker" class="algorithm_window"></div>
+<pre><code class="language-html"><keyword class="built-in">RecursiveBacktracker</keyword>(<keyword class="variable">maze</keyword>, <keyword class="variable">startingCell</keyword>)
+    path <keyword class="operation">=</keyword> [ <keyword class="variable">startingCell</keyword> ]
+    <keyword class="variable">maze</keyword>.<keyword class="built-in">visit</keyword>(<keyword class="variable">startingCell</keyword>)
+    
+    <keyword class="keyword">while</keyword> <keyword class="built-in">len</keyword>(path) <keyword class="operation">></keyword> <keyword class="literal">0</keyword>
+        <keyword class="comment">//Let pathEnd be the last element in the path array.</keyword>
+        pathEnd <keyword class="operation">=</keyword> path.<keyword class="built-in">last</keyword>()
+        neighbours <keyword class="operation">=</keyword> <keyword class="variable">maze</keyword>.<keyword class="built-in">unvisitedNeighbours</keyword>(pathEnd)
+        
+        <keyword class="keyword">if</keyword> <keyword class="built-in">len</keyword>(neighbours) <keyword class="operation">=</keyword><keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
+            path.<keyword class="built-in">pop</keyword>()
+        <keyword class="keyword">else</keyword>
+            pickedNeighbour <keyword class="operation">=</keyword> neighbours[<keyword class="built-in">random</keyword>(<keyword class="literal">0</keyword>, <keyword class="built-in">len</keyword>(neighbours))]
+            <keyword class="variable">maze</keyword>.<keyword class="built-in">connectCells</keyword>(pathEnd, pickedNeighbour)
+            path.<keyword class="built-in">append</keyword>(pickedNeighbour)
+        <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
+</code></pre>
 
-</p></div><div class="page"><p><h2 id="3">3) Recursive backtracker</h2>
-<div id="recursive_backtracker" class="algorithm_window"></div></p></div></div></body></html>
+</p></div><div class="page"><p><h2 id="3">3) Bacterial growth</h2>
+<div id="bacterial_growth" class="algorithm_window"></div>
+<pre><code class="language-html"><keyword class="built-in">BacterialGrowth</keyword>(<keyword class="variable">maze</keyword>, <keyword class="variable">startingCell</keyword>)
+    bacteria <keyword class="operation">=</keyword> [ <keyword class="variable">startingCell</keyword> ]
+    <keyword class="variable">maze</keyword>.<keyword class="built-in">visit</keyword>(<keyword class="variable">startingCell</keyword>)
+    
+    <keyword class="keyword">while</keyword> <keyword class="built-in">len</keyword>(bacteria) <keyword class="operation">></keyword> <keyword class="literal">0</keyword>
+        <keyword class="comment">//As we loop through the array some bacteria will not have any unvisited</keyword>
+        <keyword class="comment">//neighbours. We mark their indices and remove them afterwards.</keyword>
+        deadBacteria <keyword class="operation">=</keyword> []
+
+        <keyword class="keyword">for</keyword> i <keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="keyword">to</keyword> <keyword class="built-in">len</keyword>(bacteria)
+            neighbours <keyword class="operation">=</keyword> <keyword class="variable">maze</keyword>.<keyword class="built-in">unvisitedNeighbours</keyword>(bacteria[i])
+            
+            <keyword class="comment">//If a bacteria cant spead, we mark it as dead</keyword>
+            <keyword class="keyword">if</keyword> <keyword class="built-in">len</keyword>(neighbours) <keyword class="operation">=</keyword><keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
+                deadBacteria.<keyword class="built-in">append</keyword>(i)
+            <keyword class="keyword">else</keyword>
+                <keyword class="comment">//Otherwise we let it spread to a random neighbour</keyword>
+                pickedNeighbour <keyword class="operation">=</keyword> neighbours[<keyword class="built-in">random</keyword>(<keyword class="literal">0</keyword>, <keyword class="built-in">len</keyword>(neighbours))]
+                <keyword class="variable">maze</keyword>.<keyword class="built-in">connectCells</keyword>(pathEnd, pickedNeighbour)
+                bacteria.<keyword class="built-in">append</keyword>(pickedNeighbour)
+            <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
+        <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
+
+        <keyword class="comment">//Finally remove the bacteria, and remember that after we removed the</keyword>
+        <keyword class="comment">//first bacteria, the indices will be off by 1, and off by 2 after removing</keyword>
+        <keyword class="comment">//the second, etc... therefore we subtract the index by i</keyword>
+        <keyword class="keyword">for</keyword> i <keyword class="operation">=</keyword> <keyword class="literal">0</keyword> <keyword class="keyword">to</keyword> <keyword class="built-in">len</keyword>(deadBacteria)
+            bacteria.<keyword class="built-in">removeAt</keyword>(deadBacteria[i] <keyword class="operation">-</keyword> i)
+        <keyword class="keyword">end</keyword><keyword class="keyword">for</keyword>
+    <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
+</code></pre></p></div></div></body></html>
 <script src="../../dest/Maze Generation/../core.js"></script>
 <script src="../../dest/Maze Generation/../Sorting Algorithms/sound.js"></script>
 <script src="../../dest/Maze Generation/maze.js"></script>

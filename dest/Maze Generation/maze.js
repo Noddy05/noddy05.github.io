@@ -34,7 +34,8 @@ const directionVectors = new Map([
     [Directions.Down, new Vec2(0, -1)],
     [Directions.Left, new Vec2(-1, 0)],
 ]);
-const blocksPerCell = Math.floor(Object.keys(Directions).length / 4);
+const numDirections = Math.floor(Object.keys(Directions).length / 2);
+const blocksPerCell = numDirections / 2;
 class Cell {
     constructor(x, y) {
         this.color = 'white';
@@ -173,6 +174,18 @@ class Maze {
         if (this.isOutsideBounds(pos))
             return cell;
         return this.cells[pos.x][pos.y];
+    }
+    unvisitedDirections(cell) {
+        const neighbours = [];
+        for (let i = 0; i < numDirections; i++) {
+            const pos = cell.position().addDirection(i);
+            if (this.isOutsideBounds(pos))
+                continue;
+            const neighbour = this.cells[pos.x][pos.y];
+            if (neighbour.getColor() == 'white')
+                neighbours.push(i);
+        }
+        return neighbours;
     }
     isSurrounded(cell) {
         for (let i = 0; i < 2 * blocksPerCell; i++) {
