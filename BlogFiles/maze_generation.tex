@@ -21,7 +21,7 @@
         if len(neighbours) == 0
             path.##pop##()
         else
-            pickedNeighbour = neighbours[##random##(0, len(neighbours))]
+            pickedNeighbour = neighbours[##floor##(##random##(0, len(neighbours)))]
             ~maze~.##connectCells##(pathEnd, pickedNeighbour)
             path.##append##(pickedNeighbour)
         endif
@@ -35,29 +35,17 @@
     ~maze~.##visit##(~startingCell~)
     
     while len(bacteria) > 0
-        //As we loop through the array some bacteria will not have any unvisited
-        //neighbours. We mark their indices and remove them afterwards.
-        deadBacteria = []
-
-        for i = 0 to len(bacteria)
-            neighbours = ~maze~.##unvisitedNeighbours##(bacteria[i])
-            
-            //If a bacteria cant spead, we mark it as dead
-            if len(neighbours) == 0
-                deadBacteria.##append##(i)
-            else
-                //Otherwise we let it spread to a random neighbour
-                pickedNeighbour = neighbours[##random##(0, len(neighbours))]
-                ~maze~.##connectCells##(pathEnd, pickedNeighbour)
-                bacteria.##append##(pickedNeighbour)
-            endif
-        endfor
-
-        //Finally remove the bacteria, and remember that after we removed the
-        //first bacteria, the indices will be off by 1, and off by 2 after removing
-        //the second, etc... therefore we subtract the index by i
-        for i = 0 to len(deadBacteria)
-            bacteria.##removeAt##(deadBacteria[i] - i)
-        endfor
+        pickedBacteria = ##floor##(##random##(0, len(bacteria)))
+        
+        neighbours = ~maze~.##unvisitedNeighbours##(bacteria[i])
+        //If a bacteria cant spead, we mark it as dead
+        if len(neighbours) == 0
+            bacteria.##removeAt##(i)
+        else
+            //Otherwise we let it spread to a random neighbour
+            pickedNeighbour = neighbours[##random##(0, len(neighbours))]
+            ~maze~.##connectCells##(pathEnd, pickedNeighbour)
+            bacteria.##append##(pickedNeighbour)
+        endif
     endwhile
 }
