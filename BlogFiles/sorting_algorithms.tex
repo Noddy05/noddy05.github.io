@@ -186,6 +186,30 @@ Although for visualization purposes it made more sense to use this alternative f
         
     return ~A~}
 
+Let $\mathcal S$ be the number of iterations of the inner while loop, then the time complexity of \textsc{InsertionSort}
+is $\Theta(\mathcal S n)$ and $\mathcal S$ is exactly the number of times where $\A[j - 1]>\A[j]$ for any $1\leq j<|\A|$
+(note that $\mathcal S_i$, i.e the value of $\mathcal S$ at iteration $i$ is not affected by rearranging the earlier 
+elements). 
+\\\\
+If $\mathcal S_i$ is the number of times the while loop runs in the $i$'th iterations of the for loop, then the
+run time for \textsc{InsertionSort} is $=\displaystyle\sum_{i=1}^{|\A|-1}(1+\mathcal S_i)$. The average value for 
+$1+\mathcal S$ is equal to
+\begin{equation*}
+    \begin{split}
+        \mathcal S=\frac{1}{n}\sum_{i=1}^{|\A|-1} (1+\mathcal S_i)\\
+        \iff\\
+        n\mathcal S=\sum_{i=1}^{|\A|-1} (1+\mathcal S_i)=\text{run time}
+    \end{split}
+\end{equation*}
+and thus the run time is just $n$ times the average value of $1+S_i$.\\
+In the worst case all the elements are in reversed sorted order, and $S_i$ is equal to $i$ (since the $i$'th element
+has to move all the way to) and the average value of $S_i=\frac{n}{2}$ making the worst case run time
+$\Theta(n^2)$.\\
+In the average case the $i$'th element has $i/2$ elements before it, that is larger than itself. Thus 
+$S_i=\frac{n}{4}$ and the average time complexity is $\Theta(n^2)$ aswell.\\
+And in best case the array is already sorted, thus $S_i=0$ and the run time is $\Theta(n)$.
+
+
 \subsection{Clever sorting algorithms}
 \subsubsection{Merge sort}
 \div{merge_sort}{sorting_algo}
