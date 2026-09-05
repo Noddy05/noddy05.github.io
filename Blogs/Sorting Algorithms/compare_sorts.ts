@@ -253,3 +253,4 @@ function stopTracking(){
 
 const worker = new Worker('test.js');
 console.log(worker);
+worker.postMessage('Hello, worker!');
