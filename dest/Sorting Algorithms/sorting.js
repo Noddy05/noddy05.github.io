@@ -77,13 +77,25 @@ class SortingObject {
             this.max = Math.max(this.array[i], this.max);
         }
     }
-    scrambleMethod() {
+    scrambler() {
         for (let i = 0; i < scramblers.length; i++) {
             if (scramblers[i][0] == this.scrambleSelect.value) {
-                return scramblers[i][1];
+                return scramblers[i];
             }
         }
-        return (n) => [];
+        return null;
+    }
+    scrambleMethod() {
+        const scrambler = this.scrambler();
+        if (scrambler == null)
+            return (n) => [];
+        return scrambler[1];
+    }
+    compareScrambler() {
+        const scrambler = this.scrambler();
+        if (scrambler == null)
+            return (n) => [];
+        return scrambler[3];
     }
     scramble() {
         let length = +this.sizeSlider.value;
@@ -92,11 +104,8 @@ class SortingObject {
     }
     resize() {
         let length = +this.sizeSlider.value;
-        for (let i = 0; i < scramblers.length; i++) {
-            if (scramblers[i][0] == this.scrambleSelect.value) {
-                this.array = scramblers[i][2](this, length);
-            }
-        }
+        const scrambler = this.scrambler();
+        this.array = scrambler[2](this, length);
         this.calculateBounds();
     }
 }

@@ -67,13 +67,13 @@ Doing this continously will eventually lead to a sorted array.
 
 <h4>Time- and spatial complexity</h4>
 No matter how scrambled 
-the original array was, this algorithm will sort the array in $\frac{n(n-1)}{2}-1\in
+the original array was, this algorithm will sort the array in $\frac{n(n-1)}{2}-1=
 \Theta(n^2)$ steps 
 (where $n$ is the size of the original array). To see why, note that to find the smallest
 value we first have to check $n$ elements, then to find the next smallest value we check
 the remaining $n-1$ elements and so on
 \[
-    (n-1)+(n-2)+\cdots+3+2=\sum_{i=2}^{n-1} i=\sum_{i=1}^{n-1} i-1=\frac{n(n-1)}{2}-1\in\Theta (n^2)
+    (n-1)+(n-2)+\cdots+3+2=\sum_{i=2}^{n-1} i=\sum_{i=1}^{n-1} i-1=\frac{n(n-1)}{2}-1=\Theta (n^2)
 \]
 We could also look at it a different way, using upper and lower bounds, let $f(n)$ be the
 number of operations performed by SelectionSort for an array of size $n$. The following
@@ -81,19 +81,20 @@ diagram indicates the amount of work performed by our algorithm according to the
 of $i$ and $j$. Wether or not the if statement meets is condition is the difference 
 between 1 operation and 2, so its up to a constant and can be dismissed.
 <br><br>
-<img src="complexity.png" width="70%"> 
+<img src="complexity.png" width="70%">
 <p class="image-text">Figure 1: On the left: number of operations performed by insertion sort per index $i$ and $j$. <br>
 On the right: operations performed by insertion sort for an array of size 5.</p>
-
+In the figure above we can see visually that this algorithm is $\Theta(n^2)$. For each value of
+$i$ and $j$, we see how much work is perfromed.<br>
 Notice that we can fill a red square of size $n^2/4$ where all work inside the 
-square is 1. Thus the total work performed in this square is $n^2/4$, this is a
-lower bound so $f(n)\in\Omega(n^2)$. Now the entire square of size $(n-1)^2$ is an 
-overestimate (combining the green and red squares) since not all the work in this 
-large square is 1, thus we also have an upper bound $f(n)\in\mathcal O (n^2)$. Since the 
-upper and lower bounds are the same we have our precise estimate $f(n)\in \Theta(n^2)$.
+square is 1. Thus the total work performed in this square is $n^2/4$,. This is a
+lower bound, since theres also work in the green squares that we dont account for, thus $f(n)=\Omega(n^2)$. 
+Now the entire square of size $(n-1)^2$ is an upper bound for the amount of work performed (combining the green and red squares) 
+since not all the work in this large square is 1, thus we also have an upper bound $f(n)=\mathcal O (n^2)$. 
+Since the upper and lower bounds are the same we have our precise estimate $f(n)=\Theta(n^2)$.
 <br><br>
-Now in terms of spatial complexity we create only a variable <code>minIndex</code>
-and a temporary variable for swapping elements, so in total two variables, which
+Now in terms of spatial complexity we create only variables <code>minIndex</code>, $i$, $j$
+and a temporary variable for swapping elements, so in total 4 variables, which
 makes the spatial complexity constant $\Theta(1)$.
 <h4>Proof of correctness</h4>
 Let $\mathbf A =\left< a_0,a_1,\cdots,a_{n-1}\right>$ be a list of $n$ elements.
@@ -143,18 +144,18 @@ Bubble sort only uses extra storage when swapping elements, thus the spatial com
 The time complexity for bubble sort is in the worst case and average case $\mathcal{O}(n^2)$, but $\mathcal{O}(n)$ in the 
 best case.
 <br><br>
-Because our implementation of <textsc>BubbleSort</textsc>  allows for a quick exit then the array is sorted the time
+Because our implementation of <textsc>BubbleSort</textsc> allows for a quick exit then the array is sorted the time
 complexity gets a bit more complicated to calculate, but not impossible. <br><br>
 We start our analysis by letting $h(i)$ be a function that for each index in $\mathbf{A}$ returns the index where 
 $\mathbf{A}[i]$ belongs in a sorted array.<br>
 Now if $h(i)< i$ it would take $a=i-h(i)$ iterations of the outer loop before $\mathbf{A}[i]$ is where it belongs,
 since an element only moves back once. If on the other hand $h(i)>i$, then it can be carried to where it belongs
-after <textsc>BubbleSort</textsc>  has placed all elements that will go to the right of $h(i)$, i.e after $b=|\mathbf{A}|-1-h(i)$ 
+after <textsc>BubbleSort</textsc> has placed all elements that will go to the right of $h(i)$, i.e after $b=|\mathbf{A}|-1-h(i)$ 
 iterations of the outer loop (except if $h(i)=i$, then it is already in its place and $b=0$). 
 Therefore the number of iterations of the 
 outer loop is exactly $\mathcal S=1+\displaystyle\max_{0\leq i<|\mathbf{A}|} \big\{\max(a,b)\big\}$ 
 (plus one, since we always run the loop before we realize that we didn't have to).<br>
-From this we find that the runtime of <textsc>BubbleSort</textsc>  is 
+From this we find that the runtime of <textsc>BubbleSort</textsc> is 
 \begin{equation*}
     \begin{split}
         \sum_{i=1}^{\mathcal S} (n - i)=\sum_{i=1}^{\mathcal S} n-\sum_{i=1}^{\mathcal S} i\quad(n=|\mathbf{A}|)\\
@@ -167,7 +168,7 @@ Thus the problem of determing time complexity is narrowed down to finding an exp
 in terms of $n$. Now if the array is sorted $h(i)=i$ for all $i$, therefore $a=i-h(i)=0$ and $b=0$ making 
 $\mathcal S=1$. This is the best case scenario and the time complexity is $\Theta(n)$. 
 <br>
-<textsc>BubbleSort</textsc>  enters a worst case scenario if for example the smallest element was placed at the last index,
+<textsc>BubbleSort</textsc> enters a worst case scenario if for example the smallest element was placed at the last index,
 if this happens $\mathcal S=1+i-h(i)$ with $i=n-1$ and $h(i)=0$ making $\mathcal S=n$ and the time complexity is 
 in turn $\Theta(n^2)$.
 <br>
@@ -212,17 +213,17 @@ Although for visualization purposes it made more sense to use this alternative f
     <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
 
 <h4>Time- and spatial complexity</h4>
-<textsc>InsertionSort</textsc> , like all previous algorithms uses constant space to swap elements (and keep track of variables $i$ and $j$), 
+<textsc>InsertionSort</textsc>, like all previous algorithms uses constant space to swap elements (and keep track of variables $i$ and $j$), 
 thus the spatial complexity is $\Theta(1)$.<br>
 The best case for this algorithm is $\Theta(n)$ and the average and worst case are both $\Theta(n^2)$.
 <br><br>
 Here's why:<br>
-Let $\mathcal S_i$ be the number of iterations of the inner while loop, then the time complexity of <textsc>InsertionSort</textsc> 
+Let $\mathcal S_i$ be the number of iterations of the inner while loop, then the time complexity of <textsc>InsertionSort</textsc>
 is $\Theta\left(\sum(1+\mathcal S_i)\right)$ and $\mathcal S_i$ is exactly the number of times where $\mathbf{A}[j - 1]>\mathbf{A}[j]$ for 
 any $1\leq j\leq i$ (note that $\mathcal S_i$ is not affected by rearranging the earlier elements). 
 <br><br>
 If $\mathcal S_i$ is the number of times the while loop runs in the $i$'th iteration of the for loop, then the
-run time for <textsc>InsertionSort</textsc>  is $=\displaystyle\sum_{i=1}^{|\mathbf{A}|-1}(1+\mathcal S_i)$. The average value of 
+run time for <textsc>InsertionSort</textsc> is $=\displaystyle\sum_{i=1}^{|\mathbf{A}|-1}(1+\mathcal S_i)$. The average value of 
 $1+\mathcal S_i$ is equal to
 \begin{equation*}
     \begin{split}
@@ -274,11 +275,11 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
     L <keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
     R <keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
     <keyword class="comment">//While both halves have elements left pick the smallest element in both arrays</keyword>
-    <keyword class="keyword">while</keyword> L <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(leftHalf) <keyword class="operation">and</keyword> R <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(rightHalf)
+    <keyword class="keyword">while</keyword> L <keyword class="operation"><</keyword> |leftHalf| <keyword class="operation">and</keyword> R <keyword class="operation"><</keyword> |rightHalf|
         i <keyword class="operation">=</keyword> l <keyword class="operation">+</keyword> L <keyword class="operation">+</keyword> R
 
-        <keyword class="comment">//Since the halves are sorted, the smallest element in each array is the first element</keyword>
-        <keyword class="comment">//This is what makes merge O(n)</keyword>
+        <keyword class="comment">//Since the halves are sorted, the smallest element in each array is </keyword>
+        <keyword class="comment">//the first element - This is what makes merge O(n)</keyword>
         <keyword class="keyword">if</keyword> leftHalf[L] <keyword class="operation"><</keyword> rightHalf[R]
             <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> leftHalf[L]
             L<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
@@ -288,15 +289,17 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
         <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>
     <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
     
-    <keyword class="comment">//If there are no elements left in the right half, copy the remaining elements of the left half</keyword>
-    <keyword class="keyword">while</keyword> L <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(leftHalf)
+    <keyword class="comment">//If there are no elements left in the right half, copy the remaining </keyword>
+    <keyword class="comment">//elements of the left half</keyword>
+    <keyword class="keyword">while</keyword> L <keyword class="operation"><</keyword> |leftHalf|
         i <keyword class="operation">=</keyword> l <keyword class="operation">+</keyword> L <keyword class="operation">+</keyword> R
         <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> leftHalf[L]
         L<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
     <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword>
     
-    <keyword class="comment">//If there are no elements left in the left half, copy the remaining elements of the right half</keyword>
-    <keyword class="keyword">while</keyword> R <keyword class="operation"><</keyword> <keyword class="built-in">len</keyword>(rightHalf)
+    <keyword class="comment">//If there are no elements left in the left half, copy the remaining </keyword>
+    <keyword class="comment">//elements of the right half</keyword>
+    <keyword class="keyword">while</keyword> R <keyword class="operation"><</keyword> |rightHalf|
         i <keyword class="operation">=</keyword> l <keyword class="operation">+</keyword> L <keyword class="operation">+</keyword> R
         <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> rightHalf[R]
         R<keyword class="operation">+</keyword><keyword class="operation">+</keyword>

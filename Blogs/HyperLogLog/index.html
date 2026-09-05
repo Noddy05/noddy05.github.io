@@ -25,9 +25,9 @@
 <body>
 <div id="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>The HyperLogLog datastructure</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
 
-<textsc>HyperLogLog</textsc>  is a datastructure that is able to count $n$ unique events, using only $\mathcal{O}(\log\log n)$ storage, hence the name. <textsc>HyperLogLog</textsc>  is an improvement in terms of accuracy, to <textsc>SuperLogLog</textsc>  which in turn is an improvement to the <textsc>LogLog</textsc>  algorithm.
+<textsc>HyperLogLog</textsc> is a datastructure that is able to count $n$ unique events, using only $\mathcal{O}(\log\log n)$ storage, hence the name. <textsc>HyperLogLog</textsc> is an improvement in terms of accuracy, to <textsc>SuperLogLog</textsc> which in turn is an improvement to the <textsc>LogLog</textsc> algorithm.
 <br>
-This datastructure is able to compress so much data by using randomness. It essentially calculates the number of unique events, by splitting events into buckets (called registers), such that every event gets into a random register. Now each register <u>only</u>  keeps track of the rarest event that has occured, and if many registers have seen very rare events, it's likely that it's seen many events. 
+This datastructure is able to compress so much data by using randomness. It essentially calculates the number of unique events, by splitting events into buckets (called registers), such that every event gets into a random register. Now each register <u>only</u> keeps track of the rarest event that has occured, and if many registers have seen very rare events, it's likely that it's seen many events. 
 
 <div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Calculating rarity</a><br><a href="#3">3) Reversing probability</a><br><a href="#4">4) Linear counting for small range correction</a><br><a href="#5">5) Performance</a></p></div></p></div><div class="page"><p><h2 id="2">2) Calculating rarity</h2>
 Every event gets converted by a random Hash-function into a binary string. If the number of registers $m=2^k$ for some $k\in\mathbb{Z}$, then we can use the first $k=\log_2 m$ bits to determine what register to put this event into. The remaining bits are now used to calculate the rarity of the event.
@@ -48,15 +48,15 @@ We estimate the number of elements in a bucket by its approximation $2^{M-1}$, b
         Z=\frac{m}{\displaystyle\sum_{i=1}^m \frac{1}{2^{M_i-1}}}=\frac{m}{2\displaystyle\sum_{i=1}^m \frac{1}{2^{M_i}}}
     \end{split}
 \end{equation*}
-and now $Z$ is the average of each bucket, so $mZ\approx n$. However this isn't the case! In fact $mZ$ tends to <u>undercount</u>  $n$ by a constant $2\alpha_m$<a href="#footnote_1">$^1$</a>t. } such that $2m\alpha_m Z\approx n$. The hardest part of developing this algorithm is determining the value of $\alpha_m$, so let's just skip to the result. As $m\rightarrow\infty$, $\alpha_m\rightarrow\frac{1}{\log 2}$
+and now $Z$ is the average of each bucket, so $mZ\approx n$. However this isn't the case! In fact $mZ$ tends to <u>undercount</u> $n$ by a constant $2\alpha_m$<a href="#footnote_1">$^1$</a>t. } such that $2m\alpha_m Z\approx n$. The hardest part of developing this algorithm is determining the value of $\alpha_m$, so let's just skip to the result. As $m\rightarrow\infty$, $\alpha_m\rightarrow\frac{1}{\log 2}$
 \begin{equation*}
     \begin{split}
         \alpha_m=\left(m\int_0^\infty \left[\log_2\left(\frac{2+u}{1+u}\right)\right]^mdu\right)^{-1}
     \end{split}
 \end{equation*}
-<img src="alpha_table.png" width="20%"> 
+<img src="alpha_table.png" width="20%">
 $\alpha_m$ is specific to the Harmonic mean, as changing to a different type of mean will require scaling by a different constant. For example for the geometric mean $\alpha_{16}\approx \frac{4}{5}$.<br>
-But that's not the only reason this constant exists, if we develop another algorithm that keeps track of how many times $M=k$ has happened for each register, letting this number be equal to $d_i$, and then take the mean of $d_i 2^{M_i}$ the constant $=1$. The reason we dont use this algorithm however, is that it can't distinguish between events. Because if we register the same event 5 times, then $d_i$ would increase by 5 and the average would be roughly 5 times larger. But this algorithm only tries to register <u>unique</u>  events, and therefore we dont use this algorithm, but it does show why this constant exists.
+But that's not the only reason this constant exists, if we develop another algorithm that keeps track of how many times $M=k$ has happened for each register, letting this number be equal to $d_i$, and then take the mean of $d_i 2^{M_i}$ the constant $=1$. The reason we dont use this algorithm however, is that it can't distinguish between events. Because if we register the same event 5 times, then $d_i$ would increase by 5 and the average would be roughly 5 times larger. But this algorithm only tries to register <u>unique</u> events, and therefore we dont use this algorithm, but it does show why this constant exists.
 <br><br>
 For a duplicate to occur, the first $\log_2 m+(M_i+1)$ bits have to be the same, the first $\log_2 m$ bits must be the same, since it needs to hit the same register and then to have the same number of leading zeros, it must have $M_i$ leading zeros and then followed by a 1, thus $\log_2m+M_i+1$ bytes must be exactly the same. The chance of this is 
 \begin{equation*}
@@ -74,7 +74,7 @@ For a duplicate to occur, the first $\log_2 m+(M_i+1)$ bits have to be the same,
 \end{equation*}
 thus to have $E[M_i=k]=d+1$ $n$ must be $=(d+1)2^{k}$ and therefore we take the harmonic sum of $(d+1)2^{M_i}$. 
 </p><br id="footnote_1"><footnote>$\quad$1. One might wonder why the factor of 2 isn't included in the constant. That is because $\alpha_m$ is defined by Flajolet et al. for an algorithm where $Z^*=2Z$ is the Harmonic mean of $2^M_i$, rather than $2^M_i-1$ as we've just defined it. </footnote></div><div class="page"><p><h2 id="4">4) Linear counting for small range correction</h2>
-<textsc>LinearCounting</textsc>  is another technique based on registers and can easily be derived from the fact that after $n$ events, the chance that a register is still assigned 0 is equal to
+<textsc>LinearCounting</textsc> is another technique based on registers and can easily be derived from the fact that after $n$ events, the chance that a register is still assigned 0 is equal to
 \begin{equation*}
     \begin{split}
         P[M_i=0]=\left(1-\frac{1}{m}\right)^n
@@ -105,10 +105,10 @@ and from the Taylor series expansion of $\log\left(1-\frac{1}{m}\right)\approx -
     \end{split}
 \end{equation*}
 provided $V\neq 0$ we can use this in our algorithm like so
-<img src="hll_code.png" width="100%"> 
-we will use <textsc>LinearCounting</textsc>  whenever our estimate $E\leq \frac{5}{2}m$.
+<img src="hll_code.png" width="100%">
+we will use <textsc>LinearCounting</textsc> whenever our estimate $E\leq \frac{5}{2}m$.
 </p></div><div class="page"><p><h2 id="5">5) Performance</h2>
-The cost of <textsc>Add</textsc>  is $\mathcal{O}(1)$, given that it reads at most a constant number of bits (the length of the hash). And then the <textsc>Count</textsc>  operation is $\mathcal{O}(m)$. 
+The cost of <textsc>Add</textsc> is $\mathcal{O}(1)$, given that it reads at most a constant number of bits (the length of the hash). And then the <textsc>Count</textsc> operation is $\mathcal{O}(m)$. 
 <br><br>
 To store $M_i$ we require $\log_2(M_i)$ bits, and $M_i\approx1+\log_2(n/m)=\mathcal{O}(\log[n/m])$. Thus the storage per register is $\mathcal{O}(\log\log [n/m])$ for $n$ insertions. And for $m$ registers the storage is $\mathcal{O}(\log [m\log (n/m)])$, but given that $m$ is constant this makes the storage requirement $\mathcal{O}(\log\log n)$.
 </p></div></div></body></html>

@@ -42,13 +42,13 @@ Doing this continously will eventually lead to a sorted array.
 
 <h4>Time- and spatial complexity</h4>
 No matter how scrambled 
-the original array was, this algorithm will sort the array in $\frac{n(n-1)}{2}-1\in
+the original array was, this algorithm will sort the array in $\frac{n(n-1)}{2}-1=
 \Theta(n^2)$ steps 
 (where $n$ is the size of the original array). To see why, note that to find the smallest
 value we first have to check $n$ elements, then to find the next smallest value we check
 the remaining $n-1$ elements and so on
 \[
-    (n-1)+(n-2)+\cdots+3+2=\sum_{i=2}^{n-1} i=\sum_{i=1}^{n-1} i-1=\frac{n(n-1)}{2}-1\in\Theta (n^2)
+    (n-1)+(n-2)+\cdots+3+2=\sum_{i=2}^{n-1} i=\sum_{i=1}^{n-1} i-1=\frac{n(n-1)}{2}-1=\Theta (n^2)
 \]
 We could also look at it a different way, using upper and lower bounds, let $f(n)$ be the
 number of operations performed by SelectionSort for an array of size $n$. The following
@@ -59,16 +59,17 @@ between 1 operation and 2, so its up to a constant and can be dismissed.
 \fig{complexity.png}{70}
 \figtext{On the left: number of operations performed by insertion sort per index $i$ and $j$. <br>
 On the right: operations performed by insertion sort for an array of size 5.}
-
+In the figure above we can see visually that this algorithm is $\Theta(n^2)$. For each value of
+$i$ and $j$, we see how much work is perfromed.\\
 Notice that we can fill a red square of size $n^2/4$ where all work inside the 
-square is 1. Thus the total work performed in this square is $n^2/4$, this is a
-lower bound so $f(n)\in\Omega(n^2)$. Now the entire square of size $(n-1)^2$ is an 
-overestimate (combining the green and red squares) since not all the work in this 
-large square is 1, thus we also have an upper bound $f(n)\in\mathcal O (n^2)$. Since the 
-upper and lower bounds are the same we have our precise estimate $f(n)\in \Theta(n^2)$.
+square is 1. Thus the total work performed in this square is $n^2/4$,. This is a
+lower bound, since theres also work in the green squares that we dont account for, thus $f(n)=\Omega(n^2)$. 
+Now the entire square of size $(n-1)^2$ is an upper bound for the amount of work performed (combining the green and red squares) 
+since not all the work in this large square is 1, thus we also have an upper bound $f(n)=\mathcal O (n^2)$. 
+Since the upper and lower bounds are the same we have our precise estimate $f(n)=\Theta(n^2)$.
 \\\\
-Now in terms of spatial complexity we create only a variable <code>minIndex</code>
-and a temporary variable for swapping elements, so in total two variables, which
+Now in terms of spatial complexity we create only variables <code>minIndex</code>, $i$, $j$
+and a temporary variable for swapping elements, so in total 4 variables, which
 makes the spatial complexity constant $\Theta(1)$.
 <h4>Proof of correctness</h4>
 Let $\mathbf A =\left< a_0,a_1,\cdots,a_{n-1}\right>$ be a list of $n$ elements.
@@ -249,11 +250,11 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
     L = 0
     R = 0
     //While both halves have elements left pick the smallest element in both arrays
-    while L < len(leftHalf) and R < len(rightHalf)
+    while L < |leftHalf| and R < |rightHalf|
         i = l + L + R
 
-        //Since the halves are sorted, the smallest element in each array is the first element
-        //This is what makes merge O(n)
+        //Since the halves are sorted, the smallest element in each array is 
+        //the first element - This is what makes merge O(n)
         if leftHalf[L] < rightHalf[R]
             ~A~[i] = leftHalf[L]
             L++
@@ -263,15 +264,17 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
         endif
     endwhile
     
-    //If there are no elements left in the right half, copy the remaining elements of the left half
-    while L < len(leftHalf)
+    //If there are no elements left in the right half, copy the remaining 
+    //elements of the left half
+    while L < |leftHalf|
         i = l + L + R
         ~A~[i] = leftHalf[L]
         L++
     endwhile
     
-    //If there are no elements left in the left half, copy the remaining elements of the right half
-    while R < len(rightHalf)
+    //If there are no elements left in the left half, copy the remaining 
+    //elements of the right half
+    while R < |rightHalf|
         i = l + L + R
         ~A~[i] = rightHalf[R]
         R++

@@ -110,14 +110,29 @@ class SortingObject {
         }
     }
 
-    public scrambleMethod() : ((n: number) => number[]) {
+    public scrambler() : [ string, (n: number) => number[], (sortingObj: SortingObject, n: number) => number[], (n: number) => number[] ] | null {
         for(let i = 0; i < scramblers.length; i++){
             if(scramblers[i][0] == this.scrambleSelect.value){
-                return scramblers[i][1];
+                return scramblers[i];
             }
         }
+        return null;
+    }
 
-        return (n) => [];
+    public scrambleMethod() : ((n: number) => number[]) {
+        const scrambler = this.scrambler();
+        if(scrambler == null)
+            return (n) => [];
+
+        return scrambler[1];
+    }
+
+    public compareScrambler() : ((n: number) => number[]) {
+        const scrambler = this.scrambler();
+        if(scrambler == null)
+            return (n) => [];
+
+        return scrambler[3];
     }
 
     public scramble(): void {
@@ -128,13 +143,9 @@ class SortingObject {
 
     public resize(): void {
         let length = +this.sizeSlider.value;
+        const scrambler = this.scrambler();
         
-        for(let i = 0; i < scramblers.length; i++){
-            if(scramblers[i][0] == this.scrambleSelect.value){
-                this.array = scramblers[i][2](this, length);
-            }
-        }
-
+        this.array = scrambler![2](this, length);
         this.calculateBounds();
     }
 }

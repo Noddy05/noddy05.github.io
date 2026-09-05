@@ -1,9 +1,10 @@
 "use strict";
+//Scramblers: Name of method, function to generate, function to extend, fall-back function when comparing sorting.
 const scramblers = [
-    ['Scrambled', genScrambledArray, extendScrambledArray],
-    ['Sorted', genSortedArray, extendSortedArray],
-    ['Reverse Sorted', genReverseSortedArray, extendReverseSortedArray],
-    ['Random Values', genRandomArray, extendRandomArray],
+    ['Scrambled', genScrambledArray, extendScrambledArray, genScrambledArray],
+    ['Sorted', genSortedArray, extendSortedArray, genSortedArray],
+    ['Reverse Sorted', genReverseSortedArray, extendReverseSortedArray, genReverseSortedArray],
+    ['Random Values', genRandomArray, extendRandomArray, genScrambledArray],
 ];
 function genSortedArray(n) {
     const array = [];

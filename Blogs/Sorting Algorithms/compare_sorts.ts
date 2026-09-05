@@ -31,6 +31,10 @@ class CompareDiv {
     public timeButton : HTMLButtonElement | null = null;
     public accuracySlider : HTMLInputElement | null = null;
 
+    public progressA : HTMLParagraphElement | null = null;
+    public progressB : HTMLParagraphElement | null = null;
+    public progressTrackIndex : number = 0;
+
     
     public constructor(sortDiv: HTMLDivElement){
         this.sortDiv = sortDiv;
@@ -71,6 +75,11 @@ class CompareDiv {
         this.delaySlider.setAttribute('max', '200');
         this.delaySlider.setAttribute('value', '50');
 
+        this.progressA = document.createElement('p');
+        this.progressA.innerHTML = '0%';
+        this.progressB = document.createElement('p');
+        this.progressB.innerHTML = '0%';
+
         this.sortButton = document.createElement('button');
         this.sortButton.innerHTML = 'Sort';
         this.sortButton.onclick = async (e) => {
@@ -105,7 +114,7 @@ class CompareDiv {
         this.timeButton = document.createElement('button');
         this.timeButton.innerHTML = 'Meassure actual time';
         this.timeButton.onclick = async (e) => {
-            const newArray = this.sortingObjA.scrambleMethod()(+this.accuracySlider!.value);
+            const newArray = this.sortingObjA.compareScrambler()(+this.accuracySlider!.value);
             const reuseArray = [...newArray];
 
             if(this.sortingAlgorithmA != null) { 
@@ -116,9 +125,12 @@ class CompareDiv {
                 this.sortingObjA!.setArray(newArray);
                 this.delaySlider!.value = '0';
 
+                trackProgress(this.sortingObjA!, this.progressA!);
+
                 const start = Date.now();
                 await this.algorithmA()(this.sortingObjA!, true);
                 console.log(`Sorting A took: ${(Date.now() - start)}ms`);
+                stopTracking();
 
                 this.sortingObjA!.setArray(previousArray); 
                 this.delaySlider!.value = sliderVal;
@@ -205,8 +217,38 @@ class CompareDiv {
         this.sortDiv.appendChild(this.accuracySlider);
         this.sortDiv.appendChild(this.sortingAlgorithmA);
         this.sortDiv.appendChild(this.sortingAlgorithmB);
+        this.sortDiv.appendChild(this.progressA);
+        this.sortDiv.appendChild(this.progressB);
     }
 }
 
-
 const compareDiv = new CompareDiv(document.getElementById('compare_sort') as HTMLDivElement);
+
+async function trackProgress(sortingObj: SortingObject, text: HTMLParagraphElement){
+    const trackIndex = ++compareDiv.progressTrackIndex;
+    while(trackIndex == compareDiv.progressTrackIndex){
+        let displacement = 0;
+        for(let i = 0; i < sortingObj.length(); i++){
+            displacement += Math.abs(sortingObj.get(i) - i);
+        }
+        displacement /= sortingObj.length();
+        let ratio = Math.abs(sortingObj.length() / 2 - displacement) / sortingObj.length() * 2;
+
+        console.log(displacement, ratio);
+
+        text.innerHTML = `${Math.round(ratio * 100) / 100}%`;
+
+        await sleepFor(1);
+
+        if(displacement == 0)
+            return;
+    }
+    text.innerHTML = `100%`;
+}
+
+function stopTracking(){
+    compareDiv.progressTrackIndex++;
+}
+
+
+const worker = new Worker('test.js');

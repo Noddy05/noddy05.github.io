@@ -53,5 +53,5 @@ async function bogoSort(sortingObj: SortingObject, skipAnimation: boolean){
         finalizeArray(sortingObj);
 }
 
-const bogoSortDiv = new SortingDiv(document.getElementById('bogo_sort') as HTMLDivElement);
-bogoSortDiv.sortingAlgorithm = bogoSort;
+//const bogoSortDiv = new SortingDiv(document.getElementById('bogo_sort') as HTMLDivElement);
+//bogoSortDiv.sortingAlgorithm = bogoSort;
