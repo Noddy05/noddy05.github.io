@@ -199,6 +199,6 @@ async function trackProgress(sortingObj, text) {
 function stopTracking() {
     compareDiv.progressTrackIndex++;
 }
-const worker = new Worker('./dest/Sorting Algorithms/worker.js');
+const worker = new Worker('../../dest/Sorting Algorithms/worker.js');
 console.log(worker);
 worker.postMessage('Hello, worker!');

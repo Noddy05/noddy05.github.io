@@ -251,6 +251,6 @@ function stopTracking(){
 }
 
 
-const worker = new Worker('./dest/Sorting Algorithms/worker.js');
+const worker = new Worker('../../dest/Sorting Algorithms/worker.js');
 console.log(worker);
 worker.postMessage('Hello, worker!');
