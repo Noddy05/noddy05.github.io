@@ -200,3 +200,4 @@ function stopTracking() {
     compareDiv.progressTrackIndex++;
 }
 const worker = new Worker('test.js');
+console.log(worker);
