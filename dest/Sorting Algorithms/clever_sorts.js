@@ -69,30 +69,30 @@ async function merge(sortingObj, l, m, r, loopIndex) {
     }
     await draw(sortingObj, true);
 }
-const mergeSortDiv = new SortingDiv(document.getElementById('merge_sort'));
-mergeSortDiv.sortingAlgorithm = mergeSort;
-//Check to use the naive partitioning
-const naiveButton = document.createElement('input');
-naiveButton.setAttribute('type', 'checkbox');
-naiveButton.setAttribute('checked', 'true');
 async function quickSort(sortingObj, skipAnimation) {
     const loopIndex = ++sortingObj.loopIndex;
-    await quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
+    await quick_sort(sortingObj, 0, sortingObj.length() - 1, false, loopIndex);
     if (!skipAnimation && sortingObj.isRunning(loopIndex))
         await finalizeArray(sortingObj);
 }
-async function quick_sort(sortingObj, l, r, loopIndex) {
+async function naiveQuickSort(sortingObj, skipAnimation) {
+    const loopIndex = ++sortingObj.loopIndex;
+    await quick_sort(sortingObj, 0, sortingObj.length() - 1, true, loopIndex);
+    if (!skipAnimation && sortingObj.isRunning(loopIndex))
+        await finalizeArray(sortingObj);
+}
+async function quick_sort(sortingObj, l, r, isNaive, loopIndex) {
     if (r <= l)
         return;
     if (loopIndex != sortingObj.loopIndex)
         return;
-    let mid = await partition(sortingObj, l, r, loopIndex);
+    let mid = await partition(sortingObj, l, r, isNaive, loopIndex);
     if (loopIndex != sortingObj.loopIndex)
         return;
-    await quick_sort(sortingObj, l, mid - 1, loopIndex);
+    await quick_sort(sortingObj, l, mid - 1, isNaive, loopIndex);
     if (loopIndex != sortingObj.loopIndex)
         return;
-    await quick_sort(sortingObj, mid + 1, r, loopIndex);
+    await quick_sort(sortingObj, mid + 1, r, isNaive, loopIndex);
     if (loopIndex != sortingObj.loopIndex)
         return;
     await sleep(sortingObj);
@@ -100,11 +100,11 @@ async function quick_sort(sortingObj, l, r, loopIndex) {
         return;
     await draw(sortingObj, true);
 }
-async function partition(sortingObj, l, r, loopIndex, canBeNaive = true) {
+async function partition(sortingObj, l, r, isNaive, loopIndex) {
     if (loopIndex != sortingObj.loopIndex)
         return 0;
     const pivotIndex = Math.floor((l + r) / 2);
-    if (!naiveButton.checked || !canBeNaive) {
+    if (!isNaive) {
         swap(sortingObj, pivotIndex, r);
     }
     let x = sortingObj.read(r);
@@ -126,9 +126,6 @@ async function partition(sortingObj, l, r, loopIndex, canBeNaive = true) {
     sortingObj.write(i + 1, x);
     return i + 1;
 }
-const quickSortDiv = new SortingDiv(document.getElementById('quick_sort'));
-quickSortDiv.sortingAlgorithm = quickSort;
-quickSortDiv.sortDiv.appendChild(naiveButton);
 async function maxHeapify(sortingObj, length, i, loopIndex) {
     let largest = i;
     let l = 2 * i + 1;
@@ -182,8 +179,6 @@ async function heapSort(sortingObj, skipAnimation) {
     if (!skipAnimation && sortingObj.isRunning(loopIndex))
         await finalizeArray(sortingObj);
 }
-const heapSortDiv = new SortingDiv(document.getElementById('heap_sort'));
-heapSortDiv.sortingAlgorithm = heapSort;
 async function introSort(sortingObj, skipAnimation) {
     const loopIndex = ++sortingObj.loopIndex;
     await intro_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex);
@@ -199,7 +194,7 @@ async function intro_sort(sortingObj, l, r, loopIndex) {
     }
     if (loopIndex != sortingObj.loopIndex)
         return;
-    let mid = await partition(sortingObj, l, r, loopIndex, false);
+    let mid = await partition(sortingObj, l, r, false, loopIndex);
     if (loopIndex != sortingObj.loopIndex)
         return;
     await intro_sort(sortingObj, l, mid - 1, loopIndex);
@@ -213,5 +208,3 @@ async function intro_sort(sortingObj, l, r, loopIndex) {
     if (loopIndex != sortingObj.loopIndex)
         return;
 }
-const introSortDiv = new SortingDiv(document.getElementById('intro_sort'));
-introSortDiv.sortingAlgorithm = introSort;

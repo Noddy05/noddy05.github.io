@@ -3,6 +3,7 @@ const comparableAlgorithms: [ string, (sortingObj: SortingObject, skipAnimation:
     [ 'Bubble Sort', bubbleSort, ],
     [ 'Insertion Sort', insertionSort, ],
     [ 'Merge Sort', mergeSort, ],
+    [ 'Naive Quick Sort', naiveQuickSort, ],
     [ 'Quick Sort', quickSort, ],
     [ 'Heap Sort', heapSort, ],
     [ 'Intro Sort', introSort ],
@@ -31,9 +32,13 @@ class CompareDiv {
     public timeButton : HTMLButtonElement | null = null;
     public accuracySlider : HTMLInputElement | null = null;
 
+    public workerA : Worker = new Worker('../../dest/Sorting Algorithms/worker.js');
+    public workerB : Worker = new Worker('../../dest/Sorting Algorithms/worker.js');
     public progressA : HTMLParagraphElement | null = null;
     public progressB : HTMLParagraphElement | null = null;
-    public progressTrackIndex : number = 0;
+    public timerA: number = 0;
+    public timerB: number = 0;
+    public trackerIndex: number = 0;
 
     
     public constructor(sortDiv: HTMLDivElement){
@@ -47,6 +52,9 @@ class CompareDiv {
             this.delaySlider!, this.scrambleMethod!, this.sizeSlider!);
         
         this.sortingObjB.setArray([...this.sortingObjA.getArray()]);
+
+        this.workerA.onmessage = (event) => { this.timerA = event.data; console.log(event); }
+        this.workerB.onmessage = (event) => { this.timerB = event.data; console.log(event); }
         
         draw(this.sortingObjA);
         draw(this.sortingObjB);
@@ -54,6 +62,14 @@ class CompareDiv {
 
     private algorithmA(): (sortingObj: SortingObject, skipAnimation: boolean) => void {
         return comparableAlgorithms[+this.sortingAlgorithmA!.value][1];
+    }
+
+    public algorithmANum(): number {
+        return +this.sortingAlgorithmA!.value;
+    }
+
+    public algorithmBNum(): number {
+        return +this.sortingAlgorithmB!.value;
     }
 
     private algorithmB(): (sortingObj: SortingObject, skipAnimation: boolean) => void {
@@ -76,9 +92,9 @@ class CompareDiv {
         this.delaySlider.setAttribute('value', '50');
 
         this.progressA = document.createElement('p');
-        this.progressA.innerHTML = '0%';
+        this.progressA.innerHTML = 'Sorting (Selection Sort): 0ms';
         this.progressB = document.createElement('p');
-        this.progressB.innerHTML = '0%';
+        this.progressB.innerHTML = 'Sorting (Selection Sort): 0ms';
 
         this.sortButton = document.createElement('button');
         this.sortButton.innerHTML = 'Sort';
@@ -113,43 +129,40 @@ class CompareDiv {
 
         this.timeButton = document.createElement('button');
         this.timeButton.innerHTML = 'Meassure actual time';
-        this.timeButton.onclick = async (e) => {
-            const newArray = this.sortingObjA.compareScrambler()(+this.accuracySlider!.value);
-            const reuseArray = [...newArray];
+        this.timeButton.onclick = (e) => {
+            const size = +this.accuracySlider!.value;
+            const scramble = +this.sortingObjA.scramblerNum()!;
 
-            if(this.sortingAlgorithmA != null) { 
-                this.sortingObjA!.paused = false;
+            this.workerA.terminate();
+            this.workerB.terminate();
+            this.workerA = new Worker('../../dest/Sorting Algorithms/worker.js');
+            this.workerB = new Worker('../../dest/Sorting Algorithms/worker.js');
 
-                const sliderVal = this.delaySlider!.value;
-                const previousArray = this.sortingObjA!.getArray();
-                this.sortingObjA!.setArray(newArray);
-                this.delaySlider!.value = '0';
+            this.timerA = 0;
+            this.timerB = 0;
+            
+            this.workerA.postMessage({ scrambler: scramble, size: size, algorithm: compareDiv.algorithmANum() });
+            this.workerB.postMessage({ scrambler: scramble, size: size, algorithm: compareDiv.algorithmBNum() });
 
-                trackProgress(this.sortingObjA!, this.progressA!);
+            trackProgress(++this.trackerIndex);
 
-                const start = Date.now();
-                await this.algorithmA()(this.sortingObjA!, true);
-                console.log(`Sorting A took: ${(Date.now() - start)}ms`);
-                stopTracking();
-
-                this.sortingObjA!.setArray(previousArray); 
-                this.delaySlider!.value = sliderVal;
+            this.workerA.onmessage = (event) => { 
+                this.timerA = event.data; 
             }
-            if(this.sortingAlgorithmB != null) { 
-                this.sortingObjB!.paused = false;
-
-                const sliderVal = this.delaySlider!.value;
-                const previousArray = this.sortingObjB!.getArray();
-                this.sortingObjB!.setArray(reuseArray);
-                this.delaySlider!.value = '0';
-
-                const start = Date.now();
-                await this.algorithmB()(this.sortingObjB!, true);
-                console.log(`Sorting B took: ${(Date.now() - start)}ms`);
-
-                this.sortingObjB!.setArray(previousArray); 
-                this.delaySlider!.value = sliderVal;
+            this.workerB.onmessage = (event) => { 
+                this.timerB = event.data; 
             }
+
+            /*
+            this.workerA.onmessage = function(event) {
+                const timeToExecute = event.data;
+                subTimerA = timeToExecute;
+                console.log(`Sorting A took: ${timeToExecute}ms`);
+            }
+            this.workerB.onmessage = function(event) {
+                const timeToExecute = event.data;
+                console.log(`Sorting B took: ${timeToExecute}ms`);
+            }*/
         }
 
         this.pauseButton = document.createElement('button');
@@ -222,35 +235,24 @@ class CompareDiv {
     }
 }
 
-const compareDiv = new CompareDiv(document.getElementById('compare_sort') as HTMLDivElement);
+async function trackProgress(trackerIndex: number){
+    const start = Date.now();
 
-async function trackProgress(sortingObj: SortingObject, text: HTMLParagraphElement){
-    const trackIndex = ++compareDiv.progressTrackIndex;
-    while(trackIndex == compareDiv.progressTrackIndex){
-        let displacement = 0;
-        for(let i = 0; i < sortingObj.length(); i++){
-            displacement += Math.abs(sortingObj.get(i) - i);
-        }
-        displacement /= sortingObj.length();
-        let ratio = Math.abs(sortingObj.length() / 2 - displacement) / sortingObj.length() * 2;
+    const sortAName = comparableAlgorithms[compareDiv.algorithmANum()][0];
+    const sortBName = comparableAlgorithms[compareDiv.algorithmBNum()][0];
+    while(trackerIndex == compareDiv.trackerIndex){
+        await sleepFor(100);
+        if(compareDiv.timerA == 0)
+            compareDiv.progressA!.innerHTML = `Sorting (${sortAName}): ${Date.now() - start}ms`;
+        else
+            compareDiv.progressA!.innerHTML = `Sorting (${sortAName}): ${compareDiv.timerA}ms`;
 
-        console.log(displacement, ratio);
+        if(compareDiv.timerB == 0)
+            compareDiv.progressB!.innerHTML = `Sorting (${sortBName}): ${Date.now() - start}ms`;
+        else
+            compareDiv.progressB!.innerHTML = `Sorting (${sortBName}): ${compareDiv.timerB}ms`;
 
-        text.innerHTML = `${Math.round(ratio * 100) / 100}%`;
-
-        await sleepFor(1);
-
-        if(displacement == 0)
+        if(compareDiv.timerA != 0 && compareDiv.timerB != 0)
             return;
     }
-    text.innerHTML = `100%`;
 }
-
-function stopTracking(){
-    compareDiv.progressTrackIndex++;
-}
-
-
-const worker = new Worker('../../dest/Sorting Algorithms/worker.js');
-console.log(worker);
-worker.postMessage('Hello, worker!');

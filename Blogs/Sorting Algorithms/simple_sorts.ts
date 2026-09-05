@@ -25,11 +25,6 @@ async function selectionSort(sortingObj: SortingObject, skipAnimation: boolean){
         finalizeArray(sortingObj);
 }
 
-const selectionSortDiv = new SortingDiv(document.getElementById('selection_sort') as HTMLDivElement);
-selectionSortDiv.sortingAlgorithm = selectionSort;
-
-
-
 async function bubbleSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
 
@@ -56,8 +51,6 @@ async function bubbleSort(sortingObj: SortingObject, skipAnimation: boolean){
         finalizeArray(sortingObj);
 }
 
-const bubbleSortDiv = new SortingDiv(document.getElementById('bubble_sort') as HTMLDivElement);
-bubbleSortDiv.sortingAlgorithm = bubbleSort;
 
 async function insertionSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
@@ -82,6 +75,3 @@ async function insertionSort(sortingObj: SortingObject, skipAnimation: boolean){
     if(!skipAnimation && sortingObj.isRunning(loopIndex))
         finalizeArray(sortingObj);
 }
-
-const insertionSortDiv = new SortingDiv(document.getElementById('insertion_sort') as HTMLDivElement);
-insertionSortDiv.sortingAlgorithm = insertionSort;

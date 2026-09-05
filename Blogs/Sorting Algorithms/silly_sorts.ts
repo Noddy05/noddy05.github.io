@@ -24,9 +24,6 @@ async function gnomeSort(sortingObj: SortingObject, skipAnimation: boolean){
         finalizeArray(sortingObj);
 }
 
-const gnomeSortDiv = new SortingDiv(document.getElementById('gnome_sort') as HTMLDivElement);
-gnomeSortDiv.sortingAlgorithm = gnomeSort;
-
 async function bogoSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
 

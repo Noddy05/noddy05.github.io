@@ -1,10 +1,10 @@
 
 //Scramblers: Name of method, function to generate, function to extend, fall-back function when comparing sorting.
-const scramblers: [ string, (n: number) => number[], (sortingObj: SortingObject, n: number) => number[], (n: number) => number[] ][] = [
-    [ 'Scrambled', genScrambledArray, extendScrambledArray, genScrambledArray ],
-    [ 'Sorted', genSortedArray, extendSortedArray, genSortedArray ],
-    [ 'Reverse Sorted', genReverseSortedArray, extendReverseSortedArray, genReverseSortedArray ],
-    [ 'Random Values', genRandomArray, extendRandomArray, genScrambledArray ],
+const scramblers: [ string, (n: number) => number[], (sortingObj: SortingObject, n: number) => number[] ][] = [
+    [ 'Scrambled', genScrambledArray, extendScrambledArray ],
+    [ 'Sorted', genSortedArray, extendSortedArray ],
+    [ 'Reverse Sorted', genReverseSortedArray, extendReverseSortedArray ],
+    [ 'Random Values', genRandomArray, extendRandomArray ],
 ]
 
 

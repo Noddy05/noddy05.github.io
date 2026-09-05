@@ -1,10 +1,10 @@
 class SortingObject {
-    public canvas: HTMLCanvasElement;
+    public canvas: HTMLCanvasElement | null;
     private array: number[];
     public colors: Map<number, string>;
-    public delaySlider: HTMLInputElement;
-    public scrambleSelect: HTMLSelectElement;
-    public sizeSlider: HTMLInputElement;
+    public delaySlider: HTMLInputElement | null;
+    public scrambleSelect: HTMLSelectElement | null;
+    public sizeSlider: HTMLInputElement | null;
     public paused: boolean;
     public isFinishing: boolean;
     public numWrites: number;
@@ -15,10 +15,10 @@ class SortingObject {
     
     //calculated on init:
     public loopIndex: number;
-    public ctx: CanvasRenderingContext2D;
+    public ctx: CanvasRenderingContext2D | null;
 
-    public constructor(canvas: HTMLCanvasElement, delaySlider: HTMLInputElement, 
-        scrambleSelect: HTMLSelectElement, sizeSlider: HTMLInputElement){
+    public constructor(canvas: HTMLCanvasElement | null, delaySlider: HTMLInputElement | null, 
+        scrambleSelect: HTMLSelectElement | null, sizeSlider: HTMLInputElement | null){
         this.canvas = canvas;
         this.delaySlider = delaySlider;
         this.scrambleSelect = scrambleSelect;
@@ -31,10 +31,15 @@ class SortingObject {
         this.loopIndex = 0;
 
         this.array = [];
-        this.scramble();
+        if(this.sizeSlider != null && this.scrambleSelect != null)
+            this.scramble();
         
-        this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
         this.colors = new Map();
+        
+        if(this.canvas != null)
+            this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
+        else
+            this.ctx = null;
     }
 
     public isRunning(loopIndex: number): boolean {
@@ -42,7 +47,10 @@ class SortingObject {
     }
 
     public delay(): number {
-        return +this.delaySlider!.value;
+        if(this.delaySlider == null)
+            return 0;
+
+        return +this.delaySlider.value;
     }
 
     public length(): number {
@@ -110,13 +118,21 @@ class SortingObject {
         }
     }
 
-    public scrambler() : [ string, (n: number) => number[], (sortingObj: SortingObject, n: number) => number[], (n: number) => number[] ] | null {
+    public scramblerNum(scramblerSelectValue: string = this.scrambleSelect!.value) : number | null {
         for(let i = 0; i < scramblers.length; i++){
-            if(scramblers[i][0] == this.scrambleSelect.value){
-                return scramblers[i];
+            if(scramblers[i][0] == scramblerSelectValue){
+                return i;
             }
         }
         return null;
+    }
+    public scrambler() : [ string, (n: number) => number[], 
+        (sortingObj: SortingObject, n: number) => number[] ] | null 
+    {
+        if(this.scramblerNum() == null)
+            return null;
+
+        return scramblers[this.scramblerNum()!];
     }
 
     public scrambleMethod() : ((n: number) => number[]) {
@@ -127,25 +143,15 @@ class SortingObject {
         return scrambler[1];
     }
 
-    public compareScrambler() : ((n: number) => number[]) {
-        const scrambler = this.scrambler();
-        if(scrambler == null)
-            return (n) => [];
-
-        return scrambler[3];
-    }
-
-    public scramble(): void {
-        let length = +this.sizeSlider.value;
-        this.array = this.scrambleMethod()(length);
+    public scramble(sizeValue: number = +this.sizeSlider!.value): void {
+        this.array = this.scrambleMethod()(sizeValue);
         this.calculateBounds();
     }
 
-    public resize(): void {
-        let length = +this.sizeSlider.value;
+    public resize(sizeValue: number = +this.sizeSlider!.value): void {
         const scrambler = this.scrambler();
         
-        this.array = scrambler![2](this, length);
+        this.array = scrambler![2](this, sizeValue);
         this.calculateBounds();
     }
 }
@@ -268,6 +274,9 @@ function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false,
     const canvas = sortingObj.canvas;
     const ctx = sortingObj.ctx;
 
+    if(canvas == null || ctx == null)
+        return;
+
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -295,10 +304,12 @@ function draw(sortingObj: SortingObject, drawUnlessDelayIsZero: boolean = false,
 // adding scrambled and then sorted elements behaves weird
 // also for reverse sorted
 
-const finalizeCheckTime = 1000;
-const finalizeResetTime = 1000;
-const finalizeFlickerTime = 100;
 async function finalizeArray(sortingObj: SortingObject){
+    const finalizeCheckTime = 1000;
+    const finalizeResetTime = 1000;
+    const finalizeFlickerTime = 100;
+
+
     sortingObj.isFinishing = true;
     const loopIndex = sortingObj.loopIndex;
 

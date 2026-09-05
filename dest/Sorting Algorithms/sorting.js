@@ -13,14 +13,20 @@ class SortingObject {
         this.numReads = 0;
         this.loopIndex = 0;
         this.array = [];
-        this.scramble();
-        this.ctx = this.canvas.getContext('2d');
+        if (this.sizeSlider != null && this.scrambleSelect != null)
+            this.scramble();
         this.colors = new Map();
+        if (this.canvas != null)
+            this.ctx = this.canvas.getContext('2d');
+        else
+            this.ctx = null;
     }
     isRunning(loopIndex) {
         return loopIndex == this.loopIndex;
     }
     delay() {
+        if (this.delaySlider == null)
+            return 0;
         return +this.delaySlider.value;
     }
     length() {
@@ -77,13 +83,18 @@ class SortingObject {
             this.max = Math.max(this.array[i], this.max);
         }
     }
-    scrambler() {
+    scramblerNum(scramblerSelectValue = this.scrambleSelect.value) {
         for (let i = 0; i < scramblers.length; i++) {
-            if (scramblers[i][0] == this.scrambleSelect.value) {
-                return scramblers[i];
+            if (scramblers[i][0] == scramblerSelectValue) {
+                return i;
             }
         }
         return null;
+    }
+    scrambler() {
+        if (this.scramblerNum() == null)
+            return null;
+        return scramblers[this.scramblerNum()];
     }
     scrambleMethod() {
         const scrambler = this.scrambler();
@@ -91,21 +102,13 @@ class SortingObject {
             return (n) => [];
         return scrambler[1];
     }
-    compareScrambler() {
-        const scrambler = this.scrambler();
-        if (scrambler == null)
-            return (n) => [];
-        return scrambler[3];
-    }
-    scramble() {
-        let length = +this.sizeSlider.value;
-        this.array = this.scrambleMethod()(length);
+    scramble(sizeValue = +this.sizeSlider.value) {
+        this.array = this.scrambleMethod()(sizeValue);
         this.calculateBounds();
     }
-    resize() {
-        let length = +this.sizeSlider.value;
+    resize(sizeValue = +this.sizeSlider.value) {
         const scrambler = this.scrambler();
-        this.array = scrambler[2](this, length);
+        this.array = scrambler[2](this, sizeValue);
         this.calculateBounds();
     }
 }
@@ -205,6 +208,8 @@ function draw(sortingObj, drawUnlessDelayIsZero = false, ignoreColors = false, r
         return;
     const canvas = sortingObj.canvas;
     const ctx = sortingObj.ctx;
+    if (canvas == null || ctx == null)
+        return;
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     var padding = 20;
@@ -227,10 +232,10 @@ function draw(sortingObj, drawUnlessDelayIsZero = false, ignoreColors = false, r
 }
 // adding scrambled and then sorted elements behaves weird
 // also for reverse sorted
-const finalizeCheckTime = 1000;
-const finalizeResetTime = 1000;
-const finalizeFlickerTime = 100;
 async function finalizeArray(sortingObj) {
+    const finalizeCheckTime = 1000;
+    const finalizeResetTime = 1000;
+    const finalizeFlickerTime = 100;
     sortingObj.isFinishing = true;
     const loopIndex = sortingObj.loopIndex;
     sortingObj.colors = new Map([[0, 'green']]);

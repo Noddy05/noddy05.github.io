@@ -20,8 +20,6 @@ async function gnomeSort(sortingObj, skipAnimation) {
     if (!skipAnimation && sortingObj.isRunning(loopIndex))
         finalizeArray(sortingObj);
 }
-const gnomeSortDiv = new SortingDiv(document.getElementById('gnome_sort'));
-gnomeSortDiv.sortingAlgorithm = gnomeSort;
 async function bogoSort(sortingObj, skipAnimation) {
     const loopIndex = ++sortingObj.loopIndex;
     let pos = 1;
