@@ -211,14 +211,19 @@ Although for visualization purposes it made more sense to use this alternative f
         
     <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
 
-Let $\mathcal S$ be the number of iterations of the inner while loop, then the time complexity of <textsc>InsertionSort</textsc> 
-is $\Theta(\mathcal S n)$ and $\mathcal S$ is exactly the number of times where $\mathbf{A}[j - 1]>\mathbf{A}[j]$ for any $1\leq j<|\mathbf{A}|$
-(note that $\mathcal S_i$, i.e the value of $\mathcal S$ at iteration $i$ is not affected by rearranging the earlier 
-elements). 
+<h4>Time- and spatial complexity</h4>
+<textsc>InsertionSort</textsc> , like all previous algorithms uses constant space to swap elements (and keep track of variables $i$ and $j$), 
+thus the spatial complexity is $\Theta(1)$.<br>
+The best case for this algorithm is $\Theta(n)$ and the average and worst case are both $\Theta(n^2)$.
 <br><br>
-If $\mathcal S_i$ is the number of times the while loop runs in the $i$'th iterations of the for loop, then the
-run time for <textsc>InsertionSort</textsc>  is $=\displaystyle\sum_{i=1}^{|\mathbf{A}|-1}(1+\mathcal S_i)$. The average value for 
-$1+\mathcal S$ is equal to
+Here's why:<br>
+Let $\mathcal S_i$ be the number of iterations of the inner while loop, then the time complexity of <textsc>InsertionSort</textsc> 
+is $\Theta\left(\sum(1+\mathcal S_i)\right)$ and $\mathcal S_i$ is exactly the number of times where $\mathbf{A}[j - 1]>\mathbf{A}[j]$ for 
+any $1\leq j\leq i$ (note that $\mathcal S_i$ is not affected by rearranging the earlier elements). 
+<br><br>
+If $\mathcal S_i$ is the number of times the while loop runs in the $i$'th iteration of the for loop, then the
+run time for <textsc>InsertionSort</textsc>  is $=\displaystyle\sum_{i=1}^{|\mathbf{A}|-1}(1+\mathcal S_i)$. The average value of 
+$1+\mathcal S_i$ is equal to
 \begin{equation*}
     \begin{split}
         \mathcal S=\frac{1}{n}\sum_{i=1}^{|\mathbf{A}|-1} (1+\mathcal S_i)\\
@@ -228,10 +233,10 @@ $1+\mathcal S$ is equal to
 \end{equation*}
 and thus the run time is just $n$ times the average value of $1+S_i$.<br>
 In the worst case all the elements are in reversed sorted order, and $S_i$ is equal to $i$ (since the $i$'th element
-has to move all the way to) and the average value of $S_i=\frac{n}{2}$ making the worst case run time
+has to move all the way to the front of the array) and the average value of $S_i\sim\frac{n}{2}$ making the worst case run time
 $\Theta(n^2)$.<br>
 In the average case the $i$'th element has $i/2$ elements before it, that is larger than itself. Thus 
-$S_i=\frac{n}{4}$ and the average time complexity is $\Theta(n^2)$ aswell.<br>
+$S_i\sim\frac{n}{4}$ and the average time complexity is $\Theta(n^2)$ aswell.<br>
 And in best case the array is already sorted, thus $S_i=0$ and the run time is $\Theta(n)$.
 
 
@@ -296,6 +301,8 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
         <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> rightHalf[R]
         R<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
     <keyword class="keyword">end</keyword><keyword class="keyword">while</keyword></code></pre>
+
+
 <h3 id="4_2">4.2) Quick sort</h3>
 <div id="quick_sort" class="sorting_algo"></div>
 <pre><code class="language-html"><keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>)

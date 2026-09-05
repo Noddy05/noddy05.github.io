@@ -300,7 +300,7 @@ class HTMLBuilder():
             
             elif command[0] == '\\textsc':
                 self.move_command(command)
-                return f'<textsc>{command[1]}</textsc> '
+                return f'<textsc>{command[1]}</textsc>'
             
             elif command[0] == '\\href':
                 self.move_command(command)
@@ -308,12 +308,12 @@ class HTMLBuilder():
             
             elif command[0] == '\\underline':
                 self.move_command(command)
-                return f'<u>{command[1]}</u> '
+                return f'<u>{command[1]}</u>'
             
             elif command[0] == '\\fig':
                 self.move_command(command)
                 self.num_figures += 1
-                return f'<img src="{command[1]}" width="{command[2]}%"> '
+                return f'<img src="{command[1]}" width="{command[2]}%">'
 
             if not self.is_math_field:
                 for key, value in zip(self.format_commands.keys(), self.format_commands.values()):
