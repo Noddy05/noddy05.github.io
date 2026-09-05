@@ -251,6 +251,6 @@ function stopTracking(){
 }
 
 
-const worker = new Worker('test.js');
+const worker = new Worker('worker.ts');
 console.log(worker);
 worker.postMessage('Hello, worker!');
