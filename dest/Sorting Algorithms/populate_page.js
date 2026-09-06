@@ -1,6 +1,4 @@
 "use strict";
-//Comparison:
-const compareDiv = new CompareDiv(document.getElementById('compare_sort'));
 //Simple sorts
 const selectionSortDiv = new SortingDiv(document.getElementById('selection_sort'));
 selectionSortDiv.sortingAlgorithm = selectionSort;
@@ -30,3 +28,5 @@ introSortDiv.sortingAlgorithm = introSort;
 //Silly sorts
 const gnomeSortDiv = new SortingDiv(document.getElementById('gnome_sort'));
 gnomeSortDiv.sortingAlgorithm = gnomeSort;
+//Comparison:
+const compareDiv = new CompareDiv(document.getElementById('compare_sort'));

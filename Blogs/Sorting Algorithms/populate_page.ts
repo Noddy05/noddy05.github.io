@@ -1,7 +1,4 @@
 
-//Comparison:
-const compareDiv = new CompareDiv(document.getElementById('compare_sort') as HTMLDivElement);
-
 
 //Simple sorts
 const selectionSortDiv = new SortingDiv(document.getElementById('selection_sort') as HTMLDivElement);
@@ -39,3 +36,7 @@ introSortDiv.sortingAlgorithm = introSort;
 //Silly sorts
 const gnomeSortDiv = new SortingDiv(document.getElementById('gnome_sort') as HTMLDivElement);
 gnomeSortDiv.sortingAlgorithm = gnomeSort;
+
+
+//Comparison:
+const compareDiv = new CompareDiv(document.getElementById('compare_sort') as HTMLDivElement);

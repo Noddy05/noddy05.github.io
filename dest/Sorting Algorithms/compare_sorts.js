@@ -26,8 +26,8 @@ class CompareDiv {
         this.sizeSlider = null;
         this.timeButton = null;
         this.accuracySlider = null;
-        this.workerA = new Worker('../../dest/Sorting Algorithms/worker.js');
-        this.workerB = new Worker('../../dest/Sorting Algorithms/worker.js');
+        this.workerA = null;
+        this.workerB = null;
         this.progressA = null;
         this.progressB = null;
         this.timerA = 0;
@@ -38,8 +38,6 @@ class CompareDiv {
         this.sortingObjA = new SortingObject(this.canvasA, this.delaySlider, this.scrambleMethod, this.sizeSlider);
         this.sortingObjB = new SortingObject(this.canvasB, this.delaySlider, this.scrambleMethod, this.sizeSlider);
         this.sortingObjB.setArray([...this.sortingObjA.getArray()]);
-        this.workerA.onmessage = (event) => { this.timerA = event.data; console.log(event); };
-        this.workerB.onmessage = (event) => { this.timerB = event.data; console.log(event); };
         draw(this.sortingObjA);
         draw(this.sortingObjB);
     }
@@ -102,8 +100,10 @@ class CompareDiv {
         this.timeButton.onclick = (e) => {
             const size = +this.accuracySlider.value;
             const scramble = +this.sortingObjA.scramblerNum();
-            this.workerA.terminate();
-            this.workerB.terminate();
+            if (this.workerA != null)
+                this.workerA.terminate();
+            if (this.workerB != null)
+                this.workerB.terminate();
             this.workerA = new Worker('../../dest/Sorting Algorithms/worker.js');
             this.workerB = new Worker('../../dest/Sorting Algorithms/worker.js');
             this.timerA = 0;
@@ -117,16 +117,6 @@ class CompareDiv {
             this.workerB.onmessage = (event) => {
                 this.timerB = event.data;
             };
-            /*
-            this.workerA.onmessage = function(event) {
-                const timeToExecute = event.data;
-                subTimerA = timeToExecute;
-                console.log(`Sorting A took: ${timeToExecute}ms`);
-            }
-            this.workerB.onmessage = function(event) {
-                const timeToExecute = event.data;
-                console.log(`Sorting B took: ${timeToExecute}ms`);
-            }*/
         };
         this.pauseButton = document.createElement('button');
         this.pauseButton.innerHTML = 'Pause';

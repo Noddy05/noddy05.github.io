@@ -184,6 +184,15 @@ class SortingDiv {
         this.canvas.setAttribute('width', '1600px');
         this.canvas.setAttribute('height', '1000px');
 
+        const parameterContainer = document.createElement('div');
+        parameterContainer.setAttribute('class', 'parameter_container');
+
+        const animationContainer = document.createElement('div');
+        animationContainer.setAttribute('class', 'animation_container input_container');
+
+        const arrayParameterContainer = document.createElement('div');
+        arrayParameterContainer.setAttribute('class', 'array_parameter_container input_container');
+
         this.delaySlider = document.createElement('input');
         this.delaySlider.setAttribute('type', 'range');
         this.delaySlider.setAttribute('min', '0');
@@ -210,7 +219,7 @@ class SortingDiv {
         }
 
         this.scrambleButton = document.createElement('button');
-        this.scrambleButton.innerHTML = 'Scramble';
+        this.scrambleButton.innerHTML = 'Scramble array';
         this.scrambleButton.onclick = (e) => {
             this.sortingObj!.scramble();
             draw(this.sortingObj!, false, false, false);
@@ -235,12 +244,25 @@ class SortingDiv {
         }
 
         this.sortDiv.appendChild(this.canvas);
-        this.sortDiv.appendChild(this.delaySlider);
-        this.sortDiv.appendChild(this.sortButton);
-        this.sortDiv.appendChild(this.pauseButton);
-        this.sortDiv.appendChild(this.scrambleButton);
-        this.sortDiv.appendChild(this.scrambleMethod);
-        this.sortDiv.appendChild(this.sizeSlider);
+        this.sortDiv.appendChild(parameterContainer);
+        
+        parameterContainer.appendChild(animationContainer);
+        const animationLabel = document.createElement('b');
+        animationLabel.innerHTML = 'Animation parameters';
+        animationContainer.appendChild(animationLabel);
+
+        animationContainer.appendChild(this.delaySlider);
+        animationContainer.appendChild(this.sortButton);
+        animationContainer.appendChild(this.pauseButton);
+        
+        parameterContainer.appendChild(arrayParameterContainer);
+        const arrayLabel = document.createElement('b');
+        arrayLabel.innerHTML = 'Array parameters';
+        arrayParameterContainer.appendChild(arrayLabel);
+
+        arrayParameterContainer.appendChild(this.sizeSlider);
+        arrayParameterContainer.appendChild(this.scrambleButton);
+        arrayParameterContainer.appendChild(this.scrambleMethod);
     }
 }
 

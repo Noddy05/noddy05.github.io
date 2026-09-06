@@ -36,8 +36,6 @@ body{
 }
 
 .page canvas {
-    margin-left: 50%;
-    translate: -50% 0%;
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 6px 6px;
 }
