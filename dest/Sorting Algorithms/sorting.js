@@ -115,12 +115,15 @@ class SortingObject {
 class SortingDiv {
     constructor(sortDiv) {
         this.canvas = null;
+        this.delayLabel = null;
         this.delaySlider = null;
         this.sortButton = null;
         this.pauseButton = null;
         this.scrambleButton = null;
         this.scrambleMethod = null;
+        this.sizeLabel = null;
         this.sizeSlider = null;
+        this.extraContainer = null;
         this.sortingAlgorithm = null;
         this.sortDiv = sortDiv;
         this.createCanvas();
@@ -142,6 +145,9 @@ class SortingDiv {
         this.delaySlider.setAttribute('min', '0');
         this.delaySlider.setAttribute('max', '200');
         this.delaySlider.setAttribute('value', '50');
+        this.delaySlider.oninput = (e) => {
+            this.delayLabel.innerHTML = 'Delay between steps (' + this.delaySlider.value + 'ms):';
+        };
         this.sortButton = document.createElement('button');
         this.sortButton.innerHTML = 'Sort';
         this.sortButton.onclick = (e) => {
@@ -179,6 +185,7 @@ class SortingDiv {
         this.sizeSlider.oninput = (e) => {
             this.sortingObj.resize();
             draw(this.sortingObj, false, false, false);
+            this.sizeLabel.innerHTML = 'Size of array (' + this.sizeSlider.value + '):';
         };
         this.sortDiv.appendChild(this.canvas);
         this.sortDiv.appendChild(parameterContainer);
@@ -186,15 +193,27 @@ class SortingDiv {
         const animationLabel = document.createElement('b');
         animationLabel.innerHTML = 'Animation parameters';
         animationContainer.appendChild(animationLabel);
+        this.delayLabel = document.createElement('label');
+        this.delayLabel.innerHTML = 'Delay between steps (' + this.delaySlider.value + 'ms):';
+        animationContainer.appendChild(this.delayLabel);
         animationContainer.appendChild(this.delaySlider);
         animationContainer.appendChild(this.sortButton);
         animationContainer.appendChild(this.pauseButton);
+        this.extraContainer = document.createElement('div');
+        this.extraContainer.setAttribute('class', 'extra_container input_container');
+        parameterContainer.appendChild(this.extraContainer);
         parameterContainer.appendChild(arrayParameterContainer);
         const arrayLabel = document.createElement('b');
         arrayLabel.innerHTML = 'Array parameters';
         arrayParameterContainer.appendChild(arrayLabel);
+        this.sizeLabel = document.createElement('label');
+        this.sizeLabel.innerHTML = 'Size of array (' + this.sizeSlider.value + '):';
+        arrayParameterContainer.appendChild(this.sizeLabel);
         arrayParameterContainer.appendChild(this.sizeSlider);
         arrayParameterContainer.appendChild(this.scrambleButton);
+        const scrambleLabel = document.createElement('label');
+        scrambleLabel.innerHTML = 'Method used for scrambling the array:';
+        arrayParameterContainer.appendChild(scrambleLabel);
         arrayParameterContainer.appendChild(this.scrambleMethod);
     }
 }

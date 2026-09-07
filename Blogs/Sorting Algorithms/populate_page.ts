@@ -14,18 +14,24 @@ insertionSortDiv.sortingAlgorithm = insertionSort;
 const mergeSortDiv = new SortingDiv(document.getElementById('merge_sort') as HTMLDivElement);
 mergeSortDiv.sortingAlgorithm = mergeSort;
 
+//Quick sort
 const naiveButton = document.createElement('input') as HTMLInputElement;
 naiveButton.setAttribute('type', 'checkbox');
+naiveButton.setAttribute('id', 'use_naive_button');
 naiveButton.setAttribute('checked', 'true');
+
+const extraHeader = document.createElement('b');
+extraHeader.innerText = 'Algorithm parameters';
+
+const buttonLabel = document.createElement('label');
+buttonLabel.innerText = 'Use Lomuto partitioning:';
+
 const quickSortDiv = new SortingDiv(document.getElementById('quick_sort') as HTMLDivElement);
-quickSortDiv.sortingAlgorithm = naiveQuickSort;
-naiveButton.onchange = () => {
-    if(naiveButton.checked)
-        quickSortDiv.sortingAlgorithm = naiveQuickSort;
-    else
-        quickSortDiv.sortingAlgorithm = quickSort
-}
-quickSortDiv.sortDiv.appendChild(naiveButton);
+quickSortDiv.sortingAlgorithm = displayQuickSort;
+quickSortDiv.extraContainer!.appendChild(extraHeader);
+quickSortDiv.extraContainer!.appendChild(buttonLabel);
+quickSortDiv.extraContainer!.appendChild(naiveButton);
+
 
 const heapSortDiv = new SortingDiv(document.getElementById('heap_sort') as HTMLDivElement);
 heapSortDiv.sortingAlgorithm = heapSort;

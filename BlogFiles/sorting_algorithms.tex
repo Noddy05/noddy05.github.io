@@ -116,8 +116,8 @@ to the right of it - by our invariant)
     return ~A~}
 
 <h4>Time- and spatial complexity</h4>
-Bubble sort only uses extra storage when swapping elements, thus the spatial complexity is $\O(1)$.\\
-The time complexity for bubble sort is in the worst case and average case $\O(n^2)$, but $\O(n)$ in the 
+Bubble sort only uses extra storage when swapping elements, thus the spatial complexity is $\Theta(1)$.\\
+The time complexity for bubble sort is in the worst case and average case $\Theta(n^2)$, but $\Theta(n)$ in the 
 best case.
 \\\\
 Because our implementation of \textsc{BubbleSort} allows for a quick exit then the array is sorted the time
@@ -286,6 +286,7 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
 \div{quick_sort}{sorting_algo}
 \code{##QuickSort##(~A~)
     ##QuickSort##(~A~, 0, |~A~|)
+    return ~A~
 
 ##QuickSort##(~A~, ~l~, ~r~)
     if(~r~ <= ~l~)

@@ -80,37 +80,46 @@ async function merge(sortingObj: SortingObject, l: number, m: number, r: number,
     await draw(sortingObj, true)
 }
 
+async function displayQuickSort(sortingObj: SortingObject, skipAnimation: boolean){
+    const loopIndex = ++sortingObj.loopIndex;
+    await quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex, () => 
+        (document.getElementById('use_naive_button') as HTMLInputElement).checked);
+    
+    if(!skipAnimation && sortingObj.isRunning(loopIndex))
+        await finalizeArray(sortingObj);
+}
+
 async function quickSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
-    await quick_sort(sortingObj, 0, sortingObj.length() - 1, false, loopIndex);
+    await quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex, () => false);
     
     if(!skipAnimation && sortingObj.isRunning(loopIndex))
         await finalizeArray(sortingObj);
 }
 async function naiveQuickSort(sortingObj: SortingObject, skipAnimation: boolean){
     const loopIndex = ++sortingObj.loopIndex;
-    await quick_sort(sortingObj, 0, sortingObj.length() - 1, true, loopIndex);
+    await quick_sort(sortingObj, 0, sortingObj.length() - 1, loopIndex, () => true);
     
     if(!skipAnimation && sortingObj.isRunning(loopIndex))
         await finalizeArray(sortingObj);
 }
 async function quick_sort(sortingObj: SortingObject, 
-    l: number, r: number, isNaive: boolean, loopIndex: number){
+    l: number, r: number, loopIndex: number, isNaive: () => boolean){
     if(r <= l)
         return;
 
     if(loopIndex != sortingObj.loopIndex)
         return;
 
-    let mid = await partition(sortingObj, l, r, isNaive, loopIndex) as number;
+    let mid = await partition(sortingObj, l, r, loopIndex, isNaive) as number;
     if(loopIndex != sortingObj.loopIndex)
         return;
 
-    await quick_sort(sortingObj, l, mid - 1, isNaive, loopIndex);
+    await quick_sort(sortingObj, l, mid - 1, loopIndex, isNaive);
     if(loopIndex != sortingObj.loopIndex)
         return;
 
-    await quick_sort(sortingObj, mid + 1, r, isNaive, loopIndex);
+    await quick_sort(sortingObj, mid + 1, r, loopIndex, isNaive);
     if(loopIndex != sortingObj.loopIndex)
         return;
 
@@ -121,13 +130,13 @@ async function quick_sort(sortingObj: SortingObject,
 }
 
 async function partition(sortingObj: SortingObject, l: number, 
-    r: number, isNaive: boolean, loopIndex: number){
+    r: number, loopIndex: number, isNaive: () => boolean){
 
     if(loopIndex != sortingObj.loopIndex)
         return 0;
 
     const pivotIndex = Math.floor((l + r) / 2);
-    if(!isNaive){
+    if(!isNaive()){
         swap(sortingObj, pivotIndex, r);
     }
 
@@ -245,7 +254,7 @@ async function intro_sort(sortingObj: SortingObject, l: number, r: number, loopI
     if(loopIndex != sortingObj.loopIndex)
         return;
 
-    let mid = await partition(sortingObj, l, r, false, loopIndex) as number;
+    let mid = await partition(sortingObj, l, r, loopIndex, () => false) as number;
     if(loopIndex != sortingObj.loopIndex)
         return;
 
