@@ -12,6 +12,7 @@ const comparableAlgorithms = [
 ];
 class CompareDiv {
     constructor(sortDiv) {
+        this.ticks = [100, 500, 1500, 2500, 5000, 10000, 100000, 1000000];
         this.canvasA = null;
         this.canvasB = null;
         //public sortingAlgorithmA : ((sortingObj: SortingObject, skipAnimation: boolean) => void) | null = null;
@@ -81,24 +82,23 @@ class CompareDiv {
                 this.algorithmB()(this.sortingObjB, false);
             }
         };
-        const ticks = [100, 500, 1500, 2500, 5000, 10000];
         this.accuracySlider = document.createElement('input');
         this.accuracySlider.setAttribute('type', 'range');
         this.accuracySlider.setAttribute('list', 'accuracy_ticks');
-        this.accuracySlider.setAttribute('min', ticks[0].toString());
-        this.accuracySlider.setAttribute('max', ticks[ticks.length - 1].toString());
+        this.accuracySlider.setAttribute('min', '0');
+        this.accuracySlider.setAttribute('max', (this.ticks.length - 1).toString());
         const accuracyTicks = document.createElement('datalist');
         this.accuracySlider.appendChild(accuracyTicks);
         accuracyTicks.id = 'accuracy_ticks';
-        for (let i = 0; i < ticks.length; i++) {
+        for (let i = 0; i < this.ticks.length; i++) {
             const option = document.createElement('option');
-            option.setAttribute('value', ticks[i].toString());
+            option.setAttribute('value', i.toString());
             accuracyTicks.appendChild(option);
         }
         this.timeButton = document.createElement('button');
         this.timeButton.innerHTML = 'Meassure actual time';
-        this.timeButton.onclick = (e) => {
-            const size = +this.accuracySlider.value;
+        this.timeButton.onclick = () => {
+            const size = this.ticks[+this.accuracySlider.value];
             const scramble = +this.sortingObjA.scramblerNum();
             if (this.workerA != null)
                 this.workerA.terminate();

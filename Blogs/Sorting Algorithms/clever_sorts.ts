@@ -247,7 +247,7 @@ async function introSort(sortingObj: SortingObject, skipAnimation: boolean){
 }
 
 async function intro_sort(sortingObj: SortingObject, l: number, r: number, loopIndex: number){
-    if(r - l <= 8){
+    if(r - l <= 16){
         return;
     }
 

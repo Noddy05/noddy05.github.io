@@ -10,8 +10,22 @@
 \script{compare_sorts.js}
 \script{populate_page.js}
 
-\section{A Needlessly Thorough Analysis of Known Sorting Algorithms}
-Introduction
+\section{A Thorough Analysis of Known Sorting Algorithms}
+This blog contains several sorting algorithms, along with their pseudocode, an implementation to test an algorithm and
+view how it works, the worst- average- and best-case time complexity and their spatial complexity.\\
+Immediately after this introduction, you'll be met with a page where you can compare two sorting algorithms, visually.
+\\\\
+\subsubsection{Terms}
+A sorting algorithm is said to be\\
+- \underline{in-place} if it's spatial complexity is $\Theta(1)$,\\
+- \underline{stable} if it maintains the relative order of elements with equal keys\footnote{
+    When sorting integers this is irrelevant, but more often than not sorting algorithms sort objects based on
+    'keys' and it makes sense to care about stability. Suppose you have a log that displays error messages and the
+    timestamp of the error. A sorting algorithm sorts these messages in order of recency and 
+    unless your sorting algorithm is <u>stable</u> these error messages will jump around, 
+    switching places, making the messages impossible to read.
+}\\
+This page is still under development.
 
 \subsection{Compare sorting algorithms}
 \div{compare_sort}{compare_algo}
@@ -256,7 +270,7 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
 
         //Since the halves are sorted, the smallest element in each array is 
         //the first element - This is what makes merge O(n)
-        if leftHalf[L] < rightHalf[R]
+        if leftHalf[L] <= rightHalf[R]
             ~A~[i] = leftHalf[L]
             L++
         else
@@ -284,6 +298,13 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
 
 \subsubsection{Quick sort}
 \div{quick_sort}{sorting_algo}
+\textsc{Quicksort} is a very efficient sorting algorithm, often performing better than any other (non-hybrid)
+sorting algorithm. A major reason this is often faster than sorts like \textsc{MergeSort} is the fact that it
+can easily be implemented as an \underline{in-place} sorting algorithm. 
+\\\\
+Unlike previous algorithms this algorithm is not stable.
+
+<h4>Pseudocode</h4>
 \code{##QuickSort##(~A~)
     ##QuickSort##(~A~, 0, |~A~|)
     return ~A~
@@ -309,6 +330,7 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
     ~A~[i + 1] = x
     
     return i + 1}
+
 
 \subsubsection{Heap sort}
 \div{heap_sort}{sorting_algo}

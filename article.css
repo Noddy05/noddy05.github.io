@@ -116,7 +116,7 @@ textsc{
 
 footnote {
     display:block;
-    line-height: 0px;
+    /*line-height: 0px;*/
     font-size: 10pt;
 }
 

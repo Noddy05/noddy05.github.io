@@ -23,7 +23,7 @@
 	<title>Sorting Algorithms</title>
 	<link rel="stylesheet" type="text/css" href="./sorting.css"></head>
 <body>
-<div id="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>A Needlessly Thorough Analysis of Known Sorting Algorithms</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
+<div id="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>A Thorough Analysis of Known Sorting Algorithms</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
 
 
 
@@ -36,9 +36,23 @@
 
 
 
-Introduction
+This blog contains several sorting algorithms, along with their pseudocode, an implementation to test an algorithm and
+view how it works, the worst- average- and best-case time complexity and their spatial complexity.<br>
+Immediately after this introduction, you'll be met with a page where you can compare two sorting algorithms, visually.
+<br><br>
+<h3 id="1_1">1.1) Terms</h3>
+A sorting algorithm is said to be<br>
+- <u>in-place</u> if it's spatial complexity is $\Theta(1)$,<br>
+- <u>stable</u> if it maintains the relative order of elements with equal keys<a href="#footnote_1">$^1$</a><br>
+This page is still under development.
 
-<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#2">2) Compare sorting algorithms</a><br><a href="#3">3) Simple sorting algorithms</a><br><a href="#3_1">$\quad$3.1) Selection sort</a><br><a href="#3_2">$\quad$3.2) Bubble sort</a><br><a href="#3_3">$\quad$3.3) Insertion sort</a><br><a href="#4">4) Clever sorting algorithms</a><br><a href="#4_1">$\quad$4.1) Merge sort</a><br><a href="#4_2">$\quad$4.2) Quick sort</a><br><a href="#4_3">$\quad$4.3) Heap sort</a><br><a href="#4_4">$\quad$4.4) Introspective sort (Intro sort)</a><br><a href="#4_5">$\quad$4.5) Shell sort</a><br><a href="#5">5) Theoretical limits for comparison-based sorts</a><br><a href="#6">6) Silly sorting algorithms</a><br><a href="#6_1">$\quad$6.1) Gnome sort</a></p></div></p></div><div class="page"><p><h2 id="2">2) Compare sorting algorithms</h2>
+<div id="toc"><h2>Table of contents</h2><p><br><a href="#1">1) Introduction</a><br><a href="#1_1">$\quad$1.1) Terms</a><br><a href="#2">2) Compare sorting algorithms</a><br><a href="#3">3) Simple sorting algorithms</a><br><a href="#3_1">$\quad$3.1) Selection sort</a><br><a href="#3_2">$\quad$3.2) Bubble sort</a><br><a href="#3_3">$\quad$3.3) Insertion sort</a><br><a href="#4">4) Clever sorting algorithms</a><br><a href="#4_1">$\quad$4.1) Merge sort</a><br><a href="#4_2">$\quad$4.2) Quick sort</a><br><a href="#4_3">$\quad$4.3) Heap sort</a><br><a href="#4_4">$\quad$4.4) Introspective sort (Intro sort)</a><br><a href="#4_5">$\quad$4.5) Shell sort</a><br><a href="#5">5) Theoretical limits for comparison-based sorts</a><br><a href="#6">6) Silly sorting algorithms</a><br><a href="#6_1">$\quad$6.1) Gnome sort</a></p></div></p><br id="footnote_1"><footnote>$\quad$1. 
+    When sorting integers this is irrelevant, but more often than not sorting algorithms sort objects based on
+    'keys' and it makes sense to care about stability. Suppose you have a log that displays error messages and the
+    timestamp of the error. A sorting algorithm sorts these messages in order of recency and 
+    unless your sorting algorithm is <u>stable</u> these error messages will jump around, 
+    switching places, making the messages impossible to read.
+</footnote></div><div class="page"><p><h2 id="2">2) Compare sorting algorithms</h2>
 <div id="compare_sort" class="compare_algo"></div>
 
 </p></div><div class="page"><p><h2 id="3">3) Simple sorting algorithms</h2>
@@ -141,8 +155,8 @@ to the right of it - by our invariant)
     <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword></code></pre>
 
 <h4>Time- and spatial complexity</h4>
-Bubble sort only uses extra storage when swapping elements, thus the spatial complexity is $\mathcal{O}(1)$.<br>
-The time complexity for bubble sort is in the worst case and average case $\mathcal{O}(n^2)$, but $\mathcal{O}(n)$ in the 
+Bubble sort only uses extra storage when swapping elements, thus the spatial complexity is $\Theta(1)$.<br>
+The time complexity for bubble sort is in the worst case and average case $\Theta(n^2)$, but $\Theta(n)$ in the 
 best case.
 <br><br>
 Because our implementation of <textsc>BubbleSort</textsc> allows for a quick exit then the array is sorted the time
@@ -281,7 +295,7 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
 
         <keyword class="comment">//Since the halves are sorted, the smallest element in each array is </keyword>
         <keyword class="comment">//the first element - This is what makes merge O(n)</keyword>
-        <keyword class="keyword">if</keyword> leftHalf[L] <keyword class="operation"><</keyword> rightHalf[R]
+        <keyword class="keyword">if</keyword> leftHalf[L] <keyword class="operation"><</keyword><keyword class="operation">=</keyword> rightHalf[R]
             <keyword class="variable">A</keyword>[i] <keyword class="operation">=</keyword> leftHalf[L]
             L<keyword class="operation">+</keyword><keyword class="operation">+</keyword>
         <keyword class="keyword">else</keyword>
@@ -309,8 +323,16 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
 
 <h3 id="4_2">4.2) Quick sort</h3>
 <div id="quick_sort" class="sorting_algo"></div>
+<textsc>Quicksort</textsc> is a very efficient sorting algorithm, often performing better than any other (non-hybrid)
+sorting algorithm. A major reason this is often faster than sorts like <textsc>MergeSort</textsc> is the fact that it
+can easily be implemented as an <u>in-place</u> sorting algorithm. 
+<br><br>
+Unlike previous algorithms this algorithm is not stable.
+
+<h4>Pseudocode</h4>
 <pre><code class="language-html"><keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>)
     <keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="literal">0</keyword>, |<keyword class="variable">A</keyword>|)
+    <keyword class="keyword">return</keyword> <keyword class="variable">A</keyword>
 
 <keyword class="built-in">QuickSort</keyword>(<keyword class="variable">A</keyword>, <keyword class="variable">l</keyword>, <keyword class="variable">r</keyword>)
     <keyword class="keyword">if</keyword>(<keyword class="variable">r</keyword> <keyword class="operation"><</keyword><keyword class="operation">=</keyword> <keyword class="variable">l</keyword>)
@@ -333,6 +355,7 @@ And in best case the array is already sorted, thus $S_i=0$ and the run time is $
     <keyword class="variable">A</keyword>[i <keyword class="operation">+</keyword> <keyword class="literal">1</keyword>] <keyword class="operation">=</keyword> x
     
     <keyword class="keyword">return</keyword> i <keyword class="operation">+</keyword> 1</code></pre>
+
 
 <h3 id="4_3">4.3) Heap sort</h3>
 <div id="heap_sort" class="sorting_algo"></div>

@@ -195,7 +195,7 @@ async function introSort(sortingObj, skipAnimation) {
         await finalizeArray(sortingObj);
 }
 async function intro_sort(sortingObj, l, r, loopIndex) {
-    if (r - l <= 8) {
+    if (r - l <= 16) {
         return;
     }
     if (loopIndex != sortingObj.loopIndex)
