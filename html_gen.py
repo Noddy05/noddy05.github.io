@@ -268,6 +268,10 @@ class HTMLBuilder():
                 self.move_command(command)
                 return f'<div id="{command[1]}" class="{command[2]}"></div>'
             
+            elif command[0] == '\\canvas':
+                self.move_command(command)
+                return f'<canvas id="{command[1]}" class="{command[2]}"></div>'
+            
             elif command[0] == '\\code':
                 self.move_command(command)
                 code = self.colorize_code(command[1])

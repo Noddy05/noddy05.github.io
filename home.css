@@ -5,3 +5,21 @@
 #links_base a{
     margin: 10px;
 }
+
+.article-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+    width: 50%;
+}
+.article-img {
+    display: block;
+    width: 100%;
+}
+.article-title {
+    font-size: 50px;
+    width: 100%;
+    text-align: center;
+    margin-top: 0px;
+}
