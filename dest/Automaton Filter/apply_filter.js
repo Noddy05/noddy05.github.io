@@ -1,6 +1,6 @@
 "use strict";
 class Filter {
-    constructor(bornRuleDiv, surviveRuleDiv) {
+    constructor(imagePath, bornRuleDiv, surviveRuleDiv) {
         this.rules = [[], []];
         this.layer = new Layer(...this.rules);
         this.otherLayer = new Layer(...this.rules);
@@ -10,7 +10,7 @@ class Filter {
         this.surviveRuleDiv = surviveRuleDiv;
         this.parseRules();
         this.filterIndex = ++iterationIndex;
-        this.loadImage("tiger-downscaled.png");
+        this.loadImage(imagePath);
     }
     parseRules() {
         for (let i = 0; i <= 8; i++) {

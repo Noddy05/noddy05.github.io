@@ -10,13 +10,13 @@ class Filter {
     private filterIndex: Number;
     private hasLoaded = false;
 
-    public constructor(bornRuleDiv: HTMLDivElement, surviveRuleDiv: HTMLDivElement){
+    public constructor(imagePath: string, bornRuleDiv: HTMLDivElement, surviveRuleDiv: HTMLDivElement){
         this.bornRuleDiv = bornRuleDiv;
         this.surviveRuleDiv = surviveRuleDiv;
         this.parseRules();
 
         this.filterIndex = ++iterationIndex;
-        this.loadImage("tiger-downscaled.png");
+        this.loadImage(imagePath);
     }
 
     private parseRules(){

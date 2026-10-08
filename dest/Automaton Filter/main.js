@@ -32,6 +32,15 @@ let iterationIndex = 0;
 //rules = [ [ 0, 5, 6, 7, 8 ], [  ] ] // lines
 //rules = [ [ 1, 2, 3, 4, 5, 6, 7, 8 ], [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ] ] // Slates
 //rules = [ [ 1, 2, 3, 4, 5, 6, 7, 8 ], [ 0, 1, 2, 3, 4, 5, 6, 7 ] ] // Cloudy
+//rules = [ [ 0 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+//rules = [ [ 0, 1 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+//rules = [ [ 0, 1, 2 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+//rules = [ [ 0, 1, 2, 3 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+//rules = [ [ 0, 1, 2, 3, 4 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy flickering
+//rules = [ [ 0, 1, 2, 6 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+//rules = [ [ 0, 1, 2, 6, 7 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+//rules = [ [ 0, 1, 2, 6, 7, 8 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
+let rules = [[0, 1, 2,], [1, 2, 3, 4, 5, 8]]; // Algorithmy
 const filterCanvas = document.createElement('canvas');
 const filterCtx = filterCanvas.getContext('2d');
 const displayDiv = document.getElementById('first_display');
@@ -51,6 +60,8 @@ function generateDisplay() {
     for (let i = 0; i <= 8; i++) {
         const input = document.createElement('input');
         input.setAttribute('type', 'checkbox');
+        if (rules[0].includes(i))
+            input.setAttribute('checked', 'true');
         bornRuleDiv.appendChild(input);
     }
     surviveRuleDiv = document.createElement('div');
@@ -58,6 +69,8 @@ function generateDisplay() {
     for (let i = 0; i <= 8; i++) {
         const input = document.createElement('input');
         input.setAttribute('type', 'checkbox');
+        if (rules[1].includes(i))
+            input.setAttribute('checked', 'true');
         surviveRuleDiv.appendChild(input);
     }
     displayDiv.appendChild(playButton);
@@ -66,7 +79,9 @@ function generateDisplay() {
     displayDiv.appendChild(surviveRuleDiv);
 }
 function newFilter() {
-    filter = new Filter(bornRuleDiv, surviveRuleDiv);
+    let path = 'forbandet_ungdom_downscaled.png';
+    path = 'tiger-downscaled.png';
+    filter = new Filter(path, bornRuleDiv, surviveRuleDiv);
     filter.startProcessing();
 }
 displayDiv.appendChild(filterCanvas);
