@@ -41,6 +41,66 @@ let iterationIndex = 0;
 //rules = [ [ 0, 1, 2, 6, 7, 8 ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
 let rules = [ [ 0, 1, 2, ], [ 1, 2, 3, 4, 5, 8 ] ] // Algorithmy
 
+
+// Game of life'y: let the survival rule be [1, 2, ..., 6, 8] (anything but 7)
+
+// Algorithm rules:
+// B02358/S1234568
+// B0/S123458
+// B01/S123458
+// B012/S123458
+// B0123/S123458
+// B01234/S123458
+// B0126/S123458
+// B01267/S123458
+// B012678/S123458
+// B0123/S123578
+// B0123/S12358
+// B17/S012345678
+// B1/S012345678
+// B12/S012345678
+// B17/S124568
+// B178/S124568
+// B1678/S124568
+// B1678/S12458
+// B1678/S12458
+// B1678/S124578
+// B1678/S12478
+// B1678/S124678
+// B1678/S12578
+// Subtle algorithm rules:
+// B178/S1245678
+// B0123/S12357
+// B0124/S12357
+// B0126/S12357
+
+// Interesting:
+// B12345678/S012345678 <- Block-art ish
+// B01678/S12578 <- Blury mess
+// B01678/S125678 <- Interesting expansion
+
+//Clody noisy dither
+// B1234568/S01234567
+// B12345678/S01234567
+// B01678/S1246
+// B01678/S12467
+// B01678/S124567
+// B01678/S12367
+// B01678/S123567
+// B01678/S012367
+// B01678/S0123567
+
+// Spots
+// B05678/S0123456
+// B05678/S01234568
+// B0568/S01234568
+// B0568/S01234568
+// B17/S145678
+
+
+
+
+
 const filterCanvas = document.createElement('canvas') as HTMLCanvasElement;
 const filterCtx = filterCanvas.getContext('2d') as CanvasRenderingContext2D;
 const displayDiv = document.getElementById('first_display') as HTMLDivElement;
