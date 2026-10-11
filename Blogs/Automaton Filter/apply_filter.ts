@@ -10,13 +10,17 @@ class Filter {
     private filterIndex: Number;
     private hasLoaded = false;
 
-    public constructor(imagePath: string, bornRuleDiv: HTMLDivElement, surviveRuleDiv: HTMLDivElement){
+    public constructor(imagePath: string, bornRuleDiv: HTMLDivElement, surviveRuleDiv: HTMLDivElement, maskPath?: string){
         this.bornRuleDiv = bornRuleDiv;
         this.surviveRuleDiv = surviveRuleDiv;
         this.parseRules();
 
         this.filterIndex = ++iterationIndex;
-        this.loadImage(imagePath);
+
+        if(maskPath == null)
+            this.loadImage(imagePath);
+        else 
+            this.loadImageAndMask(imagePath, maskPath);
     }
 
     private parseRules(){
@@ -29,9 +33,16 @@ class Filter {
         }
     }
 
-    private async loadImage(image_path: string) {
-        await this.layer.copyImage(image_path);
-        await this.otherLayer.copyImage(image_path);
+    private async loadImage(imagePath: string) {
+        await this.layer.copyImage(imagePath);
+        await this.otherLayer.copyImage(imagePath);
+        this.hasLoaded = true;
+        this.layer.drawImageToCanvas();
+    }
+
+    private async loadImageAndMask(imagePath: string, maskPath: string) {
+        await this.layer.copyImageAndMask(imagePath, maskPath);
+        await this.otherLayer.copyImageAndMask(imagePath, maskPath);
         this.hasLoaded = true;
         this.layer.drawImageToCanvas();
     }

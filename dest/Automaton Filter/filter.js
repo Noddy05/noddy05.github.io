@@ -32,6 +32,25 @@ class Layer {
             this.data[i] = Math.round(lightLevel);
         }
     }
+    async copyImageAndMask(imagePath, maskPath) {
+        if (!filterCtx)
+            throw new Error("2D canvas context not available");
+        const mask = await this.drawImage(maskPath);
+        const maskData = await filterCtx.getImageData(0, 0, mask.width, mask.height);
+        const image = await this.drawImage(imagePath);
+        this.img = await filterCtx.getImageData(0, 0, image.width, image.height);
+        this.width = image.width;
+        this.height = image.height;
+        this.data = new Uint8Array(this.width * this.height);
+        for (let i = 0; i < this.data.length; i++) {
+            const r = maskData.data[4 * i];
+            const g = maskData.data[4 * i + 1];
+            const b = maskData.data[4 * i + 2];
+            // Light level between 0 and 1:
+            const lightLevel = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            this.data[i] = Math.round(lightLevel);
+        }
+    }
     // Draws the image to the canvas
     drawImageToCanvas() {
         filterCtx.putImageData(this.img, 0, 0);

@@ -32,9 +32,10 @@ const interestingRules = {
         "B1678/S124678",
         "B1678/S12578",
         "B01/S01235678",
-
+        "B6/S123458", // Keeps a lot of integrity in the picture
+        "B056/S015", //
     ],
-    "Intersting": [
+    "Interesting": [
         "B01678/S125678",
         "B01678/S12578",
         "B12345678/S012345678",
@@ -44,6 +45,12 @@ const interestingRules = {
         "B02468/S1357",
         "B3/S23",
         "B01234567/S8",
+        "B013/S", // Draws in
+        //"B0124/S", // Draws in
+        //"B0134/S", // Draws in
+        //"B345/S", // Cool expansion
+        "B014/S", // Smoke
+        "B346/S468", // Perlin-like
     ], 
     "Subtle Pattern": [
         "B17/S012345678",
@@ -61,6 +68,7 @@ const interestingRules = {
         "B0/S012378",
         "B0/S01238",
         "B0/S0123678",
+        "B/S68",
     ],
     "Spots": [
         "B17/S145678",
@@ -125,8 +133,16 @@ function generateDisplay(){
         input.setAttribute('type', 'checkbox');
         if(rules[0].includes(i))
             input.setAttribute('checked', 'true');
+
+        input.onchange = () => updateSliders();
         bornRuleDiv.appendChild(input);
     }
+    const bornSlider = document.createElement('input') as HTMLInputElement;
+    bornSlider.setAttribute('type', 'range');
+    bornSlider.setAttribute('min', '0');
+    bornSlider.setAttribute('max', '511');
+    bornSlider.setAttribute('value', '7');
+    bornRuleDiv.appendChild(bornSlider);
 
     surviveRuleDiv = document.createElement('div') as HTMLDivElement;
     surviveRuleDiv.setAttribute('id', 'survive_rule_div');
@@ -136,7 +152,26 @@ function generateDisplay(){
         input.setAttribute('type', 'checkbox');
         if(rules[1].includes(i))
             input.setAttribute('checked', 'true');
+
+        input.onchange = () => updateSliders();
         surviveRuleDiv.appendChild(input);
+    }
+    const surviveSlider = document.createElement('input') as HTMLInputElement;
+    surviveSlider.setAttribute('type', 'range');
+    surviveSlider.setAttribute('min', '0');
+    surviveSlider.setAttribute('max', '511');
+    surviveSlider.setAttribute('value', '318');
+    surviveRuleDiv.appendChild(surviveSlider);
+
+    bornSlider.onchange = () => newFilter();
+    bornSlider.oninput = () => {
+        const newRules = convertFromSlider(bornSlider, surviveSlider);
+        updateRules(newRules);
+    }
+    surviveSlider.onchange = () => newFilter();
+    surviveSlider.oninput = () => {
+        const newRules = convertFromSlider(bornSlider, surviveSlider);
+        updateRules(newRules);
     }
 
     const premadeRulesContainer = document.createElement('select');
@@ -158,19 +193,7 @@ function generateDisplay(){
     
     premadeRulesContainer.onchange = () => {
         const newRules = convertToRules(premadeRulesContainer.value);
-        
-        for(let i = 0; i <= 8; i++){
-            bornRuleDiv!.children[i].checked = false;
-            surviveRuleDiv!.children[i].checked = false;
-        }
-        for(let i = 0; i < newRules[0].length; i++){
-            bornRuleDiv!.children[newRules[0][i]].checked = true;
-        }
-        for(let i = 0; i < newRules[1].length; i++){
-            surviveRuleDiv!.children[newRules[1][i]].checked = true;
-        }
-
-        newFilter();
+        changeRules(newRules);
     }
 
     displayDiv.appendChild(playButton);
@@ -180,11 +203,68 @@ function generateDisplay(){
     displayDiv.appendChild(premadeRulesContainer);
 }
 
+function changeRules(newRules: number[][]){
+    updateRules(newRules);
+    newFilter();
+}
+
+function updateRules(newRules: number[][]){
+    for(let i = 0; i <= 8; i++){
+        bornRuleDiv!.children[i].checked = false;
+        surviveRuleDiv!.children[i].checked = false;
+    }
+    for(let i = 0; i < newRules[0].length; i++){
+        bornRuleDiv!.children[newRules[0][i]].checked = true;
+    }
+    for(let i = 0; i < newRules[1].length; i++){
+        surviveRuleDiv!.children[newRules[1][i]].checked = true;
+    }
+}
+
+function updateSliders(){
+    let bornSum = 0;
+    for(let i = 0; i <= 8; i++)
+    {
+        if(bornRuleDiv!.children[i].checked){
+            bornSum += Math.pow(2, i);
+        }
+    }
+
+    let surviveSum = 0;
+    for(let i = 0; i <= 8; i++)
+    {
+        if(surviveRuleDiv!.children[i].checked){
+            surviveSum += Math.pow(2, i);
+        }
+    }
+
+    bornRuleDiv!.children[9].value = bornSum;
+    surviveRuleDiv!.children[9].value = surviveSum;
+}
+
 function convertToRules(ruleString: string){
     const stringSplit = ruleString.split('/');
     const birthString = stringSplit[0].slice(1);
     const survivalString = stringSplit[1].slice(1);
     return [ stringToArray(birthString), stringToArray(survivalString) ]
+}
+
+function convertFromSlider(bornSlider: HTMLInputElement, surviveSlider: HTMLInputElement){
+    return [ sliderToBinary(+bornSlider.value), sliderToBinary(+surviveSlider.value) ]
+}
+
+function sliderToBinary(value: number){
+    const arr = []
+
+    let curr = value;
+    for(let i = 0; i <= 8; i++){
+        if(curr % 2 == 1){
+            arr.push(i);
+        }
+        curr = Math.floor(curr / 2);
+    }
+
+    return arr;
 }
 
 function stringToArray(str: string){
@@ -197,9 +277,11 @@ function stringToArray(str: string){
 
 function newFilter() {
     let path = 'forbandet_ungdom_downscaled.png';
+    let mask = 'forbandede_ungdom_mask.png';
+    //mask = path;
     //path = 'tiger-downscaled.png';
 
-    filter = new Filter(path, bornRuleDiv!, surviveRuleDiv!);
+    filter = new Filter(path, bornRuleDiv!, surviveRuleDiv!, mask);
     filter.startProcessing();
 }
 

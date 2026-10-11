@@ -1,6 +1,6 @@
 "use strict";
 class Filter {
-    constructor(imagePath, bornRuleDiv, surviveRuleDiv) {
+    constructor(imagePath, bornRuleDiv, surviveRuleDiv, maskPath) {
         this.rules = [[], []];
         this.layer = new Layer(...this.rules);
         this.otherLayer = new Layer(...this.rules);
@@ -10,7 +10,10 @@ class Filter {
         this.surviveRuleDiv = surviveRuleDiv;
         this.parseRules();
         this.filterIndex = ++iterationIndex;
-        this.loadImage(imagePath);
+        if (maskPath == null)
+            this.loadImage(imagePath);
+        else
+            this.loadImageAndMask(imagePath, maskPath);
     }
     parseRules() {
         for (let i = 0; i <= 8; i++) {
@@ -20,9 +23,15 @@ class Filter {
                 this.rules[1].push(i);
         }
     }
-    async loadImage(image_path) {
-        await this.layer.copyImage(image_path);
-        await this.otherLayer.copyImage(image_path);
+    async loadImage(imagePath) {
+        await this.layer.copyImage(imagePath);
+        await this.otherLayer.copyImage(imagePath);
+        this.hasLoaded = true;
+        this.layer.drawImageToCanvas();
+    }
+    async loadImageAndMask(imagePath, maskPath) {
+        await this.layer.copyImageAndMask(imagePath, maskPath);
+        await this.otherLayer.copyImageAndMask(imagePath, maskPath);
         this.hasLoaded = true;
         this.layer.drawImageToCanvas();
     }
