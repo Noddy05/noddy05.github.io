@@ -46,7 +46,7 @@
         <keyword class="keyword">if</keyword> <keyword class="built-in">len</keyword>(neighbours) <keyword class="operation">=</keyword><keyword class="operation">=</keyword> <keyword class="literal">0</keyword>
             path.<keyword class="built-in">pop</keyword>()
         <keyword class="keyword">else</keyword>
-            pickedNeighbour <keyword class="operation">=</keyword> neighbours[<keyword class="built-in">floor</keyword>(<keyword class="built-in">random</keyword>(<keyword class="literal">0</keyword>, <keyword class="built-in">len</keyword>(neighbours)))]
+            pickedNeighbour <keyword class="operation">=</keyword> neighbours[<keyword class="built-in">floor</keyword>(<keyword class="built-in">random</keyword>() <keyword class="operation">*</keyword> <keyword class="built-in">len</keyword>(neighbours))]
             <keyword class="variable">maze</keyword>.<keyword class="built-in">connectCells</keyword>(pathEnd, pickedNeighbour)
             path.<keyword class="built-in">append</keyword>(pickedNeighbour)
         <keyword class="keyword">end</keyword><keyword class="keyword">if</keyword>

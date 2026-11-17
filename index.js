@@ -28,9 +28,12 @@ function attachLinks(){
 attachLinks();
 
 
+
 // Vibe coded slide projects:
 const links_base = document.getElementById("links_base");
 const VISIBLE = 3;                        // slides shown at once
+let mainProjectInShowcase = 1 + VISIBLE;
+const numArticles = links_base.children.length;
 
 const slides = Array.from(links_base.children);
 const count = slides.length;              // number of real slides
@@ -62,19 +65,39 @@ function jump_to_index(index) {
 // Start on the first real slide (the real slides begin after the VISIBLE prepended clones)
 jump_to_index(VISIBLE);
 
-let scroll_timer;
-links_base.addEventListener("scroll", () => {
-    clearTimeout(scroll_timer);
-    scroll_timer = setTimeout(() => {
-        const i = Math.round(links_base.scrollLeft / slide_step());
-        if (i < VISIBLE) jump_to_index(i + count);                  // in the left clones
-        else if (i >= VISIBLE + count) jump_to_index(i - count);    // in the right clones
-    }, 100);
-});
+function updateShowcase(){
+    if(mainProjectInShowcase == links_base.children.length - VISIBLE){
+        links_base.scroll({ left: slide_step(), behavior: "instant" });
+        console.log("no");
+    }
+    else if(mainProjectInShowcase == VISIBLE - 1){
+        links_base.scroll({ left: (numArticles + 2) * slide_step(), behavior: "instant" });
+        console.log("yes");
+    }
+
+    if(mainProjectInShowcase < VISIBLE)
+        mainProjectInShowcase = links_base.children.length - 1 - VISIBLE;
+    else if(mainProjectInShowcase >= links_base.children.length - VISIBLE)
+        mainProjectInShowcase = VISIBLE;
+    for(let i = 0; i < links_base.children.length; i++){
+        if(i == mainProjectInShowcase || i - numArticles == mainProjectInShowcase || i + numArticles == mainProjectInShowcase)
+            links_base.children[i].classList.add('main');
+        else
+            links_base.children[i].classList.remove('main');
+    }
+    links_base.scroll({ left: (mainProjectInShowcase - 1) * slide_step(), behavior: "smooth" });
+}
+updateShowcase();
 
 document.getElementById("slide_left").addEventListener("click", () => {
-    links_base.scrollBy({ left: -slide_step(), behavior: "smooth" });
+    //links_base.scrollBy({ left: -slide_step(), behavior: "smooth" });
+    mainProjectInShowcase--;
+    updateShowcase();
+    
 });
 document.getElementById("slide_right").addEventListener("click", () => {
-    links_base.scrollBy({ left: slide_step(), behavior: "smooth" });
+    //links_base.scrollBy({ left: slide_step(), behavior: "smooth" });
+    mainProjectInShowcase++;
+    updateShowcase();
 });
+

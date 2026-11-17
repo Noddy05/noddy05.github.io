@@ -21,7 +21,7 @@
         if len(neighbours) == 0
             path.##pop##()
         else
-            pickedNeighbour = neighbours[##floor##(##random##(0, len(neighbours)))]
+            pickedNeighbour = neighbours[##floor##(##random##() * len(neighbours))]
             ~maze~.##connectCells##(pathEnd, pickedNeighbour)
             path.##append##(pickedNeighbour)
         endif
