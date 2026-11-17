@@ -104,6 +104,7 @@ filterCtx.getContextAttributes().willReadFrequently = true;
 let filter = null;
 let bornRuleDiv = null;
 let surviveRuleDiv = null;
+let drawMask = null;
 function generateDisplay() {
     const playButton = document.createElement('button');
     playButton.onclick = () => newFilter();
@@ -111,6 +112,14 @@ function generateDisplay() {
     const pauseButton = document.createElement('button');
     pauseButton.onclick = () => { filter.isPlaying = !filter.isPlaying; };
     pauseButton.innerText = 'Pause';
+    const applyAndPauseButton = document.createElement('button');
+    applyAndPauseButton.onclick = () => { newFilter(); filter.isPlaying = false; };
+    applyAndPauseButton.innerText = 'Reset';
+    const maskText = document.createElement('label');
+    maskText.innerText = 'Show Live Cells:';
+    drawMask = document.createElement('input');
+    drawMask.setAttribute('type', 'checkbox');
+    drawMask.onchange = () => { filter.drawMask = drawMask.checked; };
     bornRuleDiv = document.createElement('div');
     bornRuleDiv.setAttribute('id', 'born_rule_div');
     for (let i = 0; i <= 8; i++) {
@@ -171,6 +180,9 @@ function generateDisplay() {
     };
     displayDiv.appendChild(playButton);
     displayDiv.appendChild(pauseButton);
+    displayDiv.appendChild(applyAndPauseButton);
+    displayDiv.appendChild(maskText);
+    displayDiv.appendChild(drawMask);
     displayDiv.appendChild(bornRuleDiv);
     displayDiv.appendChild(surviveRuleDiv);
     displayDiv.appendChild(premadeRulesContainer);
@@ -238,8 +250,9 @@ function newFilter() {
     let path = 'forbandet_ungdom_downscaled.png';
     let mask = 'forbandede_ungdom_mask.png';
     //mask = path;
-    //path = 'tiger-downscaled.png';
-    filter = new Filter(path, bornRuleDiv, surviveRuleDiv, mask);
+    path = 'tiger-downscaled.png';
+    //filter = new Filter(path, bornRuleDiv!, surviveRuleDiv!, mask);
+    filter = new Filter(path, bornRuleDiv, surviveRuleDiv);
     filter.startProcessing();
 }
 displayDiv.appendChild(filterCanvas);

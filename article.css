@@ -120,6 +120,10 @@ footnote {
     font-size: 10pt;
 }
 
+it {
+    font-style: italic;
+}
+
 .canvas{
     width: 400px;
     height: 400px;

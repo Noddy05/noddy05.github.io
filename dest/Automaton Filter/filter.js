@@ -54,6 +54,18 @@ class Layer {
     // Draws the image to the canvas
     drawImageToCanvas() {
         filterCtx.putImageData(this.img, 0, 0);
+        if (drawMask.checked)
+            this.drawMaskToCanvas();
+    }
+    // Draws the image to the canvas
+    drawMaskToCanvas() {
+        filterCtx.fillStyle = 'white';
+        for (let x = 0; x < filterCanvas.width; x++) {
+            for (let y = 0; y < filterCanvas.height; y++) {
+                if (this.data[y * this.width + x] > 0)
+                    filterCtx.fillRect(x, y, 1, 1);
+            }
+        }
     }
     // Returns true if (x, y) is not inside the bounds of the image
     isOutsideBounds(x, y) {

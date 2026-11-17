@@ -1,9 +1,6 @@
 from math_field import *
 from subsection import *
 import os
-from os import listdir
-from pathlib import Path
-import time
 
 class HTMLBuilder():
     math_commands = {
@@ -309,6 +306,10 @@ class HTMLBuilder():
             elif command[0] == '\\textsc':
                 self.move_command(command)
                 return f'<textsc>{command[1]}</textsc>'
+            
+            elif command[0] == '\\textit':
+                self.move_command(command)
+                return f'<it>{command[1]}</it>'
             
             elif command[0] == '\\href':
                 self.move_command(command)

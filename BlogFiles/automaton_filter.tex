@@ -5,4 +5,21 @@
 \script{apply_filter.js}
 \script{main.js}
 \div{first_display}{display_filter}
-Hello world!
+I had the idea of using Cellular Automata as a post-processing effect implemented it first in the Processing app. Naturally i started
+by using the light values of an image to create a mask of live cells, and then iterated them according to the rules of the Game of Life.
+\\
+After very underwhelming results i concluded that this was not of any interest and abandoned the project. In my later revisit of the topic
+i decided to immediately implement the ability to quickly modify the rules, to hopefully discover far more interesting patterns, than the ones
+expressed by the Game of Life. I was quickly able to discover a few rule-sets that made interesting images, thus motivating me
+to continue this project.
+\\\\
+This is just a small subset of the possible post-processing effects of Cellular Automata. By considering only the 8 neighbours
+surrounding each cell we can find $2^9=512$ rulesets\footnote{Here, $2^9$ comes from the 9 possible values for the number of living cells in the
+neighbourhood of any given cell; $0,1,\ldots,8$.} for cell birth, and an additional $512$ for cell survival, giving us a grand total of
+$512^2=262.144$ possible rulesets. \\\\
+There are many different ways to use Cellular Automata, either by changing the neighbour grid from the Moore 
+neighbourhood to the von Neumann neighbourhood (or any other), changing the number of neighbours considered (if we just considered the 3 neighbours above, we 
+effectively have a 1D cellular automata, as researched by Wolfram), adding more states than \textit{dead} and \textit{alive}, adding randomness,
+or by changing the behaviour of dying and newborn cells. \\
+In this excursion I've decided that dying cells take on the average color of its dead neighbours, and newborn cells take on the average 
+color of its alive neighbours - letting cells that does not change from alive to dead, or vice versa, keep their color.
