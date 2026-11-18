@@ -2,6 +2,9 @@ from math_field import *
 from subsection import *
 import os
 
+currentFromFolder = 'BlogFiles/'
+currentToFolder = 'Blogs/'
+
 class HTMLBuilder():
     math_commands = {
         '\\O': '\\mathcal{O}',
@@ -81,11 +84,11 @@ class HTMLBuilder():
         self.num_figures = 0
         self.scripts = []
         self.styles = []
+        self.date = ''
 
 
     def starts_with(self, compare_to, all_text):
         return compare_to == all_text[self.index:self.index + len(compare_to)]
-
     def start_math_field(self):
         self.math_fields.append(MathField(self.index))
     def read_command(self, all_text):
@@ -129,16 +132,13 @@ class HTMLBuilder():
                 open_braces += 1
 
         return [ command_name, *args ]
-
     def recreate_command(self, command):
         out = command[0]
         for i in range(1, len(command)):
             out += '{' + command[i] + '}'
         return out
-
     def move_command(self, command):
         self.index += len(self.recreate_command(command)) - 1
-
     def try_color(self, code, i, keyword, type):
         j = i + len(keyword)
 
@@ -149,7 +149,6 @@ class HTMLBuilder():
             skip = len(extra)
             new_code = f'{code[0:i]}{extra}{code[j:]}'
         return [ new_code, skip ]
-
     def color_inside(self, code, i, start_marking, end_marking, keyword, remove_markings: bool):
         if(code[i:i + len(start_marking)] == start_marking):
             new_code = code
@@ -170,7 +169,6 @@ class HTMLBuilder():
             return [ new_code, skip ]
 
         return [ code, 0 ]
-
     def colorize_code(self, code):
         i = 0
         new_code = code
@@ -191,7 +189,6 @@ class HTMLBuilder():
                 
             i += 1
         return new_code
-
     def parse(self, char, all_text):
         if char == '\n':
             return char
@@ -269,6 +266,11 @@ class HTMLBuilder():
                 self.move_command(command)
                 return f'{command[1]}'
             
+            elif command[0] == '\\date':
+                self.move_command(command)
+                self.date = command[1]
+                return f''
+            
             elif command[0] == '\\canvas':
                 self.move_command(command)
                 return f'<canvas id="{command[1]}" class="{command[2]}"></canvas>'
@@ -336,7 +338,6 @@ class HTMLBuilder():
                         return value
 
         return char
-
     def read_page(self, file_name):
         with open(file_name) as file:
             all_text = file.read()
@@ -347,7 +348,6 @@ class HTMLBuilder():
                 self.index += 1
 
         #print(parsed_text)
-
     def gen_html(self, file_name):
         if(not os.path.isfile(file_name)):
             open(file_name, 'x')
@@ -393,15 +393,15 @@ class HTMLBuilder():
                 for script in self.scripts:
                     file.write(f'\n<script src="../../dest/{self.short_name}/{script}"></script>')
 
-    def blog_folder_path(self):
-        return 'Blogs/' + self.short_name
-    def blog_html_path(self):
-        return self.blog_folder_path() + '/index.html'
+    def blog_folder_path(self, to_folder: str):
+        return to_folder + self.short_name
+    def blog_html_path(self, to_folder: str):
+        return self.blog_folder_path(to_folder) + '/index.html'
 
 
-    def gen_post(self, post_name: str):
-        self.read_page("BlogFiles/" + post_name + ".tex")
-        if(not os.path.exists(self.blog_folder_path())):
-            os.makedirs(self.blog_folder_path())
+    def gen_post(self, post_name: str, to_folder: str, from_folder: str):
+        self.read_page(from_folder + post_name + '.tex')
+        if(not os.path.exists(self.blog_folder_path(to_folder))):
+            os.makedirs(self.blog_folder_path(to_folder))
 
-        self.gen_html(self.blog_html_path())
+        self.gen_html(self.blog_html_path(to_folder))

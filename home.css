@@ -13,7 +13,7 @@ body {
     margin: 10px;
 }
 
-.article-container {
+.blog-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -22,19 +22,19 @@ body {
     filter: blur(1px);
     transition-duration: 0.3s;
     scale: 0.8;
-    opacity: 0.8;
+    opacity: 0.3;
 }
-.article-container.main {
+.blog-container.main {
     background-color: rgb(255, 255, 255, 0);
     filter: blur(0);
     scale: 1;
     opacity: 1;
 }
-.article-img {
+.blog-img {
     display: block;
     width: 100%;
 }
-.article-title {
+.blog-title {
     font-size: 50px;
     width: 100%;
     text-align: center;
@@ -99,10 +99,7 @@ body {
 #links_base {
     display: flex;
     flex-direction: row;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
     gap: 1rem;
 
     /* hide scrollbar */
@@ -113,7 +110,7 @@ body {
     display: none;                  /* Chrome, Safari, newer Edge */
 }
 
-#links_base .article-container {
+#links_base .blog-container {
     flex: 0 0 calc((100% - 2rem) / 3);   /* 3 slides + 2 gaps fill the width exactly */
     scroll-snap-align: start;            /* not center, so slides line up from the left */
     scroll-snap-stop: always;
@@ -124,15 +121,10 @@ body {
 }
 
 
-#links_base .article-img {
+#links_base .blog-img {
     width: 100%;
     max-height: 70vh;
     object-fit: contain;
-}
-
-.slider {
-    position: relative;
-    top: 100px;
 }
 .slider button {
     position: absolute;
@@ -145,7 +137,61 @@ body {
     background-color: #ffffff00;
     border: 0;
     font-size: 50px;
+    color: #e9e9e9;
+    opacity: 0;
+    transition-duration: 0.2s;
+}
+.slider button:hover {
+    opacity: 30%;
 }
 #slide_left  { left: 0px; }
 #slide_right { right: 0px; }
 
+
+.slider {
+    position: relative;
+    top: 100px;
+}
+#articles_header{
+    position: relative;
+    top: 100px;
+    color: #e9e9e9;
+    text-align: center;
+    font-weight: 1;
+    font-size: 5em;
+    font-family: 'Kepler Std';
+}
+
+#main_page {
+    margin: 250px 150px 150px 150px;
+    color: #e9e9e9;
+    background-color: #313131;
+    padding: 30px;
+    border-radius: 4px;
+}
+#main_page p {
+    margin: 0;
+}
+
+#main_page .article-textbox{
+    display: inline-block;
+    position: relative;
+    margin: 5px;
+    vertical-align: middle;
+    font-size: 1em;
+}
+
+#main_page .article-container p, h2{
+    display: block;
+    position: relative;
+    font-size: 1em;
+}
+.article-container {
+    display:block;
+    margin-bottom: 20px;
+}
+.article-img{
+    width: 500px;
+    vertical-align: middle;
+    margin-right: 20px;
+}

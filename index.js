@@ -1,41 +1,74 @@
-const linksBase = document.getElementById('links_base');
+const blogLinksBase = document.getElementById('links_base');
+const articleLinksBase = document.getElementById('article_links');
 
 function attachLinks(){
     for(let i = 0; i < blogLinks.length; i++){
         const container = document.createElement('flex');
-        container.setAttribute('id', shortNames[i]);
-        container.setAttribute('class', 'article-container');
+        container.setAttribute('id', blogShortNames[i]);
+        container.setAttribute('class', 'blog-container');
 
         const link = document.createElement('a');
         link.setAttribute('href', blogLinks[i]);
-        link.setAttribute('title', `Click to read "${titles[i]}"`);
+        link.setAttribute('title', `Click to read "${blogTitles[i]}"`);
 
         const title = document.createElement('p');
-        title.setAttribute('class', 'article-title');
-        title.innerHTML = shortNames[i];
+        title.setAttribute('class', 'blog-title');
+        title.innerHTML = blogShortNames[i];
         
         const image = document.createElement('img');
-        image.setAttribute('src', `Blogs/${shortNames[i]}/thumbnail.png`);
-        image.setAttribute('class', 'article-img');
+        image.setAttribute('src', `Blogs/${blogShortNames[i]}/thumbnail.png`);
+        image.setAttribute('class', 'blog-img');
 
-        linksBase.appendChild(container);
+        blogLinksBase.appendChild(container);
         container.appendChild(link);
         container.appendChild(title);
         link.appendChild(image);
     }
+    
+    for(let i = 0; i < articleLinks.length; i++){
+        const container = document.createElement('flex');
+        container.setAttribute('id', articleShortNames[i]);
+        container.setAttribute('class', 'article-container');
+
+        const link = document.createElement('a');
+        link.setAttribute('href', articleLinks[i]);
+        link.setAttribute('title', `Click to read "${articleTitles[i]}"`);
+
+        const textBox = document.createElement('div');
+        textBox.setAttribute('class', 'article-textbox');
+
+        const title = document.createElement('h2');
+        title.setAttribute('class', 'article-title');
+        title.innerHTML = articleTitles[i];
+
+        const paragraph = document.createElement('p');
+        paragraph.setAttribute('class', 'article-paragraph');
+        paragraph.innerHTML = `Last edited: ${articleDates[i]}`;
+        
+        const image = document.createElement('img');
+        image.setAttribute('src', `Articles/${articleShortNames[i]}/thumbnail.png`);
+        image.setAttribute('class', 'article-img');
+
+        articleLinksBase.appendChild(container);
+        container.appendChild(link);
+        container.appendChild(textBox);
+        textBox.appendChild(title);
+        textBox.appendChild(paragraph);
+        link.appendChild(image);
+    }
 }
+
 
 attachLinks();
 
 
 
 // Vibe coded slide projects:
-const links_base = document.getElementById("links_base");
 const VISIBLE = 3;                        // slides shown at once
-let mainProjectInShowcase = 1 + VISIBLE;
-const numArticles = links_base.children.length;
+const numArticles = blogLinksBase.children.length;
+let mainProjectInShowcase = VISIBLE + Math.floor(Math.random() * numArticles);
 
-const slides = Array.from(links_base.children);
+const slides = Array.from(blogLinksBase.children);
 const count = slides.length;              // number of real slides
 
 function make_clone(slide) {
@@ -45,59 +78,74 @@ function make_clone(slide) {
 }
 
 // Clone VISIBLE slides at each end
-links_base.prepend(...slides.slice(-VISIBLE).map(make_clone));
-links_base.append(...slides.slice(0, VISIBLE).map(make_clone));
+blogLinksBase.prepend(...slides.slice(-VISIBLE).map(make_clone));
+blogLinksBase.append(...slides.slice(0, VISIBLE).map(make_clone));
 
 function slide_step() {
-    const gap = parseFloat(getComputedStyle(links_base).columnGap) || 0;
-    return links_base.children[0].offsetWidth + gap;
+    const gap = parseFloat(getComputedStyle(blogLinksBase).columnGap) || 0;
+    return blogLinksBase.children[0].offsetWidth + gap;
 }
 
 function jump_to_index(index) {
-    links_base.style.scrollBehavior = "auto";
-    links_base.style.scrollSnapType = "none";
-    links_base.scrollLeft = index * slide_step();
-    void links_base.offsetWidth;          // force reflow
-    links_base.style.scrollBehavior = "";
-    links_base.style.scrollSnapType = "";
+    blogLinksBase.style.scrollBehavior = "auto";
+    blogLinksBase.style.scrollSnapType = "none";
+    blogLinksBase.scrollLeft = index * slide_step();
+    void blogLinksBase.offsetWidth;          // force reflow
+    blogLinksBase.style.scrollBehavior = "";
+    blogLinksBase.style.scrollSnapType = "";
 }
 
 // Start on the first real slide (the real slides begin after the VISIBLE prepended clones)
-jump_to_index(VISIBLE);
+jump_to_index(mainProjectInShowcase - 1);
 
 function updateShowcase(){
-    if(mainProjectInShowcase == links_base.children.length - VISIBLE){
-        links_base.scroll({ left: slide_step(), behavior: "instant" });
-        console.log("no");
+    if(mainProjectInShowcase == blogLinksBase.children.length - VISIBLE){
+        blogLinksBase.scroll({ left: slide_step(), behavior: "instant" });
     }
     else if(mainProjectInShowcase == VISIBLE - 1){
-        links_base.scroll({ left: (numArticles + 2) * slide_step(), behavior: "instant" });
-        console.log("yes");
+        blogLinksBase.scroll({ left: (numArticles + 2) * slide_step(), behavior: "instant" });
     }
 
     if(mainProjectInShowcase < VISIBLE)
-        mainProjectInShowcase = links_base.children.length - 1 - VISIBLE;
-    else if(mainProjectInShowcase >= links_base.children.length - VISIBLE)
+        mainProjectInShowcase = blogLinksBase.children.length - 1 - VISIBLE;
+    else if(mainProjectInShowcase >= blogLinksBase.children.length - VISIBLE)
         mainProjectInShowcase = VISIBLE;
-    for(let i = 0; i < links_base.children.length; i++){
+    for(let i = 0; i < blogLinksBase.children.length; i++){
         if(i == mainProjectInShowcase || i - numArticles == mainProjectInShowcase || i + numArticles == mainProjectInShowcase)
-            links_base.children[i].classList.add('main');
+            blogLinksBase.children[i].classList.add('main');
         else
-            links_base.children[i].classList.remove('main');
+            blogLinksBase.children[i].classList.remove('main');
     }
-    links_base.scroll({ left: (mainProjectInShowcase - 1) * slide_step(), behavior: "smooth" });
+    blogLinksBase.scroll({ left: (mainProjectInShowcase - 1) * slide_step(), behavior: "smooth" });
 }
 updateShowcase();
 
+let hasSwiped = false;
 document.getElementById("slide_left").addEventListener("click", () => {
     //links_base.scrollBy({ left: -slide_step(), behavior: "smooth" });
+    hasSwiped = true;
     mainProjectInShowcase--;
     updateShowcase();
-    
 });
 document.getElementById("slide_right").addEventListener("click", () => {
     //links_base.scrollBy({ left: slide_step(), behavior: "smooth" });
+    hasSwiped = true;
     mainProjectInShowcase++;
     updateShowcase();
 });
 
+function autoSwipe(){
+    setTimeout(() => {
+        if(!hasSwiped){
+            mainProjectInShowcase++;
+            updateShowcase();
+            autoSwipe();
+        }
+    }, 5000);
+}
+autoSwipe();
+
+
+addEventListener('resize', () => {
+    updateShowcase();
+});

@@ -25,6 +25,7 @@
 <body>
 <div id="content"><flexbox class="header"><img class="logo" src="../../zeta_spiral_hq_cropped.png"><div id="header-text"><h1>The HyperLogLog datastructure</h1></div></flexbox><div class="page"><p><img src="thumbnail.png" id="thumbnail"><h2 id="1">1) Introduction</h2>
 
+
 <textsc>HyperLogLog</textsc> is a datastructure that is able to count $n$ unique events, using only $\mathcal{O}(\log\log n)$ storage, hence the name. <textsc>HyperLogLog</textsc> is an improvement in terms of accuracy, to <textsc>SuperLogLog</textsc> which in turn is an improvement to the <textsc>LogLog</textsc> algorithm.
 <br>
 This datastructure is able to compress so much data by using randomness. It essentially calculates the number of unique events, by splitting events into buckets (called registers), such that every event gets into a random register. Now each register <u>only</u> keeps track of the rarest event that has occured, and if many registers have seen very rare events, it's likely that it's seen many events. 
