@@ -8,7 +8,7 @@ async function bacterialGrowth(maze) {
     const y = Math.floor(Math.random() * maze.height());
     const startCell = maze.cell(x, y);
     const bacteria = [startCell];
-    startCell.setColor('red');
+    startCell.setColor(inProgressColor);
     let iteration = 0;
     let iterationsPerDraw = 1;
     while (bacteria.length > 0) {
@@ -18,7 +18,7 @@ async function bacterialGrowth(maze) {
         }
         const neighbours = maze.unvisitedDirections(bacteria[pickedBacteria]);
         if (neighbours.length == 0) {
-            bacteria[pickedBacteria].setColor('green');
+            bacteria[pickedBacteria].setColor(finalColor);
             bacteria.splice(pickedBacteria, 1);
         }
         else {

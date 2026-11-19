@@ -47,13 +47,17 @@ const directionVectors: Map<Directions, Vec2> = new Map([
 const numDirections = Math.floor(Object.keys(Directions).length / 2);
 const blocksPerCell = numDirections / 2;
 
+const finalColor = 'white';
+const initialColor = '#474747ff';
+const inProgressColor = '#ce5050ff';
+const wallColor = 'black';
 class Cell {
     private x: number;
     private y: number;
 
     private blocked: boolean[];
 
-    private color = 'white';
+    private color = initialColor;
 
     private hasChanged = true;
 
@@ -113,7 +117,7 @@ class Cell {
         ctx.fillRect(Math.floor(w * this.x), Math.floor(canvas.height - h * this.y), 
             Math.ceil(w), -Math.ceil(h));
         
-        ctx.strokeStyle = "black";
+        ctx.strokeStyle = wallColor
         let halfWidth = 1;
         ctx.lineWidth = 2 * halfWidth;
 
@@ -217,7 +221,7 @@ class Maze {
     public reset(){
         for(let x = 0; x < this.width(); x++){
             for(let y = 0; y < this.height(); y++){
-                this.cells[x][y].setColor('white');
+                this.cells[x][y].setColor(initialColor);
                 this.cells[x][y].block(Directions.Up);
                 this.cells[x][y].block(Directions.Right);
             }
@@ -245,7 +249,7 @@ class Maze {
                 continue;
 
             const neighbour = this.cells[pos.x][pos.y];
-            if(neighbour.getColor() == 'white')
+            if(neighbour.getColor() == initialColor)
                 neighbours.push(i);
         }
 
@@ -254,7 +258,7 @@ class Maze {
 
     public isSurrounded(cell: Cell): boolean {
         for(let i = 0; i < 2 * blocksPerCell; i++){
-            if(this.next(cell, i).getColor() == 'white')
+            if(this.next(cell, i).getColor() == initialColor)
                 return false;
         }
         
@@ -267,7 +271,7 @@ class Maze {
             return cell;
 
         const nextCell = this.cells[pos.x][pos.y];
-        if(nextCell.getColor() != 'white')
+        if(nextCell.getColor() != initialColor)
             return cell;
 
         if(direction.valueOf() < blocksPerCell){
@@ -276,13 +280,13 @@ class Maze {
             nextCell.unblock(direction % blocksPerCell);
         }
 
-        nextCell.setColor('red');
+        nextCell.setColor(inProgressColor);
 
         return nextCell;
     }
 
     public clear(){
-        this.ctx.fillStyle = 'white';
+        this.ctx.fillStyle = initialColor;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 

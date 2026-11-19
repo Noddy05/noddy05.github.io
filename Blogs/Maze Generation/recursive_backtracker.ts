@@ -5,10 +5,11 @@ async function recursiveBacktracker(maze: Maze){
 
     const loopIndex = maze.newLoop();
     const path: Cell[] = [ maze.cell(0, 0)! ];
-    path[0].setColor('red');
+    path[0].setColor(inProgressColor);
 
     let iteration = 0;
     while(path.length > 0){
+        // Check for resizing:
         if(prevW != maze.width() || prevH != maze.height()){
             while(path.length > 0 && maze.isOutsideBounds(path[path.length - 1].position())){
                 path.pop();
@@ -19,6 +20,7 @@ async function recursiveBacktracker(maze: Maze){
             iteration = 0;
         }
 
+        // Increase the number of iterations done between each draw to speed up the process:
         let iterationsInALoop = 1;
         if(maze.delay() < delayCutoff)
             iterationsInALoop = 1 + Math.floor((delayCutoff - maze.delay()) * 0.5);
@@ -30,7 +32,7 @@ async function recursiveBacktracker(maze: Maze){
             nextPath = maze.carve(pathEnd, direction);
             if(nextPath != pathEnd){
                 path.push(nextPath);
-                nextPath.setColor('red');
+                nextPath.setColor(inProgressColor);
                 break;
             }
         }
@@ -43,7 +45,7 @@ async function recursiveBacktracker(maze: Maze){
         }
 
         while(path.length > 0 && maze.isSurrounded(path[path.length - 1])){
-            path[path.length - 1].setColor('green');
+            path[path.length - 1].setColor(finalColor);
             path.pop();
 
             if(maze.delay() > 0 && iteration % iterationsInALoop == 0){

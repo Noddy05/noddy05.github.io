@@ -42,6 +42,7 @@ class HTMLBuilder():
         'and': 'operation',
         'or': 'operation',
         '..': 'operation',
+        '...': 'operation',
 
         '...': 'literal',
         '1': 'literal',
